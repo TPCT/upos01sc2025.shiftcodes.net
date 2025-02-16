@@ -2,15 +2,14 @@
     <div class="modal-content">
         {!! Form::open(['url' => action([\App\Http\Controllers\ExpenseController::class, 'store']), 'method' => 'post', 'id' => 'add_expense_modal_form', 'files' => true ]) !!}
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">@lang( 'expense.add_expense' )</h4>
         </div>
         <div class="modal-body">
             <div class="row">
                 @if(count($business_locations) == 1)
-                    @php
-                        $default_location = current(array_keys($business_locations->toArray()))
+                    @php 
+                        $default_location = current(array_keys($business_locations->toArray())) 
                     @endphp
                 @else
                     @php $default_location = request()->input('location_id'); @endphp
@@ -51,11 +50,10 @@
                 <div class="clearfix"></div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        {!! Form::label('expense_for', __('expense.expense_for').':') !!} @show
-                        _tooltip(__('tooltip.expense_for'))
+                        {!! Form::label('expense_for', __('expense.expense_for').':') !!} @show_tooltip(__('tooltip.expense_for'))
                         {!! Form::select('expense_for', $users, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
                     </div>
-                </div>
+                </div>                
                 <div class="col-md-6">
                     <div class="form-group">
                         {!! Form::label('expense_tax_id', __('product.applicable_tax') . ':' ) !!}
@@ -65,8 +63,8 @@
                             </span>
                             {!! Form::select('tax_id', $taxes['tax_rates'], null, ['class' => 'form-control', 'id'=>'expense_tax_id'], $taxes['attributes']); !!}
 
-                            <input type="hidden" name="tax_calculation_amount" id="tax_calculation_amount"
-                                   value="0">
+                            <input type="hidden" name="tax_calculation_amount" id="tax_calculation_amount" 
+                            value="0">
                         </div>
                     </div>
                 </div>
@@ -80,7 +78,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         {!! Form::label('expense_additional_notes', __('expense.expense_note') . ':') !!}
-                        {!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'rows' => 3, 'id' => 'expense_additional_notes']); !!}
+                                {!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'rows' => 3, 'id' => 'expense_additional_notes']); !!}
                     </div>
                 </div>
             </div>
@@ -101,8 +99,7 @@
         </div>
         <div class="modal-footer">
             <button type="submit" class="tw-dw-btn tw-dw-btn-primary tw-text-white">@lang( 'messages.save' )</button>
-            <button type="button" class="tw-dw-btn tw-dw-btn-neutral tw-text-white"
-                    data-dismiss="modal">@lang( 'messages.close' )</button>
+            <button type="button" class="tw-dw-btn tw-dw-btn-neutral tw-text-white" data-dismiss="modal">@lang( 'messages.close' )</button>
         </div>
         {!! Form::close() !!}
     </div>

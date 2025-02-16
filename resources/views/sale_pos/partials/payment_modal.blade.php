@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">@lang('lang_v1.payment')</h4>
             </div>
             <div class="modal-body">
@@ -47,14 +47,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <button type="button"
-                                        class="tw-dw-btn tw-dw-btn-primary tw-text-white tw-dw-btn-sm tw-w-full"
-                                        id="add-payment-row">@lang('sale.add_payment_row')</button>
+                                <button type="button" class="tw-dw-btn tw-dw-btn-primary tw-text-white tw-dw-btn-sm tw-w-full"
+                                    id="add-payment-row">@lang('sale.add_payment_row')</button>
                             </div>
                         </div>
                         <br>
                         <div class="row @if ($change_return['amount'] == 0) hide @endif payment_row"
-                             id="change_return_payment_data">
+                            id="change_return_payment_data">
                             <div class="col-md-12">
                                 <div class="box box-solid payment_row bg-lightgray">
                                     <div class="box-body">
@@ -176,7 +175,7 @@
                                     <!-- <span class="lead text-bold total_quantity">0</span> -->
                                     @if (!empty($change_return['id']))
                                         <input type="hidden" name="change_return_id"
-                                               value="{{ $change_return['id'] }}">
+                                            value="{{ $change_return['id'] }}">
                                     @endif
                                 </div>
 
@@ -191,6 +190,7 @@
                                 </div>
 
 
+
                             </div>
                             <!-- /.box-body -->
                         </div>
@@ -198,10 +198,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="tw-dw-btn tw-dw-btn-neutral tw-text-white"
-                        data-dismiss="modal">@lang('messages.close')</button>
-                <button type="submit" class="tw-dw-btn tw-dw-btn-primary tw-text-white"
-                        id="pos-save">@lang('sale.finalize_payment')</button>
+                <button type="button" class="tw-dw-btn tw-dw-btn-neutral tw-text-white" data-dismiss="modal">@lang('messages.close')</button>
+                <button type="submit" class="tw-dw-btn tw-dw-btn-primary tw-text-white" id="pos-save">@lang('sale.finalize_payment')</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -213,7 +211,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">@lang('lang_v1.card_transaction_details')</h4>
             </div>
             <div class="modal-body">
@@ -291,8 +289,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="tw-dw-btn tw-dw-btn-primary tw-text-white"
-                        id="pos-save-card">@lang('sale.finalize_payment')</button>
+                <button type="button" class="tw-dw-btn tw-dw-btn-primary tw-text-white" id="pos-save-card">@lang('sale.finalize_payment')</button>
             </div>
         </div>
     </div>

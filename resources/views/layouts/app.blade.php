@@ -86,7 +86,7 @@
             <div class="tw-flex-1 tw-overflow-y-auto tw-h-screen" id="scrollable-container">
                 @yield('content')
                 @if (!$pos_layout)
-
+                
                     @include('layouts.partials.footer')
                 @else
                     @include('layouts.partials.footer_pos')

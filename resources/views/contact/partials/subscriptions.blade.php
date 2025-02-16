@@ -4,7 +4,7 @@
     @else
         ''
     @endif"
-     id="subscriptions_tab">
+id="subscriptions_tab">
     <div class="row">
         <div class="col-md-12">
             @component('components.widget')
