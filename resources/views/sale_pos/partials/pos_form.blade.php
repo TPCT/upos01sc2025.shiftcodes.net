@@ -227,16 +227,14 @@
 			<thead>
 				<tr>
 					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold @if(!empty($pos_settings['inline_service_staff'])) col-md-3 @else col-md-4 @endif">	
-						@lang('sale.product') @show_tooltip(__('lang_v1.tooltip_sell_product_column'))
+						@lang('sale.product')
 					</th>
-					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-3">
+					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
+						@lang('lang_v1.stock_count')
+					</th>
+					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
 						@lang('sale.qty')
 					</th>
-					@if(!empty($pos_settings['inline_service_staff']))
-						<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
-							@lang('restaurant.service_staff')
-						</th>
-					@endif
 					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2 {{$hide_tax}}">
 						@lang('sale.price_inc_tax')
 					</th>

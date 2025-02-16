@@ -28,7 +28,7 @@ return [
     'total_expenses' => 'تفاصيل المصروفات',
     'expense_category' => 'فئة المصروف',
     'invoice_no' => 'رقم الفاتورة',
-
+    'stock_count' => 'المخزون',
     'enable_editing_product_from_purchase' => 'تمكين تعديل سعر المنتج من شاشة الشراء',
     'sales_commission_agent' => 'السماسرة',
     'sales_commission_agents' => 'السماسرة',
