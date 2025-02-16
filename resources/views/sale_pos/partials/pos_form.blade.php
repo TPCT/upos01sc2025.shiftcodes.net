@@ -22,6 +22,14 @@
 				<span class="input-group-btn">
 					<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""  @if(!auth()->user()->can('customer.create')) disabled @endif><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 				</span>
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default bg-white btn-flat show_last_customer_invoices" data-customer-id="{{$walk_in_customer['id'] ?? ''}}"><i class="fa fa-file-invoice text-primary fa-lg"></i></button>
+				</span>
+
+				<span class="input-group-btn">
+					<button type="button" data-pay_method="cash" class="btn btn-default bg-white btn-flat pos-express-finalize" data-customer-id="{{$walk_in_customer['id'] ?? ''}}"><i class="fa fa-cash-register text-primary fa-lg"></i></button>
+				</span>
+
 			</div>
 			<small class="text-danger hide contact_due_text"><strong>@lang('account.customer_due'):</strong> <span></span></small>
 		</div>

@@ -150,6 +150,11 @@ class SellPosController extends Controller
         return view('sale_pos.index')->with(compact('business_locations', 'customers', 'sales_representative', 'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 'is_service_staff_enabled', 'is_types_service_enabled', 'shipping_statuses'));
     }
 
+    public function get_client_invoices($id){
+        $client_transactions = Transaction::where('contact_id', $id)->latest()->limit(10)->get();
+        return view('sale_pos.partials.client-invoices')->with(compact('client_transactions'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -356,6 +361,7 @@ class SellPosController extends Controller
                         ->with('status', $output);
                 }
             }
+
 
             if (!empty($input['products'])) {
                 $business_id = $request->session()->get('user.business_id');

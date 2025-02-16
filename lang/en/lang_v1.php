@@ -23,6 +23,7 @@ return [
     'outside' => 'Outside',
     'drawer_cash' => 'Cash in the drawer',
     'bill_collection' => 'Bill Collections',
+    'client_invoices' => 'Last 10 Client Invoices',
     'contact_name' => 'Contact Name',
     'total_expenses' => 'Total Expenses',
     'expense_category' => 'Expense Category',

@@ -89,9 +89,15 @@
 
     <div class="modal fade" id="expense_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
     </div>
+
+    <div class="modal fade client_invoices" tabindex="-1" role="dialog"
+         aria-labelledby="gridSystemModalLabel">
+    </div>
+
     <div class="modal fade invoice_modal" tabindex="-1" role="dialog"
          aria-labelledby="gridSystemModalLabel">
     </div>
+
     @include('sale_pos.partials.configure_search_modal')
 
     @include('sale_pos.partials.recent_transactions_modal')

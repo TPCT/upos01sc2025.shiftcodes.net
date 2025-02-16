@@ -23,9 +23,12 @@ return [
     'outside' => 'الخارج',
     'drawer_cash' => 'النقدية في الدرج',
     'bill_collection' => 'تحصيلات العملاء',
+    'client_invoices' => 'اخر 10 فواتير للعميل',
     'contact_name' => 'اسم العميل',
     'total_expenses' => 'تفاصيل المصروفات',
     'expense_category' => 'فئة المصروف',
+    'invoice_no' => 'رقم الفاتورة',
+
     'enable_editing_product_from_purchase' => 'تمكين تعديل سعر المنتج من شاشة الشراء',
     'sales_commission_agent' => 'السماسرة',
     'sales_commission_agents' => 'السماسرة',
