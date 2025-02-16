@@ -3180,6 +3180,7 @@ $(document).on('change', '#res_waiter_id', function(e){
 $(function(){
     $('#customer_id').on('select2:select', function(e){
         $(".show_last_customer_invoices").attr('data-customer-id', e.params.data.id)
+        $("#pos-express-finalize-cash").attr('data-customer-id', e.params.data.id)
     })
 
     $(".show_last_customer_invoices").on('click', function (){
