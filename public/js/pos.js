@@ -3190,4 +3190,13 @@ $(function(){
             }
         })
     })
+
+    $("#pos-express-finalize-cash").on('click', function (){
+        $.get({
+            url: "/payments/pay-contact-due/" + $(this).data('customer-id') + "?type=sell",
+            success: function (response){
+                $(".client_add_cash_modal").html(response).modal('show')
+            }
+        })
+    });
 })

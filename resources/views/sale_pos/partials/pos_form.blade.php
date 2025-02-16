@@ -27,7 +27,7 @@
 				</span>
 
 				<span class="input-group-btn">
-					<button type="button" data-pay_method="cash" class="btn btn-default bg-white btn-flat pos-express-finalize" data-customer-id="{{$walk_in_customer['id'] ?? ''}}"><i class="fa fa-cash-register text-primary fa-lg"></i></button>
+					<button type="button" class="btn btn-default bg-white btn-flat" id="pos-express-finalize-cash" data-customer-id="{{$walk_in_customer['id'] ?? ''}}"><i class="fa fa-cash-register text-primary fa-lg"></i></button>
 				</span>
 
 			</div>
