@@ -77,7 +77,9 @@
     </div>
     <!-- quick product modal -->
     <div class="modal fade quick_add_product_modal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"></div>
-
+    <div class="modal fade invoice_modal" tabindex="-1" role="dialog"
+         aria-labelledby="gridSystemModalLabel">
+    </div>
     @include('sale_pos.partials.configure_search_modal')
 
     @include('sale_pos.partials.recent_transactions_modal')

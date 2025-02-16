@@ -34,8 +34,8 @@
           $total += $sell->final_total;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue"
-                 href="{{route('view-payment', ['payment_id' => $sell->id])}}"># {{$sell->invoice_no}} </a>
+          <td><a class="badge bg-blue view-invoice-modal"
+                 data-href="{{route('view-payment', ['payment_id' => $sell->id])}}"># {{$sell->invoice_no}} </a>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$sell->final_total}}</span></td>
           <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
@@ -84,8 +84,8 @@
           $total += $purchase->final_total;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue"
-                 href="{{route('view-payment', ['payment_id' => $purchase->id])}}"># {{$purchase->ref_no}} </a>
+          <td><a class="badge bg-blue view-invoice-modal"
+                 data-href="{{route('view-payment', ['payment_id' => $purchase->id])}}"># {{$purchase->ref_no}} </a>
           </td>
           <td><span>{{$purchase->contact->name}}</span></td>
           <td><span class="display_currency" data-currency_symbol="true">{{$purchase->final_total}}</span>
@@ -365,11 +365,12 @@
       @endphp
       @foreach($collected_bills as $bill)
         @php
+          $transaction = $bill->transaction;
           $bill_collection_total += $bill->amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue"
-                 href="{{route('view-payment', ['payment_id' => $bill->id])}}"># {{$bill->payment_ref_no}} </a>
+          <td><a class="badge bg-blue view-invoice-modal"
+                 data-href="{{route('view-payment', ['payment_id' => $transaction->id])}}"># {{$bill->payment_ref_no}} </a>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$bill->amount}}</span></td>
           <td><span>{{$bill->transaction->invoice_no}}</span></td>
@@ -415,8 +416,8 @@
           $total += $transaction->total_before_tax - $discount_amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue"
-                 href="{{route('view-payment', ['payment_id' => $discount->id])}}"># {{$discount->payment_ref_no}} </a>
+          <td><a class="badge bg-blue view-invoice-modal"
+                 data-href="{{route('view-payment', ['payment_id' => $transaction->id])}}"># {{$discount->payment_ref_no}} </a>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$discount_amount}}</span></td>
           <td><span>{{$transaction->invoice_no}}</span></td>
@@ -451,12 +452,13 @@
       @endphp
       @foreach($collected_bills_without_invoices as $bill)
         @php
+          $transaction = $bill->transaction;
           $bill_collection_total += $bill->amount;
           $total += $bill->amount;
         @endphp
         <tr class="">
           <td><a class="badge bg-blue"
-                 href="{{route('view-payment', ['payment_id' => $bill->id])}}"># {{$bill->payment_ref_no}} </a>
+                 data-href=""># {{$bill->payment_ref_no}} </a>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$bill->amount}}</span></td>
           <td><span>{{Contact::find($bill->payment_for)?->name ?? '-----'}}</span></td>
@@ -496,8 +498,8 @@
           $total_expenses_paid += $expense->amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue"
-                 href="{{route('view-payment', ['payment_id' => $expense->id])}}"># {{$expense->payment_ref_no}} </a>
+          <td><a class="badge bg-blue view-invoice-modal"
+                 data-href="{{route('view-payment', ['payment_id' => $transaction->id])}}"># {{$expense->payment_ref_no}} </a>
           </td>
           <td>
             <span>{{ExpenseCategory::find($transaction->expense_category_id)?->name ?? '-------'}}</span>
@@ -543,8 +545,8 @@
           $total_income += $income->amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue"
-                 href="{{route('view-payment', ['payment_id' => $income->id])}}"># {{$income->payment_ref_no}} </a>
+          <td><a class="badge bg-blue view-invoice-modal"
+                 data-href="{{route('view-payment', ['payment_id' => $transaction->id])}}"># {{$income->payment_ref_no}} </a>
           </td>
           <td>
             <span>{{ExpenseCategory::find($transaction->expense_category_id)?->name ?? '-------'}}</span>
@@ -677,4 +679,17 @@
     </table>
   </div>
 </div>
-{{--@include('cash_register.register_product_details')--}}
+
+
+  <script>
+    $(function(){
+      $("a.view-invoice-modal").on('click', function (){
+         $.get({
+           url: $(this).data('href'),
+           success: function (response){
+              $(".invoice_modal").html(response).modal('show');
+           }
+         })
+      })
+    })
+  </script>

@@ -5,7 +5,7 @@
     //#JCN to redirect in the module
     $view_suspended_sell_url = action([\Modules\PosCustom\Http\Controllers\SellController::class, 'index']).'?suspended=1';
     //#JCN to redirect in the module
-    $pos_redirect_url = action([\Modules\PosCustom\Http\Controllers\SellPosController::class, 'create']); 
+    $pos_redirect_url = action([\Modules\PosCustom\Http\Controllers\SellPosController::class, 'create']);
     $theme_divider_class = 'theme_' . $business_details->theme_color . '_divider';
     $theme_pos_class = 'tw-bg-gradient-to-r tw-from-' . $business_details->theme_color . '-800'
     .' tw-to-'.$business_details->theme_color.'-500';
@@ -32,7 +32,7 @@
     <input type="hidden" id="pos_redirect_url" value="{{ $pos_redirect_url }}">
 
     {{-- <div class="row">
-      
+
         <div class="col-md-6">
             <div class="m-6 mt-5" style="display: flex;">
                 <p><strong>@lang('sale.location'): &nbsp;</strong>
@@ -375,7 +375,7 @@
             @if(!empty($profile_photo))
               <img src="{{$profile_photo->display_url}}" width="25px" height="25px" alt="User Image">
             @endif
-            <p ><strong >&nbsp;</strong> 
+            <p ><strong >&nbsp;</strong>
               <span style="color: #fff;">{{ Auth::User()->first_name }} {{ Auth::User()->last_name }}</span>
             </p>
           </div>
