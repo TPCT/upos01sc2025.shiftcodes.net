@@ -1,50 +1,56 @@
+@php use App\Contact; @endphp
+@php use App\ExpenseCategory; @endphp
 <div class="row">
   <div class="col-md-12">
     <hr>
     <h3>@lang('lang_v1.sales_report')</h3>
     <table class="table">
       <thead>
-        <tr>
-          <th># @lang('lang_v1.reference_no')</th>
-          <th>@lang('lang_v1.total_payment')</th>
-          <th>@lang('sale.total_paid')</th>
-          <th>@lang('sale.total_remaining')</th>
-        </tr>
+      <tr>
+        <th># @lang('lang_v1.reference_no')</th>
+        <th>@lang('lang_v1.total_payment')</th>
+        <th>@lang('sale.total_paid')</th>
+        <th>@lang('sale.total_remaining')</th>
+      </tr>
       </thead>
       <tbody>
+      @php
+        $total = 0;
+        $total_sells_paid = 0;
+      @endphp
+      @foreach($sells as $sell)
         @php
-          $total = 0;
-          $total_paid = 0;
+          if ($sell->types_of_service_id){
+              if ($sell->packing_charge_type == "percent"){
+                  $services[(int)$sell->types_of_service_id]['total'] += $sell->total_before_tax * $sell->packing_charge / 100;
+              }else{
+                  $services[(int)$sell->types_of_service_id]['total'] += $sell->packing_charge;
+              }
+          }
+          $amount = 0;
+          foreach ($sell->payment_lines as $line)
+              $amount += $line->amount;
+          $total_sells_paid += $amount;
+          $total += $sell->final_total;
         @endphp
-        @foreach($sells as $sell)
-          @php
-            if ($sell->types_of_service_id){
-                if ($sell->packing_charge_type == "percent"){
-                    $services[(int)$sell->types_of_service_id]['total'] += $sell->total_before_tax * $sell->packing_charge / 100;
-                }else{
-                    $services[(int)$sell->types_of_service_id]['total'] += $sell->packing_charge;
-                }
-            }
-            $amount = 0;
-            foreach ($sell->payment_lines as $line)
-                $amount += $line->amount;
-            $total_paid += $amount;
-            $total += $sell->final_total;
-          @endphp
-          <tr class="">
-            <td><a class="badge bg-blue" href="{{route('view-payment', ['payment_id' => $sell->id])}}"># {{$sell->invoice_no}} </a></td>
-            <td><span class="display_currency" data-currency_symbol="true">{{$sell->final_total}}</span></td>
-            <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
-            <td><span class="display_currency" data-currency_symbol="true">{{$sell->final_total - $amount}}</span></td>
-          </tr>
-        @endforeach
+        <tr class="">
+          <td><a class="badge bg-blue"
+                 href="{{route('view-payment', ['payment_id' => $sell->id])}}"># {{$sell->invoice_no}} </a>
+          </td>
+          <td><span class="display_currency" data-currency_symbol="true">{{$sell->final_total}}</span></td>
+          <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
+          <td><span class="display_currency"
+                    data-currency_symbol="true">{{$sell->final_total - $amount}}</span></td>
+        </tr>
+      @endforeach
       </tbody>
       <tfoot>
       <tr>
         <td>@lang('lang_v1.total_payment')</td>
-        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span> </td>
-        <td><span class="display_currency" data-currency_symbol="true">{{$total_paid}}</span> </td>
-        <td><span class="display_currency" data-currency_symbol="true">{{$total - $total_paid}}</span> </td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span></td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total_sells_paid}}</span></td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total - $total_sells_paid}}</span>
+        </td>
       </tr>
       </tfoot>
     </table>
@@ -56,43 +62,48 @@
     <h3>@lang('lang_v1.purchases_report')</h3>
     <table class="table">
       <thead>
-        <tr>
-          <th># @lang('lang_v1.reference_no')</th>
-          <th>@lang('purchase.supplier')</th>
-          <th>@lang('lang_v1.total_payment')</th>
-          <th>@lang('sale.total_paid')</th>
-          <th>@lang('sale.total_remaining')</th>
-        </tr>
+      <tr>
+        <th># @lang('lang_v1.reference_no')</th>
+        <th>@lang('purchase.supplier')</th>
+        <th>@lang('lang_v1.total_payment')</th>
+        <th>@lang('sale.total_paid')</th>
+        <th>@lang('sale.total_remaining')</th>
+      </tr>
       </thead>
       <tbody>
+      @php
+        $total = 0;
+        $total_purchases_paid = 0;
+      @endphp
+      @foreach($purchases as $purchase)
         @php
-          $total = 0;
-          $total_paid = 0;
+          $amount = 0;
+          foreach ($purchase->payment_lines as $line)
+              $amount += $line->amount;
+          $total_purchases_paid += $amount;
+          $total += $purchase->final_total;
         @endphp
-        @foreach($purchases as $purchase)
-          @php
-            $amount = 0;
-            foreach ($purchase->payment_lines as $line)
-                $amount += $line->amount;
-            $total_paid += $amount;
-            $total += $purchase->final_total;
-          @endphp
-          <tr class="">
-            <td><a class="badge bg-blue" href="{{route('view-payment', ['payment_id' => $purchase->id])}}"># {{$purchase->ref_no}} </a></td>
-            <td><span>{{$purchase->contact->name}}</span></td>
-            <td><span class="display_currency" data-currency_symbol="true">{{$purchase->final_total}}</span></td>
-            <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
-            <td><span class="display_currency" data-currency_symbol="true">{{$purchase->final_total - $amount}}</span></td>
-          </tr>
-        @endforeach
+        <tr class="">
+          <td><a class="badge bg-blue"
+                 href="{{route('view-payment', ['payment_id' => $purchase->id])}}"># {{$purchase->ref_no}} </a>
+          </td>
+          <td><span>{{$purchase->contact->name}}</span></td>
+          <td><span class="display_currency" data-currency_symbol="true">{{$purchase->final_total}}</span>
+          </td>
+          <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
+          <td><span class="display_currency"
+                    data-currency_symbol="true">{{$purchase->final_total - $amount}}</span></td>
+        </tr>
+      @endforeach
       </tbody>
       <tfoot>
-        <tr>
-          <td>@lang('lang_v1.total_payment')</td>
-          <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span> </td>
-          <td><span class="display_currency" data-currency_symbol="true">{{$total_paid}}</span> </td>
-          <td><span class="display_currency" data-currency_symbol="true">{{$total - $total_paid}}</span> </td>
-        </tr>
+      <tr>
+        <td>@lang('lang_v1.total_payment')</td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span></td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total_purchases_paid}}</span></td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total - $total_purchases_paid}}</span>
+        </td>
+      </tr>
       </tfoot>
     </table>
   </div>
@@ -102,29 +113,29 @@
   <div class="col-md-12">
     <h3>@lang('lang_v1.services_report')</h3>
     <table class="table">
-        <thead>
-          <tr>
-            <th>@lang('lang_v1.service_name')</th>
-            <th>@lang('lang_v1.service_charge')</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($services as $service)
-            @php
-                $total += $service['total']
-            @endphp
-            <tr>
-              <td>{{$service['name']}}</td>
-              <td>
-                <span class="display_currency" data-currency_symbol="true">{{$service['total']}}</span>
-              </td>
-            </tr>
-          @endforeach
-        </tbody>
+      <thead>
+      <tr>
+        <th>@lang('lang_v1.service_name')</th>
+        <th>@lang('lang_v1.service_charge')</th>
+      </tr>
+      </thead>
+      <tbody>
+      @foreach($services as $service)
+        @php
+          $total += $service['total']
+        @endphp
+        <tr>
+          <td>{{$service['name']}}</td>
+          <td>
+            <span class="display_currency" data-currency_symbol="true">{{$service['total']}}</span>
+          </td>
+        </tr>
+      @endforeach
+      </tbody>
       <tfoot>
       <tr>
         <td>@lang('lang_v1.total_payment')</td>
-        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span> </td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span></td>
       </tr>
       </tfoot>
     </table>
@@ -144,7 +155,8 @@
           @lang('cash_register.cash_in_hand'):
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->cash_in_hand }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->cash_in_hand }}</span>
         </td>
         <td>--</td>
       </tr>
@@ -153,10 +165,12 @@
           @lang('cash_register.cash_payment'):
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cash }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_cash }}</span>
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cash_expense }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_cash_expense }}</span>
         </td>
       </tr>
       <tr>
@@ -164,10 +178,12 @@
           @lang('cash_register.checque_payment'):
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cheque }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_cheque }}</span>
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cheque_expense }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_cheque_expense }}</span>
         </td>
       </tr>
       <tr>
@@ -175,10 +191,12 @@
           @lang('cash_register.card_payment'):
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_card }}</span>
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card_expense }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_card_expense }}</span>
         </td>
       </tr>
       <tr>
@@ -186,10 +204,12 @@
           @lang('cash_register.bank_transfer'):
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_bank_transfer }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_bank_transfer }}</span>
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_bank_transfer_expense }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_bank_transfer_expense }}</span>
         </td>
       </tr>
       <tr>
@@ -197,10 +217,12 @@
           @lang('lang_v1.advance_payment'):
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_advance }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_advance }}</span>
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_advance_expense }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_advance_expense }}</span>
         </td>
       </tr>
       @if(array_key_exists('custom_pay_1', $payment_types))
@@ -209,10 +231,12 @@
             {{$payment_types['custom_pay_1']}}:
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_1 }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_1 }}</span>
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_1_expense }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_1_expense }}</span>
           </td>
         </tr>
       @endif
@@ -222,10 +246,12 @@
             {{$payment_types['custom_pay_2']}}:
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_2 }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_2 }}</span>
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_2_expense }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_2_expense }}</span>
           </td>
         </tr>
       @endif
@@ -235,10 +261,12 @@
             {{$payment_types['custom_pay_3']}}:
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_3 }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_3 }}</span>
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_3_expense }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_3_expense }}</span>
           </td>
         </tr>
       @endif
@@ -248,10 +276,12 @@
             {{$payment_types['custom_pay_4']}}:
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_4 }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_4 }}</span>
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_4_expense }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_4_expense }}</span>
           </td>
         </tr>
       @endif
@@ -261,10 +291,12 @@
             {{$payment_types['custom_pay_5']}}:
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_5 }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_5 }}</span>
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_5_expense }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_5_expense }}</span>
           </td>
         </tr>
       @endif
@@ -274,10 +306,12 @@
             {{$payment_types['custom_pay_6']}}:
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_6 }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_6 }}</span>
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_6_expense }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_6_expense }}</span>
           </td>
         </tr>
       @endif
@@ -287,10 +321,12 @@
             {{$payment_types['custom_pay_7']}}:
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_7 }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_7 }}</span>
           </td>
           <td>
-            <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_7_expense }}</span>
+                        <span class="display_currency"
+                              data-currency_symbol="true">{{ $register_details->total_custom_pay_7_expense }}</span>
           </td>
         </tr>
       @endif
@@ -299,10 +335,12 @@
           @lang('cash_register.other_payments'):
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_other }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_other }}</span>
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_other_expense }}</span>
+                    <span class="display_currency"
+                          data-currency_symbol="true">{{ $register_details->total_other_expense }}</span>
         </td>
       </tr>
     </table>
@@ -314,33 +352,35 @@
     <h3>@lang('lang_v1.bill_collection_details')</h3>
     <table class="table">
       <thead>
-        <tr>
-          <th># @lang('lang_v1.reference_no')</th>
-          <th>@lang('lang_v1.total_payment')</th>
-          <th>@lang('sale.invoice_no')</th>
-          <th>@lang('lang_v1.payment_method')</th>
-        </tr>
+      <tr>
+        <th># @lang('lang_v1.reference_no')</th>
+        <th>@lang('lang_v1.total_payment')</th>
+        <th>@lang('sale.invoice_no')</th>
+        <th>@lang('lang_v1.payment_method')</th>
+      </tr>
       </thead>
       <tbody>
+      @php
+        $bill_collection_total = 0;
+      @endphp
+      @foreach($collected_bills as $bill)
         @php
-          $total = 0;
+          $bill_collection_total += $bill->amount;
         @endphp
-        @foreach($collected_bills as $bill)
-          @php
-            $total += $bill->amount;
-          @endphp
-          <tr class="">
-            <td><a class="badge bg-blue" href="{{route('view-payment', ['payment_id' => $bill->id])}}"># {{$bill->payment_ref_no}} </a></td>
-            <td><span class="display_currency" data-currency_symbol="true">{{$bill->amount}}</span></td>
-            <td><span>{{$bill->transaction->invoice_no}}</span></td>
-            <td><span>{{__("lang_v1." . $bill->method)}}</span></td>
-          </tr>
-        @endforeach
+        <tr class="">
+          <td><a class="badge bg-blue"
+                 href="{{route('view-payment', ['payment_id' => $bill->id])}}"># {{$bill->payment_ref_no}} </a>
+          </td>
+          <td><span class="display_currency" data-currency_symbol="true">{{$bill->amount}}</span></td>
+          <td><span>{{$bill->transaction->invoice_no}}</span></td>
+          <td><span>{{__("lang_v1." . $bill->method)}}</span></td>
+        </tr>
+      @endforeach
       </tbody>
       <tfoot>
       <tr>
         <td>@lang('lang_v1.total_payment')</td>
-        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span> </td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$bill_collection_total}}</span></td>
       </tr>
       </tfoot>
     </table>
@@ -375,7 +415,9 @@
           $total += $transaction->total_before_tax - $discount_amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue" href="{{route('view-payment', ['payment_id' => $discount->id])}}"># {{$discount->payment_ref_no}} </a></td>
+          <td><a class="badge bg-blue"
+                 href="{{route('view-payment', ['payment_id' => $discount->id])}}"># {{$discount->payment_ref_no}} </a>
+          </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$discount_amount}}</span></td>
           <td><span>{{$transaction->invoice_no}}</span></td>
           <td><span>{{$transaction->contact->name}}</span></td>
@@ -385,7 +427,7 @@
       <tfoot>
       <tr>
         <td>@lang('lang_v1.total_payment')</td>
-        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span> </td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span></td>
       </tr>
       </tfoot>
     </table>
@@ -409,19 +451,22 @@
       @endphp
       @foreach($collected_bills_without_invoices as $bill)
         @php
+          $bill_collection_total += $bill->amount;
           $total += $bill->amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue" href="{{route('view-payment', ['payment_id' => $bill->id])}}"># {{$bill->payment_ref_no}} </a></td>
+          <td><a class="badge bg-blue"
+                 href="{{route('view-payment', ['payment_id' => $bill->id])}}"># {{$bill->payment_ref_no}} </a>
+          </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$bill->amount}}</span></td>
-          <td><span>{{\App\Contact::find($bill->payment_for)?->name ?? '-----'}}</span></td>
+          <td><span>{{Contact::find($bill->payment_for)?->name ?? '-----'}}</span></td>
         </tr>
       @endforeach
       </tbody>
       <tfoot>
       <tr>
         <td>@lang('lang_v1.total_payment')</td>
-        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span> </td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span></td>
       </tr>
       </tfoot>
     </table>
@@ -443,26 +488,32 @@
       </thead>
       <tbody>
       @php
-        $total = 0;
+        $total_expenses_paid = 0;
       @endphp
       @foreach($expenses as $expense)
         @php
           $transaction = $expense->transaction;
-          $total += $expense->amount;
+          $total_expenses_paid += $expense->amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue" href="{{route('view-payment', ['payment_id' => $expense->id])}}"># {{$expense->payment_ref_no}} </a></td>
-          <td><span>{{\App\ExpenseCategory::find($transaction->expense_category_id)?->name ?? '-------'}}</span></td>
+          <td><a class="badge bg-blue"
+                 href="{{route('view-payment', ['payment_id' => $expense->id])}}"># {{$expense->payment_ref_no}} </a>
+          </td>
+          <td>
+            <span>{{ExpenseCategory::find($transaction->expense_category_id)?->name ?? '-------'}}</span>
+          </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$expense->amount}}</span></td>
           <td><span>@lang('lang_v1.' . $transaction->status)</span></td>
-          <td><span>{{$transaction->transaction_for?->first_name . " " . $transaction->transaction_for?->last_name}}</span></td>
+          <td>
+            <span>{{$transaction->transaction_for?->first_name . " " . $transaction->transaction_for?->last_name}}</span>
+          </td>
         </tr>
       @endforeach
       </tbody>
       <tfoot>
       <tr>
         <td>@lang('lang_v1.total_payment')</td>
-        <td><span class="display_currency" data-currency_symbol="true">{{$total}}</span> </td>
+        <td><span class="display_currency" data-currency_symbol="true">{{$total_expenses_paid}}</span></td>
       </tr>
       </tfoot>
     </table>
@@ -484,26 +535,32 @@
       </thead>
       <tbody>
       @php
-        $total = 0;
+        $total_income = 0;
       @endphp
       @foreach($incomes as $income)
         @php
           $transaction = $income->transaction;
-          $total += $income->amount;
+          $total_income += $income->amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue" href="{{route('view-payment', ['payment_id' => $income->id])}}"># {{$income->payment_ref_no}} </a></td>
-          <td><span>{{\App\ExpenseCategory::find($transaction->expense_category_id)?->name ?? '-------'}}</span></td>
+          <td><a class="badge bg-blue"
+                 href="{{route('view-payment', ['payment_id' => $income->id])}}"># {{$income->payment_ref_no}} </a>
+          </td>
+          <td>
+            <span>{{ExpenseCategory::find($transaction->expense_category_id)?->name ?? '-------'}}</span>
+          </td>
           <td><span class="display_currency" data-currency_symbol="true">{{-1*$income->amount}}</span></td>
           <td><span>@lang('lang_v1.' . $transaction->status)</span></td>
-          <td><span>{{$transaction->transaction_for?->first_name . " " . $transaction->transaction_for?->last_name}}</span></td>
+          <td>
+            <span>{{$transaction->transaction_for?->first_name . " " . $transaction->transaction_for?->last_name}}</span>
+          </td>
         </tr>
       @endforeach
       </tbody>
       <tfoot>
       <tr>
         <td>@lang('lang_v1.total_payment')</td>
-        <td><span class="display_currency" data-currency_symbol="true">{{-1*$total}}</span> </td>
+        <td><span class="display_currency" data-currency_symbol="true">{{-1*$total_income}}</span></td>
       </tr>
       </tfoot>
     </table>
@@ -511,82 +568,112 @@
 </div>
 <hr>
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-12 col-md-6">
+    <h3>@lang('lang_v1.inside')</h3>
+    @php
+      $total_cash_register_income = $details['drawer_cash'] + $details['purchase_return'] + $total_sells_paid +  $bill_collection_total + -1*$total_income;
+    @endphp
     <table class="table table-condensed">
+      <tbody>
       <tr>
         <td>
-          @lang('cash_register.total_sales'):
+          @lang('lang_v1.drawer_cash'):
         </td>
         <td>
-          <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_sale }}</span>
-        </td>
-      </tr>
-      <tr class="danger">
-        <th>
-          @lang('cash_register.total_refund')
-        </th>
-        <td>
-          <b><span class="display_currency" data-currency_symbol="true">{{ $register_details->total_refund }}</span></b><br>
-          <small>
-            @if($register_details->total_cash_refund != 0)
-              Cash: <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cash_refund }}</span><br>
-            @endif
-            @if($register_details->total_cheque_refund != 0)
-              Cheque: <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cheque_refund }}</span><br>
-            @endif
-            @if($register_details->total_card_refund != 0)
-              Card: <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card_refund }}</span><br>
-            @endif
-            @if($register_details->total_bank_transfer_refund != 0)
-              Bank Transfer: <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_bank_transfer_refund }}</span><br>
-            @endif
-            @if(array_key_exists('custom_pay_1', $payment_types) && $register_details->total_custom_pay_1_refund != 0)
-              {{$payment_types['custom_pay_1']}}: <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_1_refund }}</span>
-            @endif
-            @if(array_key_exists('custom_pay_2', $payment_types) && $register_details->total_custom_pay_2_refund != 0)
-              {{$payment_types['custom_pay_2']}}: <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_2_refund }}</span>
-            @endif
-            @if(array_key_exists('custom_pay_3', $payment_types) && $register_details->total_custom_pay_3_refund != 0)
-              {{$payment_types['custom_pay_3']}}: <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_3_refund }}</span>
-            @endif
-            @if($register_details->total_other_refund != 0)
-              Other: <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_other_refund }}</span>
-            @endif
-          </small>
+          <span class="display_currency" data-currency_symbol="true">{{ $details['drawer_cash'] }}</span>
         </td>
       </tr>
       <tr class="success">
-        <th>
+        <td>
+          @lang('lang_v1.purchases_refunds')
+        </td>
+        <td>
+          <span class="display_currency" data-currency_symbol="true">{{ $details['purchase_return'] }}</span>
+        </td>
+      </tr>
+      <tr class="success">
+        <td>
+          @lang('lang_v1.sells')
+        </td>
+        <td>
+          <span class="display_currency" data-currency_symbol="true">{{ $total_sells_paid }}</span>
+        </td>
+      </tr>
+      <tr class="success">
+        <td>
+          @lang('lang_v1.bill_collection')
+        </td>
+        <td>
+          <span class="display_currency" data-currency_symbol="true">{{ $bill_collection_total }}</span>
+        </td>
+      </tr>
+      <tr class="success">
+        <td>
+          @lang('lang_v1.income')
+        </td>
+        <td>
+          <span class="display_currency" data-currency_symbol="true">{{ -1*$total_income }}</span>
+        </td>
+      </tr>
+      <tr class="success">
+        <td>
           @lang('lang_v1.total_payment')
-        </th>
+        </td>
         <td>
-          <b><span class="display_currency" data-currency_symbol="true">{{ $register_details->cash_in_hand + $register_details->total_cash - $register_details->total_cash_refund }}</span></b>
+          <span class="display_currency" data-currency_symbol="true">{{ $total_cash_register_income }}</span>
         </td>
       </tr>
-      <tr class="success">
-        <th>
-          @lang('lang_v1.credit_sales'):
-        </th>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-12 col-md-6">
+    <h3>@lang('lang_v1.outside')</h3>
+    @php
+      $total_cash_register_outcome = $total_purchases_paid + $details['sell_return'] + $total_expenses_paid + $details['supplier_payments'];
+    @endphp
+    <table class="table table-condensed">
+      <tbody>
+      <tr class="danger">
         <td>
-          <b><span class="display_currency" data-currency_symbol="true">{{ $details['transaction_details']->total_sales - $register_details->total_sale }}</span></b>
+          @lang('lang_v1.total_purchases_payment')
         </td>
-      </tr>
-      <tr class="success">
-        <th>
-          @lang('cash_register.total_sales'):
-        </th>
         <td>
-          <b><span class="display_currency" data-currency_symbol="true">{{ $details['transaction_details']->total_sales }}</span></b>
+          <span class="display_currency" data-currency_symbol="true">{{ $total_purchases_paid }}</span>
         </td>
       </tr>
       <tr class="danger">
-        <th>
-          @lang('report.total_expense'):
-        </th>
         <td>
-          <b><span class="display_currency" data-currency_symbol="true">{{ $register_details->total_expense }}</span></b>
+          @lang('lang_v1.total_sell_return')
+        </td>
+        <td>
+          <span class="display_currency" data-currency_symbol="true">{{ $details['sell_return'] }}</span>
         </td>
       </tr>
+      <tr class="danger">
+        <td>
+          @lang('lang_v1.total_expenses')
+        </td>
+        <td>
+          <span class="display_currency" data-currency_symbol="true">{{ $total_expenses_paid }}</span>
+        </td>
+      </tr>
+      <tr class="danger">
+        <td>
+          @lang('lang_v1.supplier_payments')
+        </td>
+        <td>
+          <span class="display_currency" data-currency_symbol="true">{{ $details['supplier_payments'] }}</span>
+        </td>
+      </tr>
+      <tr class="danger">
+        <td>
+          @lang('lang_v1.total_payment')
+        </td>
+        <td>
+          <span class="display_currency" data-currency_symbol="true">{{ $total_cash_register_outcome }}</span>
+        </td>
+      </tr>
+      </tbody>
     </table>
   </div>
 </div>

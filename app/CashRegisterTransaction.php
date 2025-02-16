@@ -12,4 +12,8 @@ class CashRegisterTransaction extends Model
      * @var array
      */
     protected $guarded = ['id'];
+
+    public function cash_register(){
+        return $this->belongsTo(CashRegister::class, 'cash_register_id');
+    }
 }
