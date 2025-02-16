@@ -29,32 +29,32 @@
                         <div class="tw-shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] tw-rounded-2xl tw-bg-white tw-mb-2 md:tw-mb-8 tw-p-2">
 
                             {{-- <div class="box box-solid mb-12 @if (!isMobile()) mb-40 @endif"> --}}
-                                <div class="box-body pb-0">
-                                    {!! Form::hidden('location_id', $default_location->id ?? null, [
-                                        'id' => 'location_id',
-                                        'data-receipt_printer_type' => !empty($default_location->receipt_printer_type)
-                                            ? $default_location->receipt_printer_type
-                                            : 'browser',
-                                        'data-default_payment_accounts' => $default_location->default_payment_accounts ?? '',
-                                    ]) !!}
-                                    <!-- sub_type -->
-                                    {!! Form::hidden('sub_type', isset($sub_type) ? $sub_type : null) !!}
-                                    <input type="hidden" id="item_addition_method"
-                                        value="{{ $business_details->item_addition_method }}">
-                                    @include('sale_pos.partials.pos_form')
+                            <div class="box-body pb-0">
+                                {!! Form::hidden('location_id', $default_location->id ?? null, [
+                                    'id' => 'location_id',
+                                    'data-receipt_printer_type' => !empty($default_location->receipt_printer_type)
+                                        ? $default_location->receipt_printer_type
+                                        : 'browser',
+                                    'data-default_payment_accounts' => $default_location->default_payment_accounts ?? '',
+                                ]) !!}
+                                <!-- sub_type -->
+                                {!! Form::hidden('sub_type', isset($sub_type) ? $sub_type : null) !!}
+                                <input type="hidden" id="item_addition_method"
+                                       value="{{ $business_details->item_addition_method }}">
+                                @include('sale_pos.partials.pos_form')
 
-                                    @include('sale_pos.partials.pos_form_totals')
+                                @include('sale_pos.partials.pos_form_totals')
 
-                                    @include('sale_pos.partials.payment_modal')
+                                @include('sale_pos.partials.payment_modal')
 
-                                    @if (empty($pos_settings['disable_suspend']))
-                                        @include('sale_pos.partials.suspend_note_modal')
-                                    @endif
+                                @if (empty($pos_settings['disable_suspend']))
+                                    @include('sale_pos.partials.suspend_note_modal')
+                                @endif
 
-                                    @if (empty($pos_settings['disable_recurring_invoice']))
-                                        @include('sale_pos.partials.recurring_invoice_modal')
-                                    @endif
-                                </div>
+                                @if (empty($pos_settings['disable_recurring_invoice']))
+                                    @include('sale_pos.partials.recurring_invoice_modal')
+                                @endif
+                            </div>
                             {{-- </div> --}}
                         </div>
                     </div>

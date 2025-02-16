@@ -135,10 +135,10 @@
     @endif
     
     <!-- /.content -->
-    <div class="modal fade register_details_modal" tabindex="-1" role="dialog" 
+    <div class="modal fade register_details_modal" tabindex="-1" role="dialog"
     	aria-labelledby="gridSystemModalLabel">
     </div>
-    <div class="modal fade close_register_modal" tabindex="-1" role="dialog" 
+    <div class="modal fade close_register_modal" tabindex="-1" role="dialog"
     	aria-labelledby="gridSystemModalLabel">
     </div>
     <!-- quick product modal -->
