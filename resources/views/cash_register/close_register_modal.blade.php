@@ -18,20 +18,18 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         {!! Form::label('closing_amount', __( 'cash_register.total_cash' ) . ':*') !!}
-                        {!! Form::text('closing_amount', @num_format($register_details->cash_in_hand + $register_details->total_cash - $register_details->total_cash_refund - $register_details->total_cash_expense), ['class' => 'form-control input_number', 'required', 'placeholder' => __( 'cash_register.total_cash' ) ]); !!}
+                        {!! Form::text('closing_amount', '', ['class' => 'form-control input_number', 'required', 'placeholder' => __( 'cash_register.total_cash' ) ]); !!}
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        {!! Form::label('total_card_slips', __( 'cash_register.total_card_slips' ) . ':*') !!} @show
-                        _tooltip(__('tooltip.total_card_slips'))
+                        {!! Form::label('total_card_slips', __( 'cash_register.total_card_slips' ) . ':*') !!}
                         {!! Form::number('total_card_slips', $register_details->total_card_slips, ['class' => 'form-control', 'required', 'placeholder' => __( 'cash_register.total_card_slips' ), 'min' => 0 ]); !!}
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        {!! Form::label('total_cheques', __( 'cash_register.total_cheques' ) . ':*') !!} @show
-                        _tooltip(__('tooltip.total_cheques'))
+                        {!! Form::label('total_cheques', __( 'cash_register.total_cheques' ) . ':*') !!}
                         {!! Form::number('total_cheques', $register_details->total_cheques, ['class' => 'form-control', 'required', 'placeholder' => __( 'cash_register.total_cheques' ), 'min' => 0 ]); !!}
                     </div>
                 </div>

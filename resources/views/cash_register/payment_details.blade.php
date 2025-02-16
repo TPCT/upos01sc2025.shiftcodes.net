@@ -680,6 +680,9 @@
   </div>
 </div>
 
+<div class="d-flex">
+  <h3 class="text-primary text-center">@lang('lang_v1.total'): <span class="display_currency" data-currency_symbol="true">{{$total_cash_register_income - $total_cash_register_outcome }}</span> </h3>
+</div>
 
   <script>
     $(function(){
