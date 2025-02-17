@@ -410,14 +410,11 @@ $(document).ready(function() {
             { data: 'name', title: translations.contact_name, name: 'name' },
             { data: 'due', title: translations.total_sale_due, name: "due", searchable: false, orderable: false },
             { data: 'return_due', title: translations.return_due, searchable: false, orderable: false },
-            { data: 'customer_group', title: translations.customer_group, name: 'cg.name' },
-            { data: 'address', title: translations.address, name: 'address', orderable: false },
-            { data: 'mobile', title: translations.mobile, name: 'mobile' },
             { data: 'email', title: translations.email, name: 'email' },
             { data: 'tax_number', title: translations.tax_no, name: 'tax_number' },
             { data: 'credit_limit', title: translations.credit_limit, name: 'credit_limit' },
-            { data: 'pay_term', title: translations.pay_term, name: 'pay_term', searchable: false, orderable: false },
-            { data: 'opening_balance', title: translations.opening_balance, name: 'opening_balance', searchable: false },
+            { data: 'pay_term', title: translations.payment_term, name: 'pay_term', searchable: false, orderable: false },
+            // { data: 'opening_balance', title: translations.opening_balance, name: 'opening_balance', searchable: false, visible: false},
             { data: 'balance', title: translations.balance, name: 'balance', searchable: false },
             { data: 'created_at', title: translations.created_at, name: 'contacts.created_at' }
         ];
@@ -427,6 +424,9 @@ $(document).ready(function() {
         }
 
         Array.prototype.push.apply(columns, [
+            { data: 'customer_group', title: translations.customer_group, name: 'cg.name' },
+            { data: 'address', title: translations.address, name: 'address', orderable: false },
+            { data: 'mobile', title: translations.mobile, name: 'mobile' },
             { data: 'custom_field1', title: translations.custom_field_1, name: 'custom_field1' },
             { data: 'custom_field2', title: translations.custom_field_2, name: 'custom_field2' },
             { data: 'custom_field3', title: translations.custom_field_3, name: 'custom_field3' },

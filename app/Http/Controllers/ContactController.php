@@ -327,15 +327,15 @@ class ContactController extends Controller
                      ->orHavingRaw('transaction_date IS NULL');
         }
 
-        if (
-            (! $is_admin && auth()->user()->can('customer_with_no_sell_three_month')) ||
-            ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
-            ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
-        ) {
-            $from_transaction_date = \Carbon::now()->subMonths(3)->format('Y-m-d');
-            $query->havingRaw("max_transaction_date < '{$from_transaction_date}'")
-                     ->orHavingRaw('transaction_date IS NULL');
-        }
+//        if (
+//            (! $is_admin && auth()->user()->can('customer_with_no_sell_three_month')) ||
+//            ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
+//            ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
+//        ) {
+//            $from_transaction_date = \Carbon::now()->subMonths(3)->format('Y-m-d');
+//            $query->havingRaw("max_transaction_date < '{$from_transaction_date}'")
+//                     ->orHavingRaw('transaction_date IS NULL');
+//        }
 
         if (
             (! $is_admin && auth()->user()->can('customer_with_no_sell_six_month')) ||
@@ -465,15 +465,15 @@ class ContactController extends Controller
                     return $html;
                 }
             )
-            ->editColumn('opening_balance', function ($row) {
-                $due = $this->contactUtil->getContactDue($row->id, $row->business_id);
-                if ($due < 0)
-                    $due = 0;
-
-                $html = '<span data-orig-value="'.$due.'">'.$this->transactionUtil->num_f($due, true).'</span>';
-
-                return $html;
-            })
+//            ->editColumn('opening_balance', function ($row) {
+//                $due = $this->contactUtil->getContactDue($row->id, $row->business_id);
+//                if ($due < 0)
+//                    $due = 0;
+//
+//                $html = '<span data-orig-value="'.$due.'">'.$this->transactionUtil->num_f($due, true).'</span>';
+//
+//                return $html;
+//            })
             ->editColumn('balance', function ($row) {
                 $due = $this->contactUtil->getContactDue($row->id, $row->business_id);
                 if ($due < 0)
@@ -514,6 +514,7 @@ class ContactController extends Controller
             ->editColumn('created_at', '{{@format_date($created_at)}}')
             ->removeColumn('total_invoice')
             ->removeColumn('opening_balance_paid')
+            ->removeColumn('opening_balance')
             ->removeColumn('invoice_received')
             ->removeColumn('state')
             ->removeColumn('country')
