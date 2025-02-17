@@ -9,6 +9,7 @@ use App\Product;
 use App\ReferenceCount;
 use App\System;
 use App\Transaction;
+use App\TransactionPayment;
 use App\TransactionSellLine;
 use App\Unit;
 use App\User;
@@ -1251,25 +1252,42 @@ class Util
      */
     public function getContactDue($contact_id, $business_id = null)
     {
-        $query = Contact::where('contacts.id', $contact_id)
-            ->join('transactions AS t', 'contacts.id', '=', 't.contact_id')
-            ->whereIn('t.type', ['sell', 'opening_balance', 'purchase'])
-            ->select(
-                DB::raw("SUM(IF(t.status = 'final' AND t.type = 'sell', final_total, 0)) as total_invoice"),
-                DB::raw("SUM(IF(t.type = 'purchase', final_total, 0)) as total_purchase"),
-                DB::raw("SUM(IF(t.status = 'final' AND t.type = 'sell', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as total_paid"),
-                DB::raw("SUM(IF(t.type = 'purchase', (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as purchase_paid"),
-                DB::raw("SUM(IF(t.type = 'opening_balance', final_total, 0)) as opening_balance"),
-                DB::raw("SUM(IF(t.type = 'opening_balance', (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as opening_balance_paid")
-            );
-        if (! empty($business_id)) {
-            $query->where('contacts.business_id', $business_id);
-        }
+        $total_credits = TransactionPayment::where(function ($query) use ($contact_id, $business_id) {
+            $query->where('payment_for', $contact_id);
+            $query->where('business_id', $business_id);
+            $query->where('payment_type', 'credit');
+        })->sum('amount');
 
-        $contact_payments = $query->first();
-        $due = $contact_payments->total_invoice + $contact_payments->total_purchase - $contact_payments->total_paid - $contact_payments->purchase_paid + $contact_payments->opening_balance - $contact_payments->opening_balance_paid;
+        $total_purchases = Transaction::where(function ($query) use ($contact_id, $business_id) {
+            $query->where('type', 'purchase');
+            $query->where('contact_id', $contact_id);
+            $query->where('business_id', $business_id);
+            $query->where('status', 'received');
+        })->sum('final_total');
 
-        return $due;
+        $total_sell_returns = Transaction::where(function ($query) use ($contact_id, $business_id){
+            $query->where('type', 'sell_return');
+            $query->where('contact_id', $contact_id);
+            $query->where('business_id', $business_id);
+            $query->where('status', 'final');
+        })->sum('final_total');
+
+        $total_pending_sells = Transaction::where(function ($query) use ($contact_id, $business_id){
+            $query->where('type', 'sell');
+            $query->where('contact_id', $contact_id);
+            $query->where('business_id', $business_id);
+        })->sum('final_total');
+
+        $total_purchase_returns = Transaction::where(function ($query) use ($contact_id, $business_id){
+            $query->where('type', 'purchase_return');
+            $query->where('contact_id', $contact_id);
+            $query->where('business_id', $business_id);
+            $query->where('status', 'final');
+        })->sum('final_total');
+
+        $total_cash_in = $total_credits + $total_purchases + $total_sell_returns;
+        $total_cash_out = $total_pending_sells + $total_purchase_returns;
+        return $total_cash_in - $total_cash_out;
     }
 
     public function getDays()

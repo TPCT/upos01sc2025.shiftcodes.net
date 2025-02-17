@@ -365,7 +365,12 @@ class ContactController extends Controller
             ->addColumn('address', '{{implode(", ", array_filter([$address_line_1, $address_line_2, $city, $state, $country, $zip_code]))}}')
             ->addColumn(
                 'due',
-                '<span class="contact_due" data-orig-value="{{$total_invoice - $invoice_received - $total_ledger_discount}}" data-highlight=true>@format_currency($total_invoice - $invoice_received - $total_ledger_discount)</span>'
+                function ($row) {
+                    $due = $this->contactUtil->getContactDue($row->id, $row->business_id);
+                    if ($due > 0)
+                        $due = 0;
+                    return $this->transactionUtil->num_f(-1 * $due, true);
+                }
             )
             ->addColumn(
                 'return_due',
@@ -460,12 +465,21 @@ class ContactController extends Controller
                 }
             )
             ->editColumn('opening_balance', function ($row) {
-                $html = '<span data-orig-value="'.$row->opening_balance.'">'.$this->transactionUtil->num_f($row->opening_balance, true).'</span>';
+                $due = $this->contactUtil->getContactDue($row->id, $row->business_id);
+                if ($due < 0)
+                    $due = 0;
+
+                $html = '<span data-orig-value="'.$due.'">'.$this->transactionUtil->num_f($due, true).'</span>';
 
                 return $html;
             })
             ->editColumn('balance', function ($row) {
-                $html = '<span data-orig-value="'.$row->balance.'">'.$this->transactionUtil->num_f($row->balance, true).'</span>';
+                $due = $this->contactUtil->getContactDue($row->id, $row->business_id);
+                if ($due < 0)
+                    $due = 0;
+
+
+                $html = '<span data-orig-value="'.$due.'">'.$this->transactionUtil->num_f($due, true).'</span>';
 
                 return $html;
             })
@@ -1649,7 +1663,7 @@ class ContactController extends Controller
             $business_id = request()->session()->get('user.business_id');
             $due = $this->transactionUtil->getContactDue($contact_id, $business_id);
 
-            $output = $due != 0 ? $this->transactionUtil->num_f($due, true) : '';
+            $output = $this->transactionUtil->num_f($due, true);
 
             return $output;
         }
