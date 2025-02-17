@@ -119,6 +119,8 @@
         @endforeach
     @endif
 @stop
+
+
 @section('javascript')
     <script src="{{ asset('js/pos.js?v=' . $asset_v) }}"></script>
     <script src="{{ asset('js/printer.js?v=' . $asset_v) }}"></script>
@@ -140,4 +142,6 @@
             @endif
         @endforeach
     @endif
+
+
 @endsection

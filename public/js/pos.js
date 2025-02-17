@@ -2237,7 +2237,6 @@ function calculate_discounted_unit_price(row) {
             row_discounted_unit_price = __substract_percent(this_unit_price, row_discount_amount);
         }
     }
-
     return row_discounted_unit_price;
 }
 

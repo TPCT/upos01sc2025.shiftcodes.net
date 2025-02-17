@@ -39,11 +39,11 @@
 					<i class="fa fa-map-marker"></i>
 				</span>
 			{!! Form::select('select_location_id', $business_locations, $default_location->id ?? null, ['class' => 'form-control input-sm',
-			'id' => 'select_location_id', 
+			'id' => 'select_location_id',
 			'required', 'autofocus'], $bl_attributes); !!}
 			<span class="input-group-addon">
 					@show_tooltip(__('tooltip.sale_location'))
-				</span> 
+				</span>
 			</div>
 		</div>
 	</div>
@@ -80,11 +80,11 @@
 									{!! Form::select('price_group', $price_groups, $selected_price_group, ['class' => 'form-control select2', 'id' => 'price_group']); !!}
 									<span class="input-group-addon">
 										@show_tooltip(__('lang_v1.price_group_help_text'))
-									</span> 
+									</span>
 								</div>
 							</div>
 						</div>
-						
+
 					@else
 						@php
 							reset($price_groups);
@@ -108,13 +108,13 @@
 
 								<span class="input-group-addon">
 									@show_tooltip(__('lang_v1.types_of_service_help'))
-								</span> 
+								</span>
 							</div>
 							<small><p class="help-block hide" id="price_group_text">@lang('lang_v1.price_group'): <span></span></p></small>
 						</div>
 					</div>
 				@endif
-				
+
 				@if(in_array('subscription', $enabled_modules))
 					<div class="col-md-4 pull-right col-sm-6">
 						<div class="checkbox">
@@ -132,17 +132,17 @@
 							<span class="input-group-addon">
 								<i class="fa fa-user"></i>
 							</span>
-							<input type="hidden" id="default_customer_id" 
+							<input type="hidden" id="default_customer_id"
 							value="{{ $walk_in_customer['id']}}" >
-							<input type="hidden" id="default_customer_name" 
+							<input type="hidden" id="default_customer_name"
 							value="{{ $walk_in_customer['name']}}" >
 							<input type="hidden" id="default_customer_balance" value="{{ $walk_in_customer['balance'] ?? ''}}" >
 							<input type="hidden" id="default_customer_address" value="{{ $walk_in_customer['shipping_address'] ?? ''}}" >
 							@if(!empty($walk_in_customer['price_calculation_type']) && $walk_in_customer['price_calculation_type'] == 'selling_price_group')
-								<input type="hidden" id="default_selling_price_group" 
+								<input type="hidden" id="default_selling_price_group"
 							value="{{ $walk_in_customer['selling_price_group_id'] ?? ''}}" >
 							@endif
-							{!! Form::select('contact_id', 
+							{!! Form::select('contact_id',
 								[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required']); !!}
 							<span class="input-group-btn">
 								<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
@@ -165,7 +165,7 @@
 						{{$walk_in_customer['supplier_business_name'] ?? ''}},<br>
 						{{$walk_in_customer['name'] ?? ''}},<br>
 						{{$walk_in_customer['shipping_address'] ?? ''}}
-					</div>					
+					</div>
 					</small>
 				</div>
 
@@ -179,10 +179,10 @@
 		              <br/>
 		              {!! Form::number('pay_term_number', $walk_in_customer['pay_term_number'], ['class' => 'form-control width-40 pull-left', 'placeholder' => __('contact.pay_term'), 'required' => $is_pay_term_required]); !!}
 
-		              {!! Form::select('pay_term_type', 
-		              	['months' => __('lang_v1.months'), 
-		              		'days' => __('lang_v1.days')], 
-		              		$walk_in_customer['pay_term_type'], 
+		              {!! Form::select('pay_term_type',
+		              	['months' => __('lang_v1.months'),
+		              		'days' => __('lang_v1.days')],
+		              		$walk_in_customer['pay_term_type'],
 		              	['class' => 'form-control width-60 pull-left','placeholder' => __('messages.please_select'), 'required' => $is_pay_term_required]); !!}
 		            </div>
 		          </div>
@@ -195,7 +195,7 @@
 				<div class="col-sm-3">
 					<div class="form-group">
 					{!! Form::label('commission_agent', __('lang_v1.commission_agent') . ':') !!}
-					{!! Form::select('commission_agent', 
+					{!! Form::select('commission_agent',
 								$commission_agent, null, ['class' => 'form-control select2', 'id' => 'commission_agent', 'required' => $is_commission_agent_required]); !!}
 					</div>
 				</div>
@@ -242,7 +242,7 @@
 						</div>
 					</div>
 					@endcan
-				
+
 				@php
 			        $custom_field_1_label = !empty($custom_labels['sell']['custom_field_1']) ? $custom_labels['sell']['custom_field_1'] : '';
 
@@ -371,7 +371,7 @@
 					<input type="hidden" name="sell_price_tax" id="sell_price_tax" value="{{$business_details->sell_price_tax}}">
 
 					<!-- Keeps count of product rows -->
-					<input type="hidden" id="product_row_count" 
+					<input type="hidden" id="product_row_count"
 						value="0">
 					@php
 						$hide_tax = '';
@@ -383,7 +383,7 @@
 					<table class="table table-condensed table-bordered table-striped table-responsive" id="pos_table">
 						<thead>
 							<tr>
-								<th class="text-center">	
+								<th class="text-center">
 									@lang('sale.product')
 								</th>
 								<th class="text-center">
@@ -423,7 +423,7 @@
 						<tr>
 							<td>
 								<div class="pull-right">
-								<b>@lang('sale.item'):</b> 
+								<b>@lang('sale.item'):</b>
 								<span class="total_quantity">0</span>
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<b>@lang('sale.total'): </b>
@@ -473,7 +473,7 @@
 			        </div>
 			    </div>
 			    <div class="col-md-4 @if($sale_type == 'sales_order') hide @endif"><br>
-			    	<b>@lang( 'sale.discount_amount' ):</b>(-) 
+			    	<b>@lang( 'sale.discount_amount' ):</b>(-)
 					<span class="display_currency" id="total_discount">0</span>
 			    </div>
 			    <div class="clearfix"></div>
@@ -510,16 +510,16 @@
 			                </span>
 			                {!! Form::select('tax_rate_id', $taxes['tax_rates'], $default_sales_tax, ['placeholder' => __('messages.please_select'), 'class' => 'form-control', 'data-default'=> $default_sales_tax], $taxes['attributes']); !!}
 
-							<input type="hidden" name="tax_calculation_amount" id="tax_calculation_amount" 
+							<input type="hidden" name="tax_calculation_amount" id="tax_calculation_amount"
 							value="@if(empty($edit)) {{@num_format($business_details->tax_calculation_amount)}} @else {{@num_format($transaction->tax?->amount)}} @endif" data-default="{{$business_details->tax_calculation_amount}}">
 			            </div>
 			        </div>
 			    </div>
 			    <div class="col-md-4 col-md-offset-4  @if($sale_type == 'sales_order') hide @endif">
-			    	<b>@lang( 'sale.order_tax' ):</b>(+) 
+			    	<b>@lang( 'sale.order_tax' ):</b>(+)
 					<span class="display_currency" id="order_tax">0</span>
-			    </div>				
-				
+			    </div>
+
 			    <div class="col-md-12">
 			    	<div class="form-group">
 						{!! Form::label('sell_note',__('sale.sell_note')) !!}
@@ -581,15 +581,15 @@
 		        $is_shipping_custom_field_2_required = !empty($custom_labels['shipping']['is_custom_field_2_required']) && $custom_labels['shipping']['is_custom_field_2_required'] == 1 ? true : false;
 
 		        $shipping_custom_label_3 = !empty($custom_labels['shipping']['custom_field_3']) ? $custom_labels['shipping']['custom_field_3'] : '';
-		        
+
 		        $is_shipping_custom_field_3_required = !empty($custom_labels['shipping']['is_custom_field_3_required']) && $custom_labels['shipping']['is_custom_field_3_required'] == 1 ? true : false;
 
 		        $shipping_custom_label_4 = !empty($custom_labels['shipping']['custom_field_4']) ? $custom_labels['shipping']['custom_field_4'] : '';
-		        
+
 		        $is_shipping_custom_field_4_required = !empty($custom_labels['shipping']['is_custom_field_4_required']) && $custom_labels['shipping']['is_custom_field_4_required'] == 1 ? true : false;
 
 		        $shipping_custom_label_5 = !empty($custom_labels['shipping']['custom_field_5']) ? $custom_labels['shipping']['custom_field_5'] : '';
-		        
+
 		        $is_shipping_custom_field_5_required = !empty($custom_labels['shipping']['is_custom_field_5_required']) && $custom_labels['shipping']['is_custom_field_5_required'] == 1 ? true : false;
 	        @endphp
 
@@ -730,7 +730,7 @@
 		    	@if(!empty($pos_settings['amount_rounding_method']) && $pos_settings['amount_rounding_method'] > 0)
 		    	<small id="round_off"><br>(@lang('lang_v1.round_off'): <span id="round_off_text">0</span>)</small>
 				<br/>
-				<input type="hidden" name="round_off_amount" 
+				<input type="hidden" name="round_off_amount"
 					id="round_off_amount" value=0>
 				@endif
 		    	<div><b>@lang('sale.total_payable'): </b>
@@ -822,7 +822,7 @@
 			        		{!! Form::hidden("change_return", $change_return['amount'], ['class' => 'form-control change_return input_number', 'required', 'id' => "change_return"]); !!}
 			        		<!-- <span class="lead text-bold total_quantity">0</span> -->
 			        		@if(!empty($change_return['id']))
-			            		<input type="hidden" name="change_return_id" 
+			            		<input type="hidden" name="change_return_id"
 			            		value="{{$change_return['id']}}">
 			            	@endif
 						</div>
@@ -873,7 +873,7 @@
 			@endcomponent
 		@endcan
 	@endif
-	
+
 	<div class="row">
 		{!! Form::hidden('is_save_and_print', 0, ['id' => 'is_save_and_print']); !!}
 		<div class="col-sm-12 text-center tw-mt-4">
@@ -881,11 +881,11 @@
 			<button type="button" id="save-and-print" class="tw-dw-btn tw-dw-btn-success tw-dw-btn-lg tw-text-white">@lang('lang_v1.save_and_print')</button>
 		</div>
 	</div>
-	
+
 	@if(empty($pos_settings['disable_recurring_invoice']))
 		@include('sale_pos.partials.recurring_invoice_modal')
 	@endif
-	
+
 	{!! Form::close() !!}
 </section>
 
@@ -893,10 +893,10 @@
 	@include('contact.create', ['quick_add' => true])
 </div>
 <!-- /.content -->
-<div class="modal fade register_details_modal" tabindex="-1" role="dialog" 
+<div class="modal fade register_details_modal" tabindex="-1" role="dialog"
 	aria-labelledby="gridSystemModalLabel">
 </div>
-<div class="modal fade close_register_modal" tabindex="-1" role="dialog" 
+<div class="modal fade close_register_modal" tabindex="-1" role="dialog"
 	aria-labelledby="gridSystemModalLabel">
 </div>
 
@@ -941,13 +941,13 @@
 		    });
 
 		    $(document).on('change', '#prefer_payment_method', function(e) {
-			    var default_accounts = $('select#select_location_id').length ? 
+			    var default_accounts = $('select#select_location_id').length ?
 			                $('select#select_location_id')
 			                .find(':selected')
 			                .data('default_payment_accounts') : $('#location_id').data('default_payment_accounts');
 			    var payment_type = $(this).val();
 			    if (payment_type) {
-			        var default_account = default_accounts && default_accounts[payment_type]['account'] ? 
+			        var default_account = default_accounts && default_accounts[payment_type]['account'] ?
 			            default_accounts[payment_type]['account'] : '';
 			        var account_dropdown = $('select#prefer_payment_account');
 			        if (account_dropdown.length && default_accounts) {
@@ -976,7 +976,7 @@
 			        });
 			    }
 			}
-			
+
 			setPreferredPaymentMethodDropdown();
 
 			$('#is_export').on('change', function () {

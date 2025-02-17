@@ -50,6 +50,9 @@
 			name="products[{{$row_count}}][product_type]" 
 			value="{{$product->product_type}}">
 
+		<input type="hidden"
+			name="product[{{$row_count}}][pos_unit_price]" value="{{$product->unit_price_before_discount}}"
+		>
 		@php
 			$hide_tax = 'hide';
 	        if(session()->get('business.enable_inline_tax') == 1){
@@ -329,6 +332,18 @@
 	</td>
 
 	<td class="{{$hide_tax}}">
+				<div class="d-flex align-items-between">
+					<div class="input-group">
+						<input type="text" name="products[{{$row_count}}][line_discount_amount]" class="form-control input_number row_discount_amount" value="0.00">
+					</div>
+					<select name="products[{{$row_count}}][line_discount_type]" class="form-control row_discount_type">
+						<option value="fixed">@lang("lang_v1.fixed")</option>
+						<option value="percentage">@lang("lang_v1.percentage")</option>
+					</select>
+				</div>
+	</td>
+
+	<td class="{{$hide_tax}}">
 		<input type="text" name="products[{{$row_count}}][unit_price_inc_tax]" class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}" @if(!$edit_price) readonly @endif @if(!empty($pos_settings['enable_msp'])) data-rule-min-value="{{$unit_price_inc_tax}}" data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($unit_price_inc_tax)])}}" @endif>
 	</td>
 	@if(!empty($common_settings['enable_product_warranty']) && !empty($is_direct_sell))
@@ -336,6 +351,9 @@
 			{!! Form::select("products[$row_count][warranty_id]", $warranties, $warranty_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control']); !!}
 		</td>
 	@endif
+
+
+
 	<td class="text-center">
 		@php
 			$subtotal_type = !empty($pos_settings['is_pos_subtotal_editable']) ? 'text' : 'hidden';

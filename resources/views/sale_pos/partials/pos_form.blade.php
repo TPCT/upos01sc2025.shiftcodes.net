@@ -5,19 +5,19 @@
 				<span class="input-group-addon">
 					<i class="fa fa-user"></i>
 				</span>
-				<input type="hidden" id="default_customer_id" 
+				<input type="hidden" id="default_customer_id"
 				value="{{ $walk_in_customer['id'] ?? ''}}" >
-				<input type="hidden" id="default_customer_name" 
+				<input type="hidden" id="default_customer_name"
 				value="{{ $walk_in_customer['name'] ?? ''}}" >
-				<input type="hidden" id="default_customer_balance" 
+				<input type="hidden" id="default_customer_balance"
 				value="{{ $walk_in_customer['balance'] ?? ''}}" >
-				<input type="hidden" id="default_customer_address" 
+				<input type="hidden" id="default_customer_address"
 				value="{{ $walk_in_customer['shipping_address'] ?? ''}}" >
 				@if(!empty($walk_in_customer['price_calculation_type']) && $walk_in_customer['price_calculation_type'] == 'selling_price_group')
-					<input type="hidden" id="default_selling_price_group" 
+					<input type="hidden" id="default_selling_price_group"
 				value="{{ $walk_in_customer['selling_price_group_id'] ?? ''}}" >
 				@endif
-				{!! Form::select('contact_id', 
+				{!! Form::select('contact_id',
 					[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required']); !!}
 				<span class="input-group-btn">
 					<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""  @if(!auth()->user()->can('customer.create')) disabled @endif><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
@@ -49,10 +49,10 @@
 
 					<!-- Show button for weighing scale modal -->
 					@if(isset($pos_settings['enable_weighing_scale']) && $pos_settings['enable_weighing_scale'] == 1)
-						<button type="button" class="btn btn-default bg-white btn-flat" id="weighing_scale_btn" data-toggle="modal" data-target="#weighing_scale_modal" 
+						<button type="button" class="btn btn-default bg-white btn-flat" id="weighing_scale_btn" data-toggle="modal" data-target="#weighing_scale_modal"
 						title="@lang('lang_v1.weighing_scale')"><i class="fa fa-digital-tachograph text-primary fa-lg"></i></button>
 					@endif
-					
+
 
 					<button type="button" class="btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{action([\App\Http\Controllers\ProductController::class, 'quickAdd'])}}" data-container=".quick_add_product_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 				</span>
@@ -64,21 +64,21 @@
 	@if(!empty($pos_settings['show_invoice_layout']))
 	<div class="col-md-4">
 		<div class="form-group">
-		{!! Form::select('invoice_layout_id', 
+		{!! Form::select('invoice_layout_id',
 					$invoice_layouts, $default_location->invoice_layout_id, ['class' => 'form-control select2', 'placeholder' => __('lang_v1.select_invoice_layout'), 'id' => 'invoice_layout_id']); !!}
 		</div>
 	</div>
 	@endif
 	<input type="hidden" name="pay_term_number" id="pay_term_number" value="{{$walk_in_customer['pay_term_number'] ?? ''}}">
 	<input type="hidden" name="pay_term_type" id="pay_term_type" value="{{$walk_in_customer['pay_term_type'] ?? ''}}">
-	
+
 	@if(!empty($commission_agent))
 		@php
 			$is_commission_agent_required = !empty($pos_settings['is_commission_agent_required']);
 		@endphp
 		<div class="col-md-4">
 			<div class="form-group">
-			{!! Form::select('commission_agent', 
+			{!! Form::select('commission_agent',
 						$commission_agent, null, ['class' => 'form-control select2', 'placeholder' => __('lang_v1.commission_agent'), 'id' => 'commission_agent', 'required' => $is_commission_agent_required]); !!}
 			</div>
 		</div>
@@ -122,7 +122,7 @@
 					{!! Form::select('price_group', $price_groups, $selected_price_group, ['class' => 'form-control select2', 'id' => 'price_group']); !!}
 					<span class="input-group-addon">
 						@show_tooltip(__('lang_v1.price_group_help_text'))
-					</span> 
+					</span>
 				</div>
 			</div>
 		</div>
@@ -149,7 +149,7 @@
 
 					<span class="input-group-addon">
 						@show_tooltip(__('lang_v1.types_of_service_help'))
-					</span> 
+					</span>
 				</div>
 				<small><p class="help-block hide" id="price_group_text">@lang('lang_v1.price_group'): <span></span></p></small>
 			</div>
@@ -166,8 +166,8 @@
 		@endphp
 		<div class="col-md-4 col-sm-6">
 			<div class="form-group">
-				{!! Form::select('invoice_scheme_id', $invoice_schemes, $invoice_scheme_id, 
-					['class' => 'form-control', 'placeholder' => __('lang_v1.select_invoice_scheme'), 
+				{!! Form::select('invoice_scheme_id', $invoice_schemes, $invoice_scheme_id,
+					['class' => 'form-control', 'placeholder' => __('lang_v1.select_invoice_scheme'),
 					'id' => 'invoice_scheme_id']); !!}
 			</div>
 		</div>
@@ -179,7 +179,7 @@
             </label><button type="button" data-toggle="modal" data-target="#recurringInvoiceModal" class="btn btn-link"><i class="fa fa-external-link-square-alt"></i></button>@show_tooltip(__('lang_v1.recurring_invoice_help'))
 		</div>
 	@endif
-	
+
 	<!-- Call restaurant module if defined -->
     @if(in_array('tables' ,$enabled_modules) || in_array('service_staff' ,$enabled_modules))
     	<div class="clearfix"></div>
@@ -200,7 +200,7 @@
 			</div>
 		</div>
     @endif
-    
+
 </div>
 <!-- include module fields -->
 @if(!empty($pos_module_data))
@@ -215,7 +215,7 @@
 		<input type="hidden" name="sell_price_tax" id="sell_price_tax" value="{{$business_details->sell_price_tax}}">
 
 		<!-- Keeps count of product rows -->
-		<input type="hidden" id="product_row_count" 
+		<input type="hidden" id="product_row_count"
 			value="0">
 		@php
 			$hide_tax = '';
@@ -226,7 +226,7 @@
 		<table class="table table-condensed table-bordered table-striped table-responsive" id="pos_table">
 			<thead>
 				<tr>
-					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold @if(!empty($pos_settings['inline_service_staff'])) col-md-3 @else col-md-4 @endif">	
+					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold @if(!empty($pos_settings['inline_service_staff'])) col-md-3 @else col-md-4 @endif">
 						@lang('sale.product')
 					</th>
 					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
@@ -235,11 +235,11 @@
 					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
 						@lang('sale.qty')
 					</th>
+					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
+						@lang('sale.discount')
+					</th>
 					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2 {{$hide_tax}}">
 						@lang('sale.price_inc_tax')
-					</th>
-					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
-						@lang('sale.subtotal')
 					</th>
 					<th class="text-center"><i class="fas fa-times tw-text-base" aria-hidden="true"></i></th>
 				</tr>
