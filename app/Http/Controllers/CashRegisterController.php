@@ -221,11 +221,13 @@ class CashRegisterController extends Controller
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->get();
 
-        $collected_bills_without_invoices = TransactionPayment::where(function($query){
+        $collected_bills_without_invoices = TransactionPayment::where(function($query) use ($business_id, $open_time, $close_time) {
             $query->whereNull('transaction_id');
             $query->whereNotNull('payment_for');
+            $query->where('business_id', $business_id);
+            $query->whereBetween('paid_on', [$open_time, $close_time]);
         })
-            ->get();
+        ->get();
 
         $services = TypesOfService::all()->pluck('name', 'id')->map(function ($item) {
             return [
@@ -362,11 +364,12 @@ class CashRegisterController extends Controller
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->get();
 
-        $collected_bills_without_invoices = TransactionPayment::where(function($query){
+        $collected_bills_without_invoices = TransactionPayment::where(function($query) use ($business_id, $open_time, $close_time) {
+            $query->where('business_id', $business_id);
+            $query->whereBetween('paid_on', [$open_time, $close_time]);
             $query->whereNull('transaction_id');
             $query->whereNotNull('payment_for');
-        })
-        ->get();
+        })->get();
 
         $services = TypesOfService::all()->pluck('name', 'id')->map(function ($item) {
             return [
