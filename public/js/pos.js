@@ -2068,7 +2068,6 @@ function reset_pos_form(){
 
     //reset contact due
     $('.contact_due_text').find('span').text('');
-    $('.contact_due_text').addClass('hide');
 
     $(document).trigger('sell_form_reset');
 }
@@ -2929,12 +2928,10 @@ function get_contact_due(id) {
         url: /get-contact-due/ + id,
         dataType: 'text',
         success: function(result) {
-            if (result != '') {
-                $('.contact_due_text').find('span').text(result);
-                $('.contact_due_text').removeClass('hide');
+            if (parseFloat(result) > 0) {
+                $('.contact_due_text').find('span').text(result).removeClass('text-danger').addClass('text-success');
             } else {
-                $('.contact_due_text').find('span').text('');
-                $('.contact_due_text').addClass('hide');
+                $('.contact_due_text').find('span').text('').removeClass('text-success').addClass('text-danger');
             }
         },
     });

@@ -40,7 +40,7 @@
 					<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""  @if(!auth()->user()->can('customer.create')) disabled @endif><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 				</span>
 			</div>
-			<small class="text-danger contact_due_text"><strong>@lang('account.customer_due'):</strong> <span> {{$due}} </span></small>
+			<small class="@if ($due >= 0 ) text-success @else text-danger @endif contact_due_text"><strong>@lang('account.customer_due'):</strong> <span> {{$due}} </span></small>
 		</div>
 	</div>
 	<div class="col-md-6">  {{--#JCN modify from 8 to 6--}}
