@@ -56,7 +56,7 @@
 	@endif
 	<tr>
 		<td><strong>@lang('lang_v1.balance_due')</strong></td>
-		<td class="align-right">@format_currency($ledger_details['balance_due'] - $ledger_details['ledger_discount'] - ($contact->balance))</td>
+		<td class="align-right">@format_currency(-1 * ($contact->balance + $ledger_details['ledger_discount'] - $ledger_details['total_reverse_payment'] - $ledger_details['total_paid']))</td>
 	</tr>
 	</table>
 </div>

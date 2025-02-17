@@ -1250,7 +1250,7 @@ class Util
      * @param  int  $contact_id
      * @return mixed
      */
-    public function getContactDue($contact_id, $business_id = null)
+    public function getContactDue($contact_id, $business_id = null, $except=[])
     {
         $total_credits = TransactionPayment::where(function ($query) use ($contact_id, $business_id) {
             $query->where('payment_for', $contact_id);
@@ -1272,10 +1272,11 @@ class Util
             $query->where('status', 'final');
         })->sum('final_total');
 
-        $total_pending_sells = Transaction::where(function ($query) use ($contact_id, $business_id){
+        $total_pending_sells = Transaction::where(function ($query) use ($contact_id, $business_id, $except){
             $query->where('type', 'sell');
             $query->where('contact_id', $contact_id);
             $query->where('business_id', $business_id);
+            $query->whereNotIn('id', $except);
         })->sum('final_total');
 
         $total_purchase_returns = Transaction::where(function ($query) use ($contact_id, $business_id){

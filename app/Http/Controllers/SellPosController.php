@@ -387,6 +387,7 @@ class SellPosController extends Controller
                 } else {
                     $input['transaction_date'] = $this->productUtil->uf_date($request->input('transaction_date'), true);
                 }
+
                 if ($is_direct_sale) {
                     $input['is_direct_sale'] = 1;
                 }
@@ -564,6 +565,10 @@ class SellPosController extends Controller
 
                     //Update payment status
                     $payment_status = $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);
+
+                    if ($is_credit_sale && $payment_status == "paid"){
+                        $this->transactionUtil->createOrUpdatePaymentLines($transaction, $input['payment']);
+                    }
 
                     $transaction->payment_status = $payment_status;
 

@@ -3003,10 +3003,12 @@ class TransactionUtil extends Util
             $final_amount = Transaction::find($transaction_id)->final_total;
         }
 
+        $transaction = Transaction::find($transaction_id);
+        $due = $this->getContactDue($transaction->contact_id, $transaction->business_id, [$transaction->id]);
         $status = 'due';
-        if ($final_amount <= $total_paid) {
-            $status = 'paid';
-        } elseif ($total_paid > 0 && $final_amount > $total_paid) {
+        if ($due + $total_paid >= $final_amount){
+            $status = "paid";
+        }elseif ($total_paid > 0 && $final_amount > $total_paid + $due){
             $status = 'partial';
         }
 
