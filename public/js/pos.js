@@ -811,7 +811,7 @@ $(document).ready(function() {
                 if (!$(this).is(":visible") && $(this).data('rule-min-value')) {
                     var val = __read_number($(this));
                     var error_msg_td = $(this).closest('tr').find('.pos_line_total_text').closest('td');
-                    if (val > $(this).data('rule-min-value')) {
+                    if (val < $(this).data('rule-min-value')) {
                         is_msp_valid = false;
                         error_msg_td.append( '<label class="error">' + $(this).data('msg-min-value') + '</label>');
                     } else {
@@ -1076,7 +1076,7 @@ $(document).ready(function() {
             if (!$(this).is(":visible") && $(this).data('rule-min-value')) {
                 var val = __read_number($(this));
                 var error_msg_td = $(this).closest('tr').find('.pos_line_total_text').closest('td');
-                if (val > $(this).data('rule-min-value')) {
+                if (val < $(this).data('rule-min-value')) {
                     is_msp_valid = false;
                     error_msg_td.append( '<label class="error">' + $(this).data('msg-min-value') + '</label>');
                 } else {
