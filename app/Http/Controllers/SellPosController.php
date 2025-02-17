@@ -378,7 +378,8 @@ class SellPosController extends Controller
 
                 $user_id = $request->session()->get('user.id');
 
-                $discount = ['discount_type' => $input['discount_type'],
+                $discount = [
+                    'discount_type' => $input['discount_type'],
                     'discount_amount' => $input['discount_amount'],
                 ];
                 $invoice_total = $this->productUtil->calculateInvoiceTotal($input['products'], $input['tax_rate_id'], $discount);
@@ -1708,9 +1709,16 @@ class SellPosController extends Controller
                 $edit_discount = auth()->user()->can('edit_product_discount_from_pos_screen');
                 $edit_price = auth()->user()->can('edit_product_price_from_pos_screen');
             }
-
+            $user = auth()->user();
             $output['html_content'] = view('sale_pos.product_row')
-                ->with(compact('product', 'row_count', 'tax_dropdown', 'enabled_modules', 'pos_settings', 'sub_units', 'discount', 'waiters', 'edit_discount', 'edit_price', 'purchase_line_id', 'warranties', 'quantity', 'is_direct_sell', 'so_line', 'is_sales_order', 'last_sell_line'))
+                ->with(compact(
+                    'product', 'row_count',
+                    'tax_dropdown', 'enabled_modules', 'pos_settings',
+                    'sub_units', 'discount', 'waiters', 'edit_discount',
+                    'edit_price', 'purchase_line_id', 'warranties', 'quantity',
+                    'is_direct_sell', 'so_line', 'is_sales_order', 'last_sell_line',
+                    'user'
+                ))
                 ->render();
         }
 
