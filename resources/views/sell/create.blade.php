@@ -148,7 +148,7 @@
 								<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 							</span>
 						</div>
-						<small class="text-danger hide contact_due_text"><strong>@lang('account.customer_due'):</strong> <span></span></small>
+						<small class="text-danger  contact_due_text"><strong>@lang('account.customer_due'):</strong> <span></span></small>
 					</div>
 					<small>
 					<strong>

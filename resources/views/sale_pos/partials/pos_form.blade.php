@@ -31,7 +31,7 @@
 				</span>
 
 			</div>
-			<small class="text-danger hide contact_due_text"><strong>@lang('account.customer_due'):</strong> <span></span></small>
+			<small class="text-danger  contact_due_text"><strong>@lang('account.customer_due'):</strong> <span class="display_currency"  data-currency_symbol="true">{{$due}}</span></small>
 		</div>
 	</div>
 	<div class="col-md-8">
