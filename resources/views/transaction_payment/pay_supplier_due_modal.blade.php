@@ -63,7 +63,7 @@
               @if(!empty($contact_details->opening_balance) || $contact_details->opening_balance != '0.00')
                   <strong>@lang('lang_v1.opening_balance'): </strong>
                   <span class="display_currency" data-currency_symbol="true">
-                  {{ $contact_details->opening_balance }}</span><br>
+                  {{ $contact_details->contact_balance }}</span><br>
                   <strong>@lang('lang_v1.opening_balance_due'): </strong>
                   <span class="display_currency" data-currency_symbol="true">
                   {{ $ob_due }}</span>
