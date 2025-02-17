@@ -2928,7 +2928,7 @@ function get_contact_due(id) {
         url: /get-contact-due/ + id,
         dataType: 'text',
         success: function(result) {
-            if (parseFloat(result) > 0) {
+            if (parseFloat(result.split(' ')[1]) >= 0) {
                 $('.contact_due_text').find('span').text(result).removeClass('text-danger').addClass('text-success');
             } else {
                 $('.contact_due_text').find('span').text('').removeClass('text-success').addClass('text-danger');

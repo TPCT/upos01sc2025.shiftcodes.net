@@ -31,7 +31,8 @@
 				</span>
 
 			</div>
-			<small class="text-danger  contact_due_text"><strong>@lang('account.customer_due'):</strong> <span class="display_currency"  data-currency_symbol="true">{{$due}}</span></small>
+			<small class="@if ($due >= 0 ) text-success @else text-danger @endif contact_due_text"><strong>@lang('account.customer_due'):</strong> <span> {{$due}} </span></small>
+
 		</div>
 	</div>
 	<div class="col-md-8">
