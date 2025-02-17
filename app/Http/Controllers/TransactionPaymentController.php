@@ -65,6 +65,10 @@ class TransactionPaymentController extends Controller
             $transaction_id = $request->input('transaction_id');
             $transaction = Transaction::where('business_id', $business_id)->with(['contact'])->findOrFail($transaction_id);
 
+            if (! empty($request->input('denominations'))) {
+                $this->transactionUtil->updateCashDenominations($payment, $request->input('denominations'));
+            }
+
             $transaction_before = $transaction->replicate();
 
             if (! (auth()->user()->can('purchase.payments') || auth()->user()->can('hms.add_booking_payment') || auth()->user()->can('sell.payments') || auth()->user()->can('all_expense.access') || auth()->user()->can('view_own_expense'))) {
@@ -103,20 +107,30 @@ class TransactionPaymentController extends Controller
                 DB::beginTransaction();
 
                 $ref_count = $this->transactionUtil->setAndGetReferenceCount($prefix_type);
-                //Generate reference number
+
                 $inputs['payment_ref_no'] = $this->transactionUtil->generateReferenceNumber($prefix_type, $ref_count);
 
                 $inputs['business_id'] = $request->session()->get('business.id');
                 $inputs['document'] = $this->transactionUtil->uploadFile($request, 'document', 'documents');
 
-                //Pay from advance balance
-                $payment_amount = $inputs['amount'];
                 $contact_balance = ! empty($transaction->contact) ? $transaction->contact->balance : 0;
-                if ($inputs['method'] == 'advance' && $inputs['amount'] > $contact_balance) {
-                    throw new AdvanceBalanceNotAvailable(__('lang_v1.required_advance_balance_not_available'));
-                }
 
                 if (! empty($inputs['amount'])) {
+                    if ($inputs['amount'] < $transaction->final_total) {
+                        $difference = $transaction->final_total - $inputs['amount'];
+                        if ($difference > $contact_balance){
+                            $transaction->contact->update([
+                                'balance' => 0
+                            ]);
+                            $inputs['amount'] += $contact_balance;
+                        }else{
+                            $inputs['amount'] += $difference;
+                            $transaction->contact->update([
+                                'balance' => $contact_balance - $difference
+                            ]);
+                        }
+                    }
+
                     $tp = TransactionPayment::create($inputs);
 
                     if (! empty($request->input('denominations'))) {
@@ -126,6 +140,7 @@ class TransactionPaymentController extends Controller
                     $inputs['transaction_type'] = $transaction->type;
                     event(new TransactionPaymentAdded($tp, $inputs));
                 }
+
 
                 //update payment status
                 $payment_status = $this->transactionUtil->updatePaymentStatus($transaction_id, $transaction->final_total);
@@ -257,6 +272,15 @@ class TransactionPaymentController extends Controller
             }
 
             $payment = TransactionPayment::where('method', '!=', 'advance')->findOrFail($id);
+            $transaction = Transaction::where('business_id', $business_id)
+                ->find($payment->transaction_id);
+            $due = $this->transactionUtil->getContactDue($transaction->contact_id, $business_id);
+
+            $advance_payment_amount = 0;
+            if ($due < 0){
+                $advance_payment_amount = $transaction->final_amount + $due;
+            }
+            dd($transaction->final_amount, $due, $advance_payment_amount);
 
             if (! empty($request->input('denominations'))) {
                 $this->transactionUtil->updateCashDenominations($payment, $request->input('denominations'));
@@ -272,8 +296,7 @@ class TransactionPaymentController extends Controller
 
             $business_id = $request->session()->get('user.business_id');
 
-            $transaction = Transaction::where('business_id', $business_id)
-                                ->find($payment->transaction_id);
+
 
             $transaction_before = $transaction->replicate();
             $document_name = $this->transactionUtil->uploadFile($request, 'document', 'documents');
@@ -308,7 +331,7 @@ class TransactionPaymentController extends Controller
             ];
         }
 
-        return redirect()->back()->with(['status' => $output]);
+//        return redirect()->back()->with(['status' => $output]);
     }
 
     /**

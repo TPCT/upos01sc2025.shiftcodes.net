@@ -1252,10 +1252,19 @@ class Util
      */
     public function getContactDue($contact_id, $business_id = null, $except=[])
     {
-        $total_credits = TransactionPayment::where(function ($query) use ($contact_id, $business_id) {
-            $query->where('payment_for', $contact_id);
+        $total_credits = Contact::find($contact_id)->balance;
+
+        $total_partials = TransactionPayment::whereHas('transaction', function ($query) use ($contact_id, $business_id) {
+            $query->where('contact_id', $contact_id);
             $query->where('business_id', $business_id);
-            $query->where('payment_type', 'credit');
+            $query->where(function ($query){
+                $query->where('payment_status', 'partial');
+                $query->orWhere('payment_status', 'paid');
+            });
+            $query->where('type', 'sell');
+        })->where(function ($query) use ($contact_id, $business_id) {
+            $query->where('business_id', $business_id);
+            $query->where('payment_for', $contact_id);
         })->sum('amount');
 
         $total_purchases = Transaction::where(function ($query) use ($contact_id, $business_id) {
@@ -1286,7 +1295,7 @@ class Util
             $query->where('status', 'final');
         })->sum('final_total');
 
-        $total_cash_in = $total_credits + $total_purchases + $total_sell_returns;
+        $total_cash_in = $total_credits + $total_partials + $total_purchases + $total_sell_returns;
         $total_cash_out = $total_pending_sells + $total_purchase_returns;
         return $total_cash_in - $total_cash_out;
     }

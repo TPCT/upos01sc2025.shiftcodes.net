@@ -566,9 +566,9 @@ class SellPosController extends Controller
                     //Update payment status
                     $payment_status = $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);
 
-                    if ($is_credit_sale && $payment_status == "paid"){
-                        $this->transactionUtil->createOrUpdatePaymentLines($transaction, $input['payment']);
-                    }
+//                    if ($is_credit_sale && $payment_status == "paid"){
+//                        $this->transactionUtil->createOrUpdatePaymentLines($transaction, $input['payment']);
+//                    }
 
                     $transaction->payment_status = $payment_status;
 
