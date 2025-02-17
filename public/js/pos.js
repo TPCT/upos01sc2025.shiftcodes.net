@@ -3185,7 +3185,7 @@ $(function(){
 
     $(".show_last_customer_invoices").on('click', function (){
         $.get({
-            url: "/sells/pos/" + $(this).data('customer-id'),
+            url: "/sells/pos/" + $(this).attr('data-customer-id'),
             success: function (response){
                 $(".client_invoices").html(response).modal('show');
             }
@@ -3194,7 +3194,7 @@ $(function(){
 
     $("#pos-express-finalize-cash").on('click', function (){
         $.get({
-            url: "/payments/pay-contact-due/" + $(this).data('customer-id') + "?type=sell",
+            url: "/payments/pay-contact-due/" + $(this).attr('data-customer-id') + "?type=sell",
             success: function (response){
                 $(".client_add_cash_modal").html(response).modal('show')
             }
