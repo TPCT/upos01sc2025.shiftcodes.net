@@ -30,4 +30,15 @@
      'total_sale_paid' => 'اجمالي مدفوعات المبيعات',
      'total_sale_due' => 'اجمالي المديونية',
      'customer' => 'عميل',
+     'contact_id' => 'معرف العميل',
+     'supplier_business_name' => 'اسم النشاط',
+     'email' => 'البريد الالكتروني',
+     'credit_limit' => 'حد السحب',
+     'opening_balance' => 'الرصيد الافتتاحي',
+     'balance' => 'الرصيد المسبق',
+     'created_at' => 'تاريخ الانشاء',
+     'total_rp' => 'total_rp',
+     'customer_group' => 'مجموعه العميل',
+     'return_due' => 'اجمالى مرتجع المبيعات المستحق	',
+     'address' => 'عنوان العميل'
  ];
