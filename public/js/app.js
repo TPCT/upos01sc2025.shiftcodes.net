@@ -404,38 +404,40 @@ $(document).ready(function() {
         ];
     } else if (contact_table_type == 'customer') {
         var columns = [
-            { data: 'action', searchable: false, orderable: false },
-            { data: 'contact_id', name: 'contact_id' },
-            { data: 'supplier_business_name', name: 'supplier_business_name' },
-            { data: 'name', name: 'name' },
-            { data: 'email', name: 'email' },
-            { data: 'tax_number', name: 'tax_number' },
-            { data: 'credit_limit', name: 'credit_limit' },
-            { data: 'pay_term', name: 'pay_term', searchable: false, orderable: false },
-            { data: 'opening_balance', name: 'opening_balance', searchable: false },
-            { data: 'balance', name: 'balance', searchable: false },
-            { data: 'created_at', name: 'contacts.created_at' }
+            { data: 'action', title: translations.actions, searchable: false, orderable: false },
+            { data: 'contact_id', title: translations.contact_id, name: 'contact_id' },
+            { data: 'supplier_business_name', title: translations.supplier_bussiness_name, name: 'supplier_business_name' },
+            { data: 'name', title: translations.contact_name, name: 'name' },
+            { data: 'due', title: translations.total_sale_due, name: "due", searchable: false, orderable: false },
+            { data: 'email', title: translations.email, name: 'email' },
+            { data: 'tax_number', title: translations.tax_no, name: 'tax_number' },
+            { data: 'credit_limit', title: translations.credit_limit, name: 'credit_limit' },
+            { data: 'pay_term', title: translations.payment_term, name: 'pay_term', searchable: false, orderable: false },
+            { data: 'opening_balance', title: translations.opening_balance, name: 'opening_balance', searchable: false },
+            { data: 'balance', title: translations.balance, name: 'balance', searchable: false },
+            { data: 'created_at', title: translations.created_at, name: 'contacts.created_at' }
         ];
 
         if ($('#rp_col').length) {
-            columns.push({ data: 'total_rp', name: 'total_rp' });
+            columns.push({ data: 'total_rp', title: translations.total_rp, name: 'total_rp' });
         }
-        Array.prototype.push.apply(columns, [{ data: 'customer_group', name: 'cg.name' },
-            { data: 'address', name: 'address', orderable: false },
-            { data: 'mobile', name: 'mobile' },
-            { data: 'due', searchable: false, orderable: false },
-            { data: 'return_due', searchable: false, orderable: false },
-            { data: 'custom_field1', name: 'custom_field1'},
-            { data: 'custom_field2', name: 'custom_field2'},
-            { data: 'custom_field3', name: 'custom_field3'},
-            { data: 'custom_field4', name: 'custom_field4'},
-            { data: 'custom_field5', name: 'custom_field5'},
-            { data: 'custom_field6', name: 'custom_field6'},
-            { data: 'custom_field7', name: 'custom_field7'},
-            { data: 'custom_field8', name: 'custom_field8'},
-            { data: 'custom_field9', name: 'custom_field9'},
-            { data: 'custom_field10', name: 'custom_field10'},
-            ]);
+
+        Array.prototype.push.apply(columns, [
+            { data: 'customer_group', title: translations.customer_group, name: 'cg.name' },
+            { data: 'address', title: translations.address, name: 'address', orderable: false },
+            { data: 'mobile', title: translations.mobile, name: 'mobile' },
+            { data: 'return_due', title: translations.return_due, searchable: false, orderable: false },
+            { data: 'custom_field1', title: translations.custom_field_1, name: 'custom_field1' },
+            { data: 'custom_field2', title: translations.custom_field_2, name: 'custom_field2' },
+            { data: 'custom_field3', title: translations.custom_field_3, name: 'custom_field3' },
+            { data: 'custom_field4', title: translations.custom_field_4, name: 'custom_field4' },
+            { data: 'custom_field5', title: translations.custom_field_5, name: 'custom_field5' },
+            { data: 'custom_field6', title: translations.custom_field_6, name: 'custom_field6' },
+            { data: 'custom_field7', title: translations.custom_field_7, name: 'custom_field7' },
+            { data: 'custom_field8', title: translations.custom_field_8, name: 'custom_field8' },
+            { data: 'custom_field9', title: translations.custom_field_9, name: 'custom_field9' },
+            { data: 'custom_field10', title: translations.custom_field_10, name: 'custom_field10' }
+        ]);
     }
     
     contact_table = $('#contact_table').DataTable({
