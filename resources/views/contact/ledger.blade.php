@@ -26,12 +26,7 @@
 		<i id="show_info_btn" class="fa fa-info-circle text-info" style="margin-right: 10px; margin-top:4px;"></i>
 		<b>{{$ledger_details['start_date']}} @lang('lang_v1.to') {{$ledger_details['end_date']}}</b>
 		<table class="table table-condensed text-left align-left no-border @if(!empty($for_pdf)) table-pdf @endif">
-        
-        {{-- All summary_hidden class is commented --}}
-        {{-- <tr class="summary_hidden">
-				<td>@lang('lang_v1.opening_balance')</td>
-				<td class="align-right">@format_currency($ledger_details['beginning_balance'])</td>
-			</tr> --}}
+
 		@if( $contact->type == 'supplier' || $contact->type == 'both')
 			<tr>
 				<td>@lang('report.total_purchase')</td>
@@ -68,7 +63,7 @@
 	<div style="border: 1px solid #000; padding: 10px;">
 		<b> @lang('lang_v1.overall_summary') </b>
 		<table class="table table-condensed text-left align-left no-border @if(!empty($for_pdf)) table-pdf @endif">
-		
+
 			@if( $contact->type == 'supplier' || $contact->type == 'both')
 				<tr>
 					<td>@lang('report.total_purchase')</td>
@@ -128,9 +123,9 @@
 		<tbody>
 			@foreach($ledger_details['ledger'] as $data)
 
-                @if($data['type'] == 'Opening Balance') 
+                @if($data['type'] == 'Opening Balance')
                     @continue
-                @endif 
+                @endif
 
 				<tr @if(!empty($for_pdf) && $loop->iteration % 2 == 0) class="odd" @endif>
 					<td class="row-border">{{@format_datetime($data['date'])}}</td>

@@ -456,19 +456,19 @@ class TransactionPaymentController extends Controller
                     $query->where('payment_type', 'credit');
                 })->sum('amount');
 
-                $total_purchases = Transaction::where(function ($query) use ($contact_id, $business_id) {
-                    $query->where('type', 'purchase');
-                    $query->where('contact_id', $contact_id);
-                    $query->where('business_id', $business_id);
-                    $query->where('status', 'received');
-                })->sum('final_total');
-
-                $total_sell_returns = Transaction::where(function ($query) use ($contact_id, $business_id){
-                    $query->where('type', 'sell_return');
-                    $query->where('contact_id', $contact_id);
-                    $query->where('business_id', $business_id);
-                    $query->where('status', 'final');
-                })->sum('final_total');
+//                $total_purchases = Transaction::where(function ($query) use ($contact_id, $business_id) {
+//                    $query->where('type', 'purchase');
+//                    $query->where('contact_id', $contact_id);
+//                    $query->where('business_id', $business_id);
+//                    $query->where('status', 'received');
+//                })->sum('final_total');
+//
+//                $total_sell_returns = Transaction::where(function ($query) use ($contact_id, $business_id){
+//                    $query->where('type', 'sell_return');
+//                    $query->where('contact_id', $contact_id);
+//                    $query->where('business_id', $business_id);
+//                    $query->where('status', 'final');
+//                })->sum('final_total');
 
                 $total_pending_sells = Transaction::where(function ($query) use ($contact_id, $business_id){
                     $query->where('type', 'sell');
@@ -476,16 +476,16 @@ class TransactionPaymentController extends Controller
                     $query->where('business_id', $business_id);
                 })->sum('final_total');
 
-                $total_purchase_returns = Transaction::where(function ($query) use ($contact_id, $business_id){
-                    $query->where('type', 'purchase_return');
-                    $query->where('contact_id', $contact_id);
-                    $query->where('business_id', $business_id);
-                    $query->where('status', 'final');
-                })->sum('final_total');
+//                $total_purchase_returns = Transaction::where(function ($query) use ($contact_id, $business_id){
+//                    $query->where('type', 'purchase_return');
+//                    $query->where('contact_id', $contact_id);
+//                    $query->where('business_id', $business_id);
+//                    $query->where('status', 'final');
+//                })->sum('final_total');
                 $contact_details = Contact::find($contact_id);
-
-                $contact_details->total_paid = $total_credits + $total_purchases + $total_sell_returns;
-                $contact_details->total_invoice = $total_pending_sells + $total_purchase_returns;
+//
+                $contact_details->total_paid = $total_credits; // + $total_purchases + $total_sell_returns;
+                $contact_details->total_invoice = $total_pending_sells;// + $total_purchase_returns;
                 $payment_line->amount = $this->transactionUtil->getContactDue($contact_id, $business_id);
                 if ($payment_line->amount > 0)
                     $payment_line->amount = 0;

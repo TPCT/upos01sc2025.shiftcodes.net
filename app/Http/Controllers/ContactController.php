@@ -330,6 +330,7 @@ class ContactController extends Controller
         if (
             (! $is_admin && auth()->user()->can('customer_with_no_sell_three_month')) ||
             ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
+            ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
         ) {
             $from_transaction_date = \Carbon::now()->subMonths(3)->format('Y-m-d');
             $query->havingRaw("max_transaction_date < '{$from_transaction_date}'")
@@ -1296,7 +1297,7 @@ class ContactController extends Controller
 
         $start_date = request()->start_date;
         $end_date = request()->end_date;
-        $format = request()->format;
+        $format = "format_3";
         $location_id = request()->location_id;
 
         $contact = Contact::find($contact_id);

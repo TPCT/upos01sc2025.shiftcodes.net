@@ -14,28 +14,28 @@
 @endphp
 <div class="row">
     <div class="col-md-12">
-        <div class="col-md-3">
+        <div class="col-md-7">
             <div class="form-group">
                 {!! Form::label('ledger_date_range', __('report.date_range') . ':') !!}
                 {!! Form::text('ledger_date_range', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'readonly']); !!}
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label>@lang('lang_v1.ledger_format')</label>
-            <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-default active">
-                    <input type="radio" name="ledger_format" value="format_1" checked> @lang('lang_v1.format_1')
-                </label>
-                <label class="btn btn-default">
-                    <input type="radio" name="ledger_format" value="format_2"> @lang('lang_v1.format_2')
-                </label>
-                <label class="btn btn-default">
-                    <input type="radio" name="ledger_format" value="format_3"> @lang('lang_v1.format_3')
-                </label>
-            </div>
-            </div>
-        </div>
+{{--        <div class="col-md-4">--}}
+{{--            <div class="form-group">--}}
+{{--                <label>@lang('lang_v1.ledger_format')</label>--}}
+{{--            <div class="btn-group" data-toggle="buttons">--}}
+{{--                <label class="btn btn-default active">--}}
+{{--                    <input type="radio" name="ledger_format" value="format_1" checked> @lang('lang_v1.format_1')--}}
+{{--                </label>--}}
+{{--                <label class="btn btn-default">--}}
+{{--                    <input type="radio" name="ledger_format" value="format_2"> @lang('lang_v1.format_2')--}}
+{{--                </label>--}}
+{{--                <label class="btn btn-default">--}}
+{{--                    <input type="radio" name="ledger_format" value="format_3"> @lang('lang_v1.format_3')--}}
+{{--                </label>--}}
+{{--            </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="col-md-3">
             <div class="form-group">
                 {!! Form::label('ledger_location', __('purchase.business_location') . ':') !!}
