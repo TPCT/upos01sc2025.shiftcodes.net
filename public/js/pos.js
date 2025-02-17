@@ -479,6 +479,7 @@ $(document).ready(function() {
             }else{
                 amount.val(Math.min(amount.val(), parseFloat(q.val()) * (unit_price - minimum_unit_price)))
             }
+
             //calculate discounted unit price
             var discounted_unit_price = calculate_discounted_unit_price(tr);
 
