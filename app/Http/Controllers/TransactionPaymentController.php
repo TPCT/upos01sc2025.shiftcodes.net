@@ -115,7 +115,9 @@ class TransactionPaymentController extends Controller
 
                 $contact_balance = ! empty($transaction->contact) ? $transaction->contact->balance : 0;
 
-                if (! empty($inputs['amount'])) {
+                $inputs['amount'] ??= 0;
+
+                if ($contact_balance || $inputs['amount']) {
                     if ($inputs['amount'] < $transaction->final_total) {
                         $difference = $transaction->final_total - $inputs['amount'];
                         if ($difference > $contact_balance){
