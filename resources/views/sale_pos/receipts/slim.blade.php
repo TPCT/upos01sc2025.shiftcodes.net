@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>فاتورة مبيعات</title>
 	<style>
+
 		body {
 			font-family: 'Tahoma', sans-serif;
 			direction: rtl;
@@ -21,6 +22,7 @@
 			object-fit: contain;
 		}
 		.container {
+			width: 302px;
 			margin: 20px auto;
 			border: 2px solid #000;
 			padding: 30px;
@@ -175,6 +177,7 @@
 			<th>رقم</th>
 			<th>الصنف</th>
 			<th>السعر</th>
+			<th>الكمية</th>
 			<th>الخصم %</th>
 			<th>الإجمالي</th>
 		</tr>

@@ -1093,7 +1093,7 @@ class TransactionUtil extends Util
         $output['customer_tax_number'] = '';
         $output['customer_tax_label'] = '';
         $output['customer_custom_fields'] = '';
-        $output['customer_balance'] = $customer->balance;
+        $output['customer_balance'] = $this->getContactDue($customer->id, $business_details->id, [$transaction->id]);
         $output['customer_name'] = ! empty($customer->name) ? $customer->name : $customer->supplier_business_name;
         $output['customer_mobile'] = $customer->mobile;
         $output['customer_city'] = $customer->city;
