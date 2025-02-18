@@ -70,8 +70,8 @@
 							<div class="input-group">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
 								<input type="text" class="form-control" 
-									name="print[name_size]" 
-									value="15">
+									name="print[name_size]"
+								   value="{{$default->name_size ?? "15"}}">
 							</div>
 						</td>
 
@@ -84,9 +84,9 @@
 
 							<div class="input-group">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-								<input type="text" class="form-control" 
-									name="print[variations_size]" 
-									value="17">
+								<input type="text" class="form-control"
+									name="print[variations_size]"
+								   	value="{{$default->variations_size ?? "17"}}">
 							</div>
 						</td>
 
@@ -99,15 +99,15 @@
 
 							<div class="input-group">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-								<input type="text" class="form-control" 
-									name="print[price_size]" 
-									value="17">
+								<input type="text" class="form-control"
+									name="print[price_size]"
+								   value="{{$default->price_size ?? "17"}}">
 							</div>
 
 						</td>
 
 						<td>
-							
+
 							<div class="" id="price_type_div">
 								<div class="form-group">
 									{!! Form::label('print[price_type]', @trans( 'barcode.show_price' ) . ':') !!}
@@ -133,9 +133,9 @@
 
 							<div class="input-group">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-								<input type="text" class="form-control" 
-									name="print[business_name_size]" 
-									value="20">
+								<input type="text" class="form-control"
+									name="print[business_name_size]"
+									   value="{{$default->business_name_size ?? "20"}}">
 							</div>
 						</td>
 
@@ -148,15 +148,15 @@
 
 							<div class="input-group">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-								<input type="text" class="form-control" 
-									name="print[packing_date_size]" 
-									value="12">
+								<input type="text" class="form-control"
+									name="print[packing_date_size]"
+									   value="{{$default->packing_date_size ?? "12"}}">
 							</div>
 						</td>
 
 						<td>
 							@if(request()->session()->get('business.enable_lot_number') == 1)
-							
+
 								<div class="checkbox">
 								    <label>
 								    	<input type="checkbox" checked name="print[lot_number]" value="1"> <b>@lang( 'lang_v1.print_lot_number' )</b>
@@ -165,9 +165,9 @@
 
 								<div class="input-group">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-									<input type="text" class="form-control" 
-										name="print[lot_number_size]" 
-										value="12">
+									<input type="text" class="form-control"
+										name="print[lot_number_size]"
+										value="{{$default->lot_number_size ?? "12"}}">
 								</div>
 							@endif
 						</td>
@@ -182,55 +182,19 @@
 
 								<div class="input-group">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-									<input type="text" class="form-control" 
-										name="print[exp_date_size]" 
-										value="12">
+									<input type="text" class="form-control"
+										name="print[exp_date_size]"
+									   value="{{$default->exp_date_size ?? "12"}}">
 								</div>
 							@endif
-						</td>						
-					</tr>
-					<tr>
-						
-						@php
-							$c = 0;
-							$custom_labels = json_decode(session('business.custom_labels'), true);
-        					$product_custom_fields = !empty($custom_labels['product']) ? $custom_labels['product'] : [];
-							 $product_cf_details = !empty($custom_labels['product_cf_details']) ? $custom_labels['product_cf_details'] : [];
-						@endphp
-						@foreach($product_custom_fields as $index => $cf)
-							@if(!empty($cf))
-								@php
-									$field_name = 'product_custom_field' . $loop->iteration;
-									$cf_type = !empty($product_cf_details[$loop->iteration]['type']) ? $product_cf_details[$loop->iteration]['type'] : 'text';
-									$dropdown = !empty($product_cf_details[$loop->iteration]['dropdown_options']) ? explode(PHP_EOL, $product_cf_details[$loop->iteration]['dropdown_options']) : [];
-									$c++;
-								@endphp
-								<td>
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" name="print[{{ $field_name }}]" value="1"> <b>{{ $cf }}</b>
-										</label>
-									</div>
-
-									<div class="input-group">
-									<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-										<input type="text" class="form-control" 
-											name="print[{{ $field_name }}_size]" 
-											value="12">
-									</div>
-								</td>
-								@if ($c % 4 == 0)
-									</tr>
-								@endif
-							@endif
-						@endforeach
+						</td>
 					</tr>
 				</table>
 			</div>
 
-			
 
-			
+
+
 
 			<div class="col-sm-12">
 				<hr/>
@@ -243,7 +207,7 @@
 						<span class="input-group-addon">
 							<i class="fa fa-cog"></i>
 						</span>
-						{!! Form::select('barcode_setting', $barcode_settings, !empty($default) ? $default->id : null, ['class' => 'form-control']); !!}
+						{!! Form::select('barcode_setting', $barcode_settings->pluck('name', 'id'), !empty($default) ? $default->id : null, ['class' => 'form-control']); !!}
 					</div>
 				</div>
 			</div>
@@ -251,6 +215,7 @@
 			<div class="clearfix"></div>
 			
 			<div class="col-sm-12 text-center">
+				<button type="button" id="save_bar_code_settings" class="tw-dw-btn tw-dw-btn-primary tw-dw-btn-lg tw-text-white">@lang( 'barcode.set_as_default' )</button>
 				<button type="button" id="labels_preview" class="tw-dw-btn tw-dw-btn-primary tw-dw-btn-lg tw-text-white">@lang( 'barcode.preview' )</button>
 			</div>
 		</div>
@@ -271,4 +236,18 @@
 @stop
 @section('javascript')
 	<script src="{{ asset('js/labels.js?v=' . $asset_v) }}"></script>
+	<script>
+		$("#save_bar_code_settings").on('click', function (){
+			$.post({
+				url: "/labels/" + $("select[name='barcode_setting']").val(),
+				data: $("#preview_setting_form").serialize(),
+				contentType: "application/x-www-form-urlencoded",
+				success: function (response){
+					console.log(response);
+					const modal = $(".client_add_cash_modal");
+					modal.html(response);
+				}
+			})
+		})
+	</script>
 @endsection

@@ -31,6 +31,17 @@ class LabelsController extends Controller
         $this->productUtil = $productUtil;
     }
 
+    public function update(Request $request, Barcode $barcode){
+        $data = [];
+        foreach ($request->input('print') as $key => $value) {
+            if (str_contains($key, '_size')) {
+                $data[$key] = $value;
+            }
+        }
+        $barcode->update($data);
+        return back();
+    }
+
     /**
      * Display labels
      *
@@ -61,11 +72,9 @@ class LabelsController extends Controller
 
         $barcode_settings = Barcode::where('business_id', $business_id)
                                 ->orWhereNull('business_id')
-                                ->select(DB::raw('CONCAT(name, ", ", COALESCE(description, "")) as name, id, is_default'))
+                                ->select(DB::raw('*, CONCAT(name, ", ", COALESCE(description, "")) as name'))
                                 ->get();
-        $default = $barcode_settings->where('is_default', 1)->first();
-        $barcode_settings = $barcode_settings->pluck('name', 'id');
-
+        $default = $barcode_settings->where('is_default', 1)->first() ?? $barcode_settings->first();
         return view('labels.show')
             ->with(compact('products', 'barcode_settings', 'default', 'price_groups'));
     }
