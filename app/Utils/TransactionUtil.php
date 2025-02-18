@@ -1093,6 +1093,7 @@ class TransactionUtil extends Util
         $output['customer_tax_number'] = '';
         $output['customer_tax_label'] = '';
         $output['customer_custom_fields'] = '';
+        $output['customer_balance'] = $customer->balance;
         if ($il->show_customer == 1) {
             $output['customer_label'] = ! empty($il->customer_label) ? $il->customer_label : '';
             $output['customer_name'] = ! empty($customer->name) ? $customer->name : $customer->supplier_business_name;
@@ -1480,6 +1481,7 @@ class TransactionUtil extends Util
             $paid_amount = $this->getTotalPaid($transaction->id);
             $due = $transaction->final_total - $paid_amount;
 
+            $output['total_paid_unformatted'] = $paid_amount;
             $output['total_paid'] = ($paid_amount == 0) ? 0 : $this->num_f($paid_amount, $show_currency, $business_details);
             $output['total_paid_label'] = $il->paid_label;
             $output['total_due'] = ($due == 0) ? 0 : $this->num_f($due, $show_currency, $business_details);
@@ -1993,6 +1995,7 @@ class TransactionUtil extends Util
             $line_array = [
                 //Field for 1st column
                 'name' => $product->name,
+                'id' => $product->id,
                 'product_description' => ! empty($show_product_description) ? $product->product_description : null,
                 'variation' => (empty($variation->name) || $variation->name == 'DUMMY') ? '' : $variation->name,
                 'product_variation' => (empty($product_variation->name) || $product_variation->name == 'DUMMY') ? '' : $product_variation->name,
