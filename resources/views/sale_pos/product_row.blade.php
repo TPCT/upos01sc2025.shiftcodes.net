@@ -56,7 +56,6 @@
             $tax_id = $product->tax_id;
             $item_tax = !empty($product->item_tax) ? $product->item_tax : 0;
             $unit_price_inc_tax = $product->sell_price_inc_tax;
-            $base_price = $product->last_purchased_price;
 
             if($hide_tax == 'hide'){
                 $tax_id = null;
@@ -351,7 +350,7 @@
             <div class="d-flex align-items-between">
                 <div class="input-group">
                     <input type="text" name="products[{{$row_count}}][line_discount_amount]"
-                           class="form-control input_number row_discount_amount" value="0.00" data-unit-price="{{$unit_price_inc_tax}}" data-minimum-fixed-discount="{{$base_price}}" data-maximum-percentage-discount="{{$user->max_sales_discount_percent ?? 0}}">
+                           class="form-control input_number row_discount_amount" value="0.00" data-unit-price="{{$unit_price_inc_tax}}" data-minimum-fixed-discount="{{$unit_price_inc_tax}}" data-maximum-percentage-discount="{{$user->max_sales_discount_percent ?? 0}}">
                 </div>
                 <select name="products[{{$row_count}}][line_discount_type]" class="form-control row_discount_type">
                     <option value="fixed">@lang("lang_v1.fixed")</option>
@@ -365,8 +364,9 @@
         <input type="text" name="products[{{$row_count}}][unit_price_inc_tax]"
                class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}"
                @if(!$edit_price) readonly
-               @endif @if(!empty($pos_settings['enable_msp'])) data-rule-min-value="{{$base_price}}"
-               data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($base_price)])}}" @endif>
+               @endif data-rule-min-value="{{$unit_price_inc_tax}}"
+               data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($unit_price_inc_tax)])}}"
+        >
     </td>
 
     @if(!empty($common_settings['enable_product_warranty']) && !empty($is_direct_sell))
