@@ -3,19 +3,19 @@
         <div class="modal-header">
             <button type="button" class="close no-print" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title no-print">
-                @lang( 'purchase.view_payments' ) 
+                @lang( 'purchase.view_payments' )
                 (
-                @if(in_array($transaction->type, ['purchase', 'expense', 'purchase_return', 'payroll']))    
-                    @lang('purchase.ref_no'): {{ $transaction->ref_no }} 
+                @if(in_array($transaction->type, ['purchase', 'expense', 'purchase_return', 'payroll']))
+                    @lang('purchase.ref_no'): {{ $transaction->ref_no }}
                 @elseif(in_array($transaction->type, ['sell', 'sell_return']))
                     @lang('sale.invoice_no'): {{ $transaction->invoice_no }}
                 @elseif (in_array($transaction->type, ['hms_booking']))
                     @lang('hms::lang.booking_Id'): {{ $transaction->ref_no }}
                 @endif
-                )   
+                )
             </h4>
             <h4 class="modal-title visible-print-block">
-                @if(in_array($transaction->type, ['purchase', 'expense', 'purchase_return', 'payroll'])) 
+                @if(in_array($transaction->type, ['purchase', 'expense', 'purchase_return', 'payroll']))
                     @lang('purchase.ref_no'): {{ $transaction->ref_no }}
                 @elseif($transaction->type == 'sell')
                     @lang('sale.invoice_no'): {{ $transaction->invoice_no }}
@@ -136,7 +136,7 @@
                 @if($transaction->type == 'purchase')
                     <div class="row no-print">
                         <div class="col-md-12 text-right">
-                            <button type="button" class="tw-dw-btn tw-dw-btn-info tw-text-white tw-dw-btn-xs btn-modal" 
+                            <button type="button" class="tw-dw-btn tw-dw-btn-info tw-text-white tw-dw-btn-xs btn-modal"
                             data-href="{{action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $transaction->id,'template_for' => 'payment_paid'])}}" data-container=".view_modal"><i class="fa fa-envelope"></i> @lang('lang_v1.payment_paid_notification')</button>
                         </div>
                     </div>
@@ -145,9 +145,9 @@
                 @if($transaction->type == 'sell' || $transaction->type == 'hms_booking')
                     <div class="row no-print">
                         <div class="col-md-12 text-right">
-                            <button type="button" class="tw-dw-btn tw-dw-btn-info tw-text-white tw-dw-btn-xs btn-modal" 
+                            <button type="button" class="tw-dw-btn tw-dw-btn-info tw-text-white tw-dw-btn-xs btn-modal"
                             data-href="{{action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $transaction->id,'template_for' => 'payment_received'])}}" data-container=".view_modal"><i class="fa fa-envelope"></i> @lang('lang_v1.payment_received_notification')</button>
-                          
+
                             @if($transaction->payment_status != 'paid')
                                 &nbsp;
                                 <button type="button" class="tw-dw-btn tw-dw-btn-warning tw-text-white tw-dw-btn-xs btn-modal" data-href="{{action([\App\Http\Controllers\NotificationController::class, 'getTemplate'], ['transaction_id' => $transaction->id,'template_for' => 'payment_reminder'])}}" data-container=".view_modal"><i class="fa fa-envelope"></i> @lang('lang_v1.send_payment_reminder')</button>
@@ -194,13 +194,13 @@
                               <td class="no-print" style="display: flex;">
                               @if((in_array($transaction->type, ['hms_booking']) && auth()->user()->can('hms.edit_booking_payment')) || (auth()->user()->can('edit_purchase_payment') && (in_array($transaction->type, ['purchase', 'purchase_return']))) || (auth()->user()->can('edit_sell_payment') && (in_array($transaction->type, ['sell', 'sell_return']))) || ((auth()->user()->can('all_expense.access') || auth()->user()->can('view_own_expense')) && $transaction->type == 'expense') )
                                     @if($payment->method != 'advance')
-                                        <button type="button" class="tw-dw-btn tw-dw-btn-xs tw-dw-btn-outline  tw-dw-btn-info edit_payment" 
+                                        <button type="button" class="tw-dw-btn tw-dw-btn-xs tw-dw-btn-outline  tw-dw-btn-info edit_payment"
                                     data-href="{{action([\App\Http\Controllers\TransactionPaymentController::class, 'edit'], [$payment->id]) }}"><i class="glyphicon glyphicon-edit"></i></button>
                                     @endif
                                 @endif
 
                                 @if((in_array($transaction->type, ['hms_booking']) && auth()->user()->can('hms.delete_booking_payment')) || (auth()->user()->can('delete_purchase_payment') && (in_array($transaction->type, ['purchase', 'purchase_return']))) || (auth()->user()->can('delete_sell_payment') && (in_array($transaction->type, ['sell', 'sell_return']))) || ((auth()->user()->can('all_expense.access') || auth()->user()->can('view_own_expense')) && $transaction->type == 'expense') )
-                                    &nbsp; <button type="button" class="tw-dw-btn tw-dw-btn-xs tw-dw-btn-outline  tw-dw-btn-error delete_payment" 
+                                    &nbsp; <button type="button" class="tw-dw-btn tw-dw-btn-xs tw-dw-btn-outline  tw-dw-btn-error delete_payment"
                                     data-href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, 'destroy'], [$payment->id]) }}"
                                     ><i class="fa fa-trash" aria-hidden="true"></i></button>
                                 @endif
@@ -231,8 +231,8 @@
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="tw-dw-btn tw-dw-btn-primary tw-text-white no-print" 
-              aria-label="Print" 
+            <button type="button" class="tw-dw-btn tw-dw-btn-primary tw-text-white no-print"
+              aria-label="Print"
                 onclick="$(this).closest('div.modal').printThis();">
                 <i class="fa fa-print"></i> @lang( 'messages.print' )
             </button>

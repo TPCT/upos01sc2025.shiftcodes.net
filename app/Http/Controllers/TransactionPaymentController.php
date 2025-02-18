@@ -473,60 +473,6 @@ class TransactionPaymentController extends Controller
             $payment_line->method = 'cash';
             $payment_line->paid_on = \Carbon::now()->toDateTimeString();
 
-//            if ($due_payment_type == 'sell'){
-//                $total_credits = TransactionPayment::where(function ($query) use ($contact_id, $business_id) {
-//                    $query->where('payment_for', $contact_id);
-//                    $query->where('business_id', $business_id);
-//                    $query->where('payment_type', 'credit');
-//                })->sum('amount');
-//
-////                $total_purchases = Transaction::where(function ($query) use ($contact_id, $business_id) {
-////                    $query->where('type', 'purchase');
-////                    $query->where('contact_id', $contact_id);
-////                    $query->where('business_id', $business_id);
-////                    $query->where('status', 'received');
-////                })->sum('final_total');
-////
-////                $total_sell_returns = Transaction::where(function ($query) use ($contact_id, $business_id){
-////                    $query->where('type', 'sell_return');
-////                    $query->where('contact_id', $contact_id);
-////                    $query->where('business_id', $business_id);
-////                    $query->where('status', 'final');
-////                })->sum('final_total');
-//
-//                $total_pending_sells = Transaction::where(function ($query) use ($contact_id, $business_id){
-//                    $query->where('type', 'sell');
-//                    $query->where('contact_id', $contact_id);
-//                    $query->where('business_id', $business_id);
-//                })->sum('final_total');
-//
-////                $total_purchase_returns = Transaction::where(function ($query) use ($contact_id, $business_id){
-////                    $query->where('type', 'purchase_return');
-////                    $query->where('contact_id', $contact_id);
-////                    $query->where('business_id', $business_id);
-////                    $query->where('status', 'final');
-////                })->sum('final_total');
-//                $contact_details = Contact::find($contact_id);
-////
-//                $contact_details->total_paid = $total_credits; // + $total_purchases + $total_sell_returns;
-//                $contact_details->total_invoice = $total_pending_sells;// + $total_purchase_returns;
-//                $payment_line->amount = $this->transactionUtil->getContactDue($contact_id, $business_id);
-//                if ($payment_line->amount > 0)
-//                    $payment_line->amount = 0;
-//                $payment_line->amount *= -1;
-//                $amount_formated = $this->transactionUtil->num_f($payment_line->amount);
-//                $contact_details->total_paid = empty($contact_details->total_paid) ? 0 : $contact_details->total_paid;
-//
-//                return view('transaction_payment.sell.pay_supplier_due_modal')
-//                    ->with(compact('contact_details',
-//                        'payment_types',
-//                        'payment_line',
-//                        'due_payment_type',
-//                        'amount_formated',
-//                        'accounts'
-//                    ));
-//            }
-
             $query = Contact::where('contacts.id', $contact_id)
                             ->leftjoin('transactions AS t', 'contacts.id', '=', 't.contact_id');
             if ($due_payment_type == 'purchase') {
@@ -609,7 +555,7 @@ class TransactionPaymentController extends Controller
      * Adds Payments for Contact due
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function postPayContactDue(Request $request)
     {
@@ -648,6 +594,8 @@ class TransactionPaymentController extends Controller
             $output = ['success' => true,
                 'msg' => __('purchase.payment_added_success'),
             ];
+
+            return redirect()->route('view-payment', ['payment_id' => $tp->id])->with('status', $output);
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
