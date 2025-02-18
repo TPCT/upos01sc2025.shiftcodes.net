@@ -202,9 +202,13 @@
 
 		<table class="summary-table">
 			<tr>
-				<td>المجموع:</td> <td>{{number_format($total_sum, 2) . " " . $receipt_details->currency['symbol']}}</td>
-				<td>الخصم:</td> <td>{{number_format($total_discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
-				<td>الإجمالي:</td> <td>{{number_format($total_sum - $total_discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
+				<td><strong>المجموع:</strong></td> <td>{{number_format($total_sum, 2) . " " . $receipt_details->currency['symbol']}}</td>
+			</tr>
+			<tr>
+				<td><strong>الخصم:</strong></td> <td>{{number_format($total_discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
+			</tr>
+			<tr>
+				<td><strong>الإجمالي:</strong></td> <td>{{number_format($total_sum - $total_discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
 			</tr>
 			<tr>
 				<td><strong>الإجمالي:</strong></td>
