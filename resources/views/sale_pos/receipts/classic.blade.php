@@ -177,7 +177,7 @@
             <p style="text-align: right; padding: 5px;">قيمة البضاعة: {{number_format($total_sum, 2) . " " . $receipt_details->currency['symbol']}}</p>
             <p style="text-align: right; padding: 5px;">القيمة المقدمة: {{$receipt_details->total_paid}}</p>
             <p style="text-align: right; padding: 5px;">خصم نقدي: {{number_format($total_discount, 2) . " " . $receipt_details->currency['symbol']}}</p>
-            <p style="background-color: #d3d3d3; text-align: right; padding: 5px;">بعد الخصم: {{number_format($total_sum - $total_discount, 2) . " " . $receipt_details->currency['symbol'] }}</p>
+            <p style="background-color: #d3d3d3; text-align: right; padding: 5px;">بعد الخصم: {{number_format($receipt_details->total_unformatted, 2) . " " . $receipt_details->currency['symbol'] }}</p>
         </div>
     </div>
 </body>
