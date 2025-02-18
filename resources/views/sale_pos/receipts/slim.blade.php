@@ -130,15 +130,13 @@
 	</div>
 
 	<div style="display: flex; justify-content: center;">
-		<div style="display: flex; justify-content: center">
-			@if(!empty($receipt_details->total_due))
-				<p>فاتورة مبيعات - أجل</p>
-			@elseif(!empty($receipt_details->total_paid))
-				<p>فاتورة مبيعات - نقدي</p>
-			@else
-				<p>فاتورة مبيعات - عرض سعر</p>
-			@endif
-		</div>
+		@if(!empty($receipt_details->total_due))
+			<p>فاتورة مبيعات - أجل</p>
+		@elseif(!empty($receipt_details->total_paid))
+			<p>فاتورة مبيعات - نقدي</p>
+		@else
+			<p>فاتورة مبيعات - عرض سعر</p>
+		@endif
 	</div>
 
 	<div class="details">
