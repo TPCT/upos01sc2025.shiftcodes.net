@@ -194,8 +194,8 @@
 	<div class="summary">
 
 		<div class="summary-quantity" style="display: flex; flex-direction: column">
-			<p><strong style="display: inline-block; width: 40px">عدد الأصناف:</strong> <span>{{$total_products}}</span> </p>
-			<p><strong style="display: inline-block; width: 40px">إجمالى الكمية:</strong> <span>{{$total_quantity}}</span> </p>
+			<p><strong style="display: inline-block; width: 60px">عدد الأصناف:</strong> <span>{{$total_products}}</span> </p>
+			<p><strong style="display: inline-block; width: 60px">إجمالى الكمية:</strong> <span>{{$total_quantity}}</span> </p>
 		</div>
 
 		<div style="height: 1px; border: 1px solid black; margin-top: 10px"></div>
