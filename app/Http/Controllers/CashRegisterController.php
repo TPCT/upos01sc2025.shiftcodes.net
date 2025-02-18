@@ -390,7 +390,6 @@ class CashRegisterController extends Controller
             $query->where('type', 'purchase_return');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
-            $query->where('payment_status', 'paid');
         })->where(function ($query) use ($business_id, $user_id, $open_time, $close_time){
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
@@ -400,7 +399,6 @@ class CashRegisterController extends Controller
             $query->where('type', 'sell_return');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
-            $query->where('payment_status', 'paid');
         })->where(function ($query) use ($business_id, $user_id, $open_time, $close_time){
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
