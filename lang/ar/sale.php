@@ -24,7 +24,7 @@
      'subtotal' => 'المجموع',
      'recent_transactions' => 'معاملاتك الأخيرة',
      'pos_sale_added' => 'تمت إضافة عملية البيع بنجاح',
-     'price_inc_tax' => 'السعر شامل الضريبة',
+     'price_inc_tax' => 'السعر',
      'tax' => 'الضريبية',
      'edit_discount' => 'تعديل الخصم',
      'edit_order_tax' => 'تعديل ضريبة الطلبية',
