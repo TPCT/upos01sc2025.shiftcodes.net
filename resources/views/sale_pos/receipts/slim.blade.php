@@ -222,7 +222,7 @@
 
 			<tr>
 				<td><strong>إجمالي الحساب:</strong></td>
-				<td>{{number_format($receipt_total > 0 ? 0 : abs($receipt_total), 0, 2) . " " . $receipt_details->currency['symbol']}}</td>
+				<td>{{number_format($receipt_total > 0 ? $receipt_total : abs($receipt_total), 0, 2) . " " . $receipt_details->currency['symbol']}}</td>
 			</tr>
 		</table>
 	</div>
