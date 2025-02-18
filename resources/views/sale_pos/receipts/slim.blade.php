@@ -129,8 +129,7 @@
 		<p>{{$receipt_details->location_name}}</p>
 	</div>
 
-	<div style="display: flex; flex-direction: column; margin-right: 20px; margin-left: 80px;">
-		<p>التاريخ: {{$receipt_details->invoice_date}}</p>
+	<div style="display: flex; justify-content: center;">
 		<div style="display: flex; justify-content: center">
 			@if(!empty($receipt_details->total_due))
 				<p>فاتورة مبيعات - أجل</p>
