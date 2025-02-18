@@ -14,7 +14,7 @@
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
-			font-size: 9px;
+			font-size: 7px;
 			word-break: break-all;
 		}
 
@@ -24,11 +24,9 @@
 			object-fit: contain;
 		}
 		.container {
-			width: 302px;
 			margin: 20px auto;
 			border: 2px solid #000;
 			padding: 5px;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 		}
 
 		.header {
