@@ -129,8 +129,8 @@
 				<td>{{$line['name']}}</td>
 				<td>{{$line['quantity']}}</td>
 				<td>{{$line['unit_price_inc_tax'] . " " . $receipt_details->currency['symbol']}}</td>
-				<td>{{$discount . " " . $receipt_details->currency['symbol']}}</td>
-				<td>{{$total . " " . $receipt_details->currency['symbol']}}</td>
+				<td>{{number_format($discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
+				<td>{{number_format($total, 2) . " " . $receipt_details->currency['symbol']}}</td>
 			</tr>
         @endforeach
         </tbody>

@@ -1094,10 +1094,11 @@ class TransactionUtil extends Util
         $output['customer_tax_label'] = '';
         $output['customer_custom_fields'] = '';
         $output['customer_balance'] = $customer->balance;
+        $output['customer_name'] = ! empty($customer->name) ? $customer->name : $customer->supplier_business_name;
+        $output['customer_mobile'] = $customer->mobile;
+        $output['customer_city'] = $customer->city;
         if ($il->show_customer == 1) {
             $output['customer_label'] = ! empty($il->customer_label) ? $il->customer_label : '';
-            $output['customer_name'] = ! empty($customer->name) ? $customer->name : $customer->supplier_business_name;
-            $output['customer_mobile'] = $customer->mobile;
 
             if ($receipt_printer_type != 'printer') {
                 $output['customer_info'] .= $customer->contact_address;
@@ -1244,6 +1245,8 @@ class TransactionUtil extends Util
                 $output['invoice_heading'] .= ' '.$il->invoice_heading_not_paid;
             }
         }
+
+        $output['transaction_date_object'] = \Carbon::createFromFormat('Y-m-d H:i:s', $transaction->transaction_date);
 
         $output['date_label'] = $il->date_label;
         if (blank($il->date_time_format)) {
