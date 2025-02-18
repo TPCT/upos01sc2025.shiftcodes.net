@@ -84,7 +84,6 @@
 		}
 
 		.summary-quantity span {
-			border: 1px solid #000;
 			padding: 3px 22px;
 		}
 
@@ -225,7 +224,7 @@
 	</div>
 
 	<div class="footer">
-		{{$receipt_details->footer_text}}
+		{!! $receipt_details->footer_text !!}
 	</div>
 </div>
 </body>
