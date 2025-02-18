@@ -14,6 +14,8 @@
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
+			font-size: 9px;
+			word-break: break-all;
 		}
 
 		.logo img{
@@ -25,7 +27,7 @@
 			width: 302px;
 			margin: 20px auto;
 			border: 2px solid #000;
-			padding: 30px;
+			padding: 5px;
 			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 		}
 
@@ -38,24 +40,15 @@
 
 		.header h2 {
 			margin: 0;
-			font-size: 24px;
+			font-size: 12px;
 		}
 
 		.header p {
 			margin: 5px 0;
-			font-size: 16px;
-		}
-
-		.invoice-title {
-			text-align: center;
-			font-size: 20px;
-			margin-bottom: 20px;
-			font-weight: bold;
 		}
 
 		.details p {
 			margin: 5px 0;
-			font-size: 16px;
 		}
 
 		table {
@@ -76,14 +69,12 @@
 		}
 
 		.summary-table {
-			width: 50%;
 			margin-right: auto;
 		}
 
 		.footer {
 			text-align: center;
 			margin-top: 30px;
-			font-size: 14px;
 			font-weight: bold;
 		}
 
@@ -96,7 +87,7 @@
 
 		.summary-quantity span {
 			border: 1px solid #000;
-			padding: 10px 40px;
+			padding: 3px 22px;
 		}
 
 		.summary-head {
@@ -132,9 +123,6 @@
 		@elseif (!empty(session('business.logo')))
 			<div class="logo">
 				<img src="{{url('uploads/business_logos/' . session('business.logo')) }}" alt="شعار الشركة">
-			</div>
-		@else
-			<div class="logo" style="width: 100px; height: 80px">
 			</div>
 		@endif
 
@@ -174,7 +162,6 @@
 	<table>
 		<thead>
 		<tr>
-			<th>رقم</th>
 			<th>الصنف</th>
 			<th>السعر</th>
 			<th>الكمية</th>
@@ -200,9 +187,9 @@
 					$total_discount += $discount;
 				@endphp
 				<tr>
-					<td>{{$loop->iteration}}</td>
 					<td>{{$line['name']}}</td>
 					<td>{{$line['unit_price_inc_tax'] . " " . $receipt_details->currency['symbol']}}</td>
+					<td>{{(float)$line['quantity']}}</td>
 					<td>{{number_format($discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
 					<td>{{number_format($total, 2) . " " . $receipt_details->currency['symbol']}}</td>
 				</tr>
@@ -211,12 +198,12 @@
 	</table>
 
 	<div class="summary">
-		<div class="summary-head">
+		<div class="summary-head" style="display: flex; flex-direction: column">
 			<p><strong>المجموع:</strong> <span>{{number_format($total_sum, 2) . " " . $receipt_details->currency['symbol']}}</span> </p>
 			<p><strong>الخصم:</strong> <span>{{number_format($total_discount, 2) . " " . $receipt_details->currency['symbol']}}</span> </p>
 			<p><strong>الإجمالي:</strong> <span>{{number_format($total_sum - $total_discount, 2) . " " . $receipt_details->currency['symbol']}}</span> </p>
 		</div>
-		<div class="summary-quantity">
+		<div class="summary-quantity" style="display: flex; flex-direction: column">
 			<p><strong>عدد الأصناف:</strong> <span>{{$total_products}}</span> </p>
 			<p><strong>إجمالى الكمية:</strong> <span>{{$total_quantity}}</span> </p>
 		</div>
@@ -240,8 +227,7 @@
 	</div>
 
 	<div class="footer">
-		<p>شكراً لزيارتكم</p>
-		<p>برجاء الاحتفاظ بالفاتورة لعملية الاستبدال أو الاسترجاع</p>
+		{{$receipt_details->footer_text}}
 	</div>
 </div>
 </body>
