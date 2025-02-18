@@ -980,6 +980,9 @@ class TransactionUtil extends Util
             'table_subtotal_label' => $il->table_subtotal_label,
         ];
 
+        $output['payment_status'] = $transaction->payment_status;
+        $output['payment_type'] = $transaction->type;
+
         //Display name
         $output['display_name'] = $output['business_name'];
         if (! empty($output['location_name'])) {

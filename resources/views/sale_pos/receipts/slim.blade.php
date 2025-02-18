@@ -173,7 +173,7 @@
 				$total_sum = 0.0;
                 $total_product = 0.0;
                 $total_products = 0;
-                $receipt_total = $receipt_details->customer_balance - $receipt_details->total_unformatted + $receipt_details->total_paid_unformatted
+                $receipt_total = $receipt_details->customer_balance - $receipt_details->total_unformatted + $receipt_details->total_paid_unformatted;
 			@endphp
 			@foreach($receipt_details->lines as $line)
 				@php
@@ -213,17 +213,25 @@
 				<td><strong>الإجمالي:</strong></td>
 				<td>{{number_format($total_sum - $total_discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
 			</tr>
-			@if ($receipt_details->customer_balance)
-				<tr>
-					<td><strong>الرصيد السابق:</strong></td>
-					<td>{{number_format($receipt_details->customer_balance, 2) . " " . $receipt_details->currency['symbol']}}</td>
-				</tr>
+			@if ($receipt_details->payment_type == "sell")
+				@if ($receipt_details->payment_status == "due")
+					<tr>
+						<td><strong>الرصيد السابق:</strong></td>
+						<td>{{number_format($receipt_details->customer_balance, 2) . " " . $receipt_details->currency['symbol']}}</td>
+					</tr>
+					<tr>
+						<td><strong>إجمالي الحساب:</strong></td>
+						<td>{{number_format($receipt_total > 0 ? 0 : abs($receipt_total), 2) . " " . $receipt_details->currency['symbol']}}</td>
+					</tr>
+				@else
+					<tr>
+						<td><strong>إجمالي الحساب:</strong></td>
+						<td>{{number_format($receipt_details->total_unformatted, 2) . " " . $receipt_details->currency['symbol']}}</td>
+					</tr>
+				@endif
 			@endif
 
-			<tr>
-				<td><strong>إجمالي الحساب:</strong></td>
-				<td>{{number_format($receipt_total > 0 ? $receipt_total : abs($receipt_total), 0, 2) . " " . $receipt_details->currency['symbol']}}</td>
-			</tr>
+
 		</table>
 	</div>
 
