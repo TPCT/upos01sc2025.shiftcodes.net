@@ -7,7 +7,7 @@
 	<title>فاتورة مبيعات</title>
 	<style>
 
-		body.invoice-slim {
+		.invoice-slim {
 			font-family: 'Tahoma', sans-serif;
 			direction: rtl;
 			text-align: right;
@@ -110,8 +110,8 @@
 	</style>
 </head>
 
-<body class="invoice-slim">
-<div class="container ">
+<body>
+<div class="container invoice-slim">
 	<div class="header">
 		@if(!empty($receipt_details->logo))
 			<div class="logo">
