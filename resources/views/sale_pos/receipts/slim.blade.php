@@ -152,9 +152,9 @@
 	<table>
 		<thead>
 		<tr>
+			<th>الكمية</th>
 			<th>الصنف</th>
 			<th>السعر</th>
-			<th>الكمية</th>
 			<th>الخصم</th>
 			<th>الإجمالي</th>
 		</tr>
@@ -171,17 +171,17 @@
 			@foreach($receipt_details->lines as $line)
 				@php
 					$total_products += 1;
-					$discount = $line['total_line_discount'];
+					$discount = (float)$line['total_line_discount'];
 					$total = $line['line_total'];
 					$total_sum += $total;
 					$total_quantity += (float) $line['quantity'];
 					$total_discount += $discount;
 				@endphp
 				<tr>
-					<td>{{$line['name']}}</td>
-					<td>{{$line['unit_price_inc_tax']}}</td>
 					<td>{{(float)$line['quantity']}}</td>
-					<td>{{number_format($discount, 2)}}</td>
+					<td>{{$line['name']}}</td>
+					<td>{{$line['unit_price_before_discount']}}</td>
+					<td>{{number_format((float)$line['total_line_discount'] / (float)$line['line_total'] * 100, 2)}} %</td>
 					<td>{{number_format($total, 2)}}</td>
 				</tr>
 			@endforeach
