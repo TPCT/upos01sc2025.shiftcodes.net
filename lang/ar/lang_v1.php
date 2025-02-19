@@ -605,6 +605,7 @@ return [
     'sale_price_is_minimum_sale_price' => 'سعر البيع هو سعر البيع الأدنى',
     'minimum_sale_price_help' => 'إذا تم تمكين ذلك , فسيكون سعر البيع الافتراضي على شاشة البيع أو البيع هو سعر البيع الأدنى للمنتج. لا يمكنك تعيين سعر أقل من سعر البيع الافتراضي.',
     'minimum_selling_price_error_msg' => 'الحد الأدنى لسعر البيع هو :price',
+    'sale_price_is_max_discount_price' => 'الحد الأدنى الاقصي للخصم هو :price',
     'lot_numbers_are_used_in_sale' => 'لا يمكن حذفه , تم بيع بعض القطع من عملية الشراء هذه',
     'created_at' => 'أنشئت في',
     'download' => 'تحميل',

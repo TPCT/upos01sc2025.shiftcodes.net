@@ -469,16 +469,23 @@ $(document).ready(function() {
         'select.row_discount_type, input.row_discount_amount',
         function() {
             var tr = $(this).parents('tr');
-            const amount = $("input.row_discount_amount");
-            const type = $("select.row_discount_type");
-            const q = $("input.pos_quantity")
-            const unit_price = parseFloat(amount.attr('data-unit-price'));
-            const minimum_unit_price = parseFloat(amount.attr('data-minimum-fixed-discount'))
-            if (type.val() === "percentage"){
-                amount.val(Math.min(amount.val(), amount.attr('data-maximum-percentage-discount'), ((unit_price - minimum_unit_price) / unit_price) * 100, 100))
-            }else{
-                amount.val(Math.min(amount.val(), parseFloat(q.val()) * (unit_price - minimum_unit_price)))
-            }
+            const type = tr.find("select.row_discount_type");
+            const value = tr.find("input.row_discount_amount");
+            const max_discount_val = parseFloat(type.attr('data-max-' + type.val() + '-discount'));
+            if (parseFloat(value.val()) > max_discount_val)
+                value.val(max_discount_val);
+
+            //
+            // const amount = $("input.row_discount_amount");
+            // const q = $("input.pos_quantity")
+            // const unit_price = parseFloat(amount.attr('data-unit-price'));
+            // const minimum_unit_price = parseFloat(amount.attr('data-minimum-fixed-discount'))
+            //
+            // if (type.val() === "percentage"){
+            //     amount.val(Math.min(amount.val(), amount.attr('data-maximum-percentage-discount'), ((unit_price - minimum_unit_price) / unit_price) * 100, 100))
+            // }else{
+            //     amount.val(Math.min(amount.val(), parseFloat(q.val()) * (unit_price - minimum_unit_price)))
+            // }
 
             //calculate discounted unit price
             var discounted_unit_price = calculate_discounted_unit_price(tr);

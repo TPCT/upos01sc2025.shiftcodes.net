@@ -351,9 +351,14 @@
             <div class="d-flex align-items-between">
                 <div class="input-group">
                     <input type="text" name="products[{{$row_count}}][line_discount_amount]"
-                           class="form-control input_number row_discount_amount" value="0.00" data-unit-price="{{$base_price}}" data-minimum-fixed-discount="{{$base_price}}" data-maximum-percentage-discount="{{$user->max_sales_discount_percent ?? 0}}">
+                           class="form-control input_number row_discount_amount" value="0.00"
+                    >
                 </div>
-                <select name="products[{{$row_count}}][line_discount_type]" class="form-control row_discount_type">
+                <select name="products[{{$row_count}}][line_discount_type]"
+                        class="form-control row_discount_type"
+                        data-max-fixed-discount="{{min((float)($unit_price_inc_tax - $base_price), ((float)$unit_price_inc_tax * $user->max_sales_discount_percent))}}"
+                        data-max-percentage-discount="{{min((float)($unit_price_inc_tax - $base_price) / $unit_price_inc_tax * 100, ((float) $user->max_sales_discount_percent))}}"
+                >
                     <option value="fixed">@lang("lang_v1.fixed")</option>
                     <option value="percentage">@lang("lang_v1.percentage")</option>
                 </select>
