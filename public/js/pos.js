@@ -2946,9 +2946,9 @@ function get_contact_due(id) {
         dataType: 'text',
         success: function(result) {
             if (parseFloat(result.split(' ')[1]) >= 0) {
-                $('.contact_due_text').find('span').text(result).removeClass('text-danger').addClass('text-success');
+                $('.contact_due_text').removeClass('text-danger').addClass('text-success').find('span').text(result);
             } else {
-                $('.contact_due_text').find('span').text('').removeClass('text-success').addClass('text-danger');
+                $('.contact_due_text').removeClass('text-success').addClass('text-danger').find('span').text(result);
             }
         },
     });

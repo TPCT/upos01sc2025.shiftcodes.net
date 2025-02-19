@@ -172,7 +172,7 @@
 				@php
 					$total_products += 1;
 					$discount = (float)$line['total_line_discount'];
-					$total = $line['line_total'];
+					$total = (float)$line['line_total'];
 					$total_sum += $total;
 					$total_quantity += (float) $line['quantity'];
 					$total_discount += $discount;

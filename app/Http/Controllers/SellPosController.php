@@ -1872,7 +1872,7 @@ class SellPosController extends Controller
             $query->where('transactions.sub_type', null);
         }
 
-        $transactions = $query->orderBy('transactions.created_at', 'desc')
+        $transactions = $query->orderBy('transactions.updated_at', 'desc')
             ->groupBy('transactions.id')
             ->select('transactions.*')
             ->with(['contact', 'table'])

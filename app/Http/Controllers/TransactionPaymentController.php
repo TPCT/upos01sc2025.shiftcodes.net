@@ -631,7 +631,6 @@ class TransactionPaymentController extends Controller
         if (request()->ajax()) {
             $business_id = request()->session()->get('business.id');
             $single_payment_line = TransactionPayment::findOrFail($payment_id);
-
             $transaction = null;
             if (! empty($single_payment_line->transaction_id)) {
                 $transaction = Transaction::where('id', $single_payment_line->transaction_id)
@@ -644,11 +643,13 @@ class TransactionPaymentController extends Controller
                         ->first();
                 $transaction = ! empty($child_payment) ? $child_payment->transaction : null;
             }
-
+            $due = 0;
+            if ($transaction)
+                $due = $this->transactionUtil->getContactDue($transaction->contact->id, $business_id);
             $payment_types = $this->transactionUtil->payment_types(null, false, $business_id);
 
             return view('transaction_payment.single_payment_view')
-                    ->with(compact('single_payment_line', 'transaction', 'payment_types'));
+                    ->with(compact('single_payment_line', 'transaction', 'payment_types', 'due'));
         }
     }
 
