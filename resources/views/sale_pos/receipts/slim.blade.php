@@ -207,7 +207,7 @@
 			</tr>
 			<tr>
 				<td><strong>الإجمالي:</strong></td>
-				<td>{{number_format($total_sum - $total_discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
+				<td>{{number_format($total_sum, 2) . " " . $receipt_details->currency['symbol']}}</td>
 			</tr>
 			@if ($receipt_details->payment_type == "sell")
 				@if ($receipt_details->payment_status == "due")
@@ -218,11 +218,6 @@
 					<tr>
 						<td><strong>إجمالي الحساب:</strong></td>
 						<td>{{number_format($receipt_total > 0 ? 0 : abs($receipt_total), 2) . " " . $receipt_details->currency['symbol']}}</td>
-					</tr>
-				@else
-					<tr>
-						<td><strong>إجمالي الحساب:</strong></td>
-						<td>{{number_format($receipt_details->total_unformatted, 2) . " " . $receipt_details->currency['symbol']}}</td>
 					</tr>
 				@endif
 			@endif
