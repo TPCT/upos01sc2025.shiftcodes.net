@@ -22,7 +22,7 @@
                                 <tr>
                                     <td>{{$transaction->created_at}}</td>
                                     <td>
-                                        <a class="badge bg-blue view-invoice-modal" data-href="{{route('view-payment', ['payment_id' => $transaction->id])}}"># {{$transaction->invoice_no}} </a>
+                                        <a class="badge bg-blue view-invoice-modal" data-href="/sells/{{$transaction->id}}"># {{$transaction->invoice_no}} </a>
                                     </td>
                                     <td>{{$transaction->final_total}}</td>
                                     @if ($transaction->discount_type == "percentage")
