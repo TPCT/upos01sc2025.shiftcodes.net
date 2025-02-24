@@ -9,12 +9,12 @@
 		@php
 			$loop_count += 1;
 			$is_new_row = ($barcode_details->stickers_in_one_row == 1 || ($loop_count % $barcode_details->stickers_in_one_row) == 1) ? true : false;
- 
+
 			$is_new_paper = ($barcode_details->is_continuous && $is_new_row) || (!$barcode_details->is_continuous && ($loop_count % $barcode_details->stickers_in_one_sheet == 1));
 
 			$is_paper_end = (($barcode_details->is_continuous && ($loop_count % $barcode_details->stickers_in_one_row == 0)) || (!$barcode_details->is_continuous && ($loop_count % $barcode_details->stickers_in_one_sheet == 0)));
 
-			
+
 		@endphp
 
 		@if($is_new_paper)
@@ -52,7 +52,7 @@
 				<span style="display: block !important">
 					<b>{{$details['details']->product_variation_name}}</b>:{{$details['details']->variation_name}}
 				</span>
-				
+
 			@endif
 
 			{{-- Price --}}
@@ -169,7 +169,7 @@
 		margin-bottom: 0in;
 		margin-left: 0in;
 		margin-right: 0in;
-		
+
 		@if($barcode_details->is_continuous)
 			/*page-break-inside : avoid !important;*/
 		@endif

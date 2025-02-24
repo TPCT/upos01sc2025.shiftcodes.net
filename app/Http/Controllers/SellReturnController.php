@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
+use App\Business;
 use App\BusinessLocation;
 use App\Contact;
+use App\CustomerGroup;
 use App\Events\TransactionPaymentDeleted;
+use App\InvoiceScheme;
+use App\SellingPriceGroup;
+use App\TaxRate;
 use App\Transaction;
 use App\TransactionSellLine;
+use App\TypesOfService;
 use App\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ContactUtil;
@@ -46,6 +53,17 @@ class SellReturnController extends Controller
         $this->contactUtil = $contactUtil;
         $this->businessUtil = $businessUtil;
         $this->moduleUtil = $moduleUtil;
+
+        $this->dummyPaymentLine = ['method' => '', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
+            'is_return' => 0, 'transaction_no' => '', ];
+
+        $this->shipping_status_colors = [
+            'ordered' => 'bg-yellow',
+            'packed' => 'bg-info',
+            'shipped' => 'bg-navy',
+            'delivered' => 'bg-green',
+            'cancelled' => 'bg-red',
+        ];
     }
 
     /**
@@ -201,27 +219,144 @@ class SellReturnController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\View\View|string
      */
-    // public function create()
-    // {
-    //     if (!auth()->user()->can('sell.create')) {
-    //         abort(403, 'Unauthorized action.');
-    //     }
+     public function create()
+     {
+         if (! auth()->user()->can('access_sell_return') && ! auth()->user()->can('access_own_sell_return')) {
+             abort(403, 'Unauthorized action.');
+         }
 
-    //     $business_id = request()->session()->get('user.business_id');
+         $business_id = request()->session()->get('user.business_id');
+         //Check if subscribed or not
+         if (! $this->moduleUtil->isSubscribed($business_id)) {
+             return $this->moduleUtil->expiredResponse();
+         }
 
-    //     //Check if subscribed or not
-    //     if (!$this->moduleUtil->isSubscribed($business_id)) {
-    //         return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\SellReturnController::class, 'index']));
-    //     }
+         $walk_in_customer = $this->contactUtil->getWalkInCustomer($business_id);
 
-    //     $business_locations = BusinessLocation::forDropdown($business_id);
-    //     //$walk_in_customer = $this->contactUtil->getWalkInCustomer($business_id);
+         $business_details = $this->businessUtil->getDetails($business_id);
+         $taxes = TaxRate::forBusinessDropdown($business_id, true, true);
 
-    //     return view('sell_return.create')
-    //         ->with(compact('business_locations'));
-    // }
+         $business_locations = BusinessLocation::forDropdown($business_id, false, true);
+         $bl_attributes = $business_locations['attributes'];
+         $business_locations = $business_locations['locations'];
+
+         $default_location = null;
+         foreach ($business_locations as $id => $name) {
+             $default_location = BusinessLocation::findOrFail($id);
+             break;
+         }
+
+         $commsn_agnt_setting = $business_details->sales_cmsn_agnt;
+         $commission_agent = [];
+         if ($commsn_agnt_setting == 'user') {
+             $commission_agent = User::forDropdown($business_id);
+         } elseif ($commsn_agnt_setting == 'cmsn_agnt') {
+             $commission_agent = User::saleCommissionAgentsDropdown($business_id);
+         }
+
+         $types = [];
+         if (auth()->user()->can('supplier.create')) {
+             $types['supplier'] = __('report.supplier');
+         }
+         if (auth()->user()->can('customer.create')) {
+             $types['customer'] = __('report.customer');
+         }
+         if (auth()->user()->can('supplier.create') && auth()->user()->can('customer.create')) {
+             $types['both'] = __('lang_v1.both_supplier_customer');
+         }
+         $customer_groups = CustomerGroup::forDropdown($business_id);
+
+         $payment_line = $this->dummyPaymentLine;
+         $payment_types = $this->transactionUtil->payment_types(null, true, $business_id);
+
+         //Selling Price Group Dropdown
+         $price_groups = SellingPriceGroup::forDropdown($business_id);
+
+         $default_price_group_id = ! empty($default_location->selling_price_group_id) && array_key_exists($default_location->selling_price_group_id, $price_groups) ? $default_location->selling_price_group_id : null;
+
+         $default_datetime = $this->businessUtil->format_date('now', true);
+
+         $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
+
+         $invoice_schemes = InvoiceScheme::forDropdown($business_id);
+         $default_invoice_schemes = InvoiceScheme::getDefault($business_id);
+         if (! empty($default_location) && !empty($default_location->sale_invoice_scheme_id)) {
+             $default_invoice_schemes = InvoiceScheme::where('business_id', $business_id)
+                 ->findorfail($default_location->sale_invoice_scheme_id);
+         }
+         $shipping_statuses = $this->transactionUtil->shipping_statuses();
+
+         //Types of service
+         $types_of_service = [];
+         if ($this->moduleUtil->isModuleEnabled('types_of_service')) {
+             $types_of_service = TypesOfService::forDropdown($business_id);
+         }
+
+         //Accounts
+         $accounts = [];
+         if ($this->moduleUtil->isModuleEnabled('account')) {
+             $accounts = Account::forDropdown($business_id, true, false);
+         }
+
+         $status = request()->get('status', '');
+
+         $statuses = Transaction::sell_statuses();
+
+         if ($sale_type == 'sales_order') {
+             $status = 'ordered';
+         }
+
+         $is_order_request_enabled = false;
+         $is_crm = $this->moduleUtil->isModuleInstalled('Crm');
+         if ($is_crm) {
+             $crm_settings = Business::where('id', auth()->user()->business_id)
+                 ->value('crm_settings');
+             $crm_settings = ! empty($crm_settings) ? json_decode($crm_settings, true) : [];
+
+             if (! empty($crm_settings['enable_order_request'])) {
+                 $is_order_request_enabled = true;
+             }
+         }
+
+         //Added check because $users is of no use if enable_contact_assign if false
+         $users = config('constants.enable_contact_assign') ? User::forDropdown($business_id, false, false, false, true) : [];
+
+         $change_return = $this->dummyPaymentLine;
+         $due = $this->transactionUtil->getContactDue(1, $business_id);
+
+         return view('sell.create')
+             ->with(compact(
+                 'business_details',
+                 'taxes',
+                 'walk_in_customer',
+                 'business_locations',
+                 'bl_attributes',
+                 'default_location',
+                 'commission_agent',
+                 'types',
+                 'customer_groups',
+                 'payment_line',
+                 'payment_types',
+                 'price_groups',
+                 'default_datetime',
+                 'pos_settings',
+                 'invoice_schemes',
+                 'default_invoice_schemes',
+                 'types_of_service',
+                 'accounts',
+                 'shipping_statuses',
+                 'status',
+                 'sale_type',
+                 'statuses',
+                 'is_order_request_enabled',
+                 'users',
+                 'default_price_group_id',
+                 'change_return',
+                 'due'
+             ));
+     }
 
     /**
      * Show the form for creating a new resource.

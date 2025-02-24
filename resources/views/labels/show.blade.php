@@ -69,7 +69,7 @@
 
 							<div class="input-group">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-								<input type="text" class="form-control" 
+								<input type="text" class="form-control"
 									name="print[name_size]"
 								   value="{{$default->name_size ?? "15"}}">
 							</div>
@@ -213,7 +213,7 @@
 			</div>
 
 			<div class="clearfix"></div>
-			
+
 			<div class="col-sm-12 text-center">
 				<button type="button" id="save_bar_code_settings" class="tw-dw-btn tw-dw-btn-primary tw-dw-btn-lg tw-text-white">@lang( 'barcode.set_as_default' )</button>
 				<button type="button" id="labels_preview" class="tw-dw-btn tw-dw-btn-primary tw-dw-btn-lg tw-text-white">@lang( 'barcode.preview' )</button>
