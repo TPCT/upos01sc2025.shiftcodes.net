@@ -55,7 +55,7 @@
 	$common_settings = session()->get('business.common_settings');
 @endphp
 <input type="hidden" id="item_addition_method" value="{{$business_details->item_addition_method}}">
-	{!! Form::open(['url' => action([\App\Http\Controllers\SellPosController::class, 'store']), 'method' => 'post', 'id' => 'add_sell_form', 'files' => true ]) !!}
+	{!! Form::open(['url' => action([\App\Http\Controllers\SellReturnController::class, 'store']), 'method' => 'post', 'id' => 'add_sell_form', 'files' => true ]) !!}
 	 @if(!empty($sale_type))
 	 	<input type="hidden" id="sale_type" name="type" value="{{$sale_type}}">
 	 @endif
@@ -864,8 +864,7 @@
 	<div class="row">
 		{!! Form::hidden('is_save_and_print', 0, ['id' => 'is_save_and_print']); !!}
 		<div class="col-sm-12 text-center tw-mt-4">
-			<button type="button" id="submit-sell" class="tw-dw-btn tw-dw-btn-primary tw-dw-btn-lg tw-text-white">@lang('messages.save')</button>
-			<button type="button" id="save-and-print" class="tw-dw-btn tw-dw-btn-success tw-dw-btn-lg tw-text-white">@lang('lang_v1.save_and_print')</button>
+			<button type="button" id="save-and-print" class="tw-dw-btn tw-dw-btn-success tw-dw-btn-lg tw-text-white">@lang('lang_v1.save')</button>
 		</div>
 	</div>
 

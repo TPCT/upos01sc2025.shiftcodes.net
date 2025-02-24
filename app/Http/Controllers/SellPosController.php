@@ -806,7 +806,9 @@ class SellPosController extends Controller
      */
     public function edit($id)
     {
+
         $business_id = request()->session()->get('user.business_id');
+        $due = $this->transactionUtil->getContactDue(1, $business_id);
 
         if (!(auth()->user()->can('superadmin') || auth()->user()->can('sell.update')
             || auth()->user()->can('edit_pos_payment')
@@ -1092,7 +1094,7 @@ class SellPosController extends Controller
         //Added check because $users is of no use if enable_contact_assign if false
         $users = config('constants.enable_contact_assign') ? User::forDropdown($business_id, false, false, false, true) : [];
         $only_payment = request()->segment(2) == 'payment';
-
+        $user = auth()->user();
         return view('sale_pos.edit')
             ->with(compact('business_details', 'taxes', 'payment_types', 'walk_in_customer',
                 'sell_details', 'transaction', 'payment_lines', 'location_printer_type', 'shortcuts',
@@ -1100,7 +1102,7 @@ class SellPosController extends Controller
                 'brands', 'accounts', 'waiters', 'redeem_details', 'edit_price', 'edit_discount',
                 'shipping_statuses', 'warranties', 'sub_type', 'pos_module_data', 'invoice_schemes',
                 'default_invoice_schemes', 'invoice_layouts', 'featured_products', 'customer_due',
-                'users', 'only_payment'));
+                'users', 'only_payment', 'due', 'user'));
     }
 
     /**
@@ -1631,7 +1633,6 @@ class SellPosController extends Controller
         }
 
         $product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id, $location_id, $check_qty);
-
         if (!isset($product->quantity_ordered)) {
             $product->quantity_ordered = $quantity;
         }

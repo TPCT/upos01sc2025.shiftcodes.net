@@ -22,7 +22,7 @@ return new class extends Migration
             'width' => 0.9,
             'height' => 0.95,
             'paper_width' => 1.57,
-            'paper_height' => 0.98,
+            'paper_height' => 0.49,
             'top_left' => 0,
             'left_margin' => 0,
             'row_distance' => 0,

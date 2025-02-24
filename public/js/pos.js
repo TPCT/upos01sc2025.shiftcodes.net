@@ -364,7 +364,6 @@ $(document).ready(function() {
             .find(':selected')
             .data('rate');
         var unit_price_inc_tax = __read_number(tr.find('input.pos_unit_price_inc_tax'));
-
         var discounted_unit_price = __get_principle(unit_price_inc_tax, tax_rate);
         var unit_price = get_unit_price_from_discounted_unit_price(tr, discounted_unit_price);
         __write_number(tr.find('input.pos_unit_price'), unit_price);
@@ -475,21 +474,9 @@ $(document).ready(function() {
             if (parseFloat(value.val()) > max_discount_val)
                 value.val(max_discount_val);
 
-            //
-            // const amount = $("input.row_discount_amount");
-            // const q = $("input.pos_quantity")
-            // const unit_price = parseFloat(amount.attr('data-unit-price'));
-            // const minimum_unit_price = parseFloat(amount.attr('data-minimum-fixed-discount'))
-            //
-            // if (type.val() === "percentage"){
-            //     amount.val(Math.min(amount.val(), amount.attr('data-maximum-percentage-discount'), ((unit_price - minimum_unit_price) / unit_price) * 100, 100))
-            // }else{
-            //     amount.val(Math.min(amount.val(), parseFloat(q.val()) * (unit_price - minimum_unit_price)))
-            // }
-
             //calculate discounted unit price
             var discounted_unit_price = calculate_discounted_unit_price(tr);
-
+            console.log(discounted_unit_price);
             var tax_rate = tr
                 .find('select.tax_id')
                 .find(':selected')
@@ -1784,7 +1771,7 @@ function pos_each_row(row_obj) {
 
     var unit_price_inc_tax =
         discounted_unit_price + __calculate_amount('percentage', tax_rate, discounted_unit_price);
-    __write_number(row_obj.find('input.pos_unit_price_inc_tax'), unit_price_inc_tax);
+    // __write_number(row_obj.find('input.pos_unit_price_inc_tax'), unit_price_inc_tax);
 
     var discount = __read_number(row_obj.find('input.row_discount_amount'));
 
@@ -2200,12 +2187,12 @@ $('body').on('focus', 'select', function(e) {
 });
 
 function round_row_to_iraqi_dinnar(row) {
-    if (iraqi_selling_price_adjustment) {
-        var element = row.find('input.pos_unit_price_inc_tax');
-        var unit_price = round_to_iraqi_dinnar(__read_number(element));
-        __write_number(element, unit_price);
-        element.change();
-    }
+    // if (iraqi_selling_price_adjustment) {
+    //     var element = row.find('input.pos_unit_price_inc_tax');
+    //     var unit_price = round_to_iraqi_dinnar(__read_number(element));
+    //     __write_number(element, unit_price);
+    //     element.change();
+    // }
 }
 
 function pos_print(receipt) {
@@ -2243,6 +2230,7 @@ function pos_print(receipt) {
 
 function calculate_discounted_unit_price(row) {
     var this_unit_price = __read_number(row.find('input.pos_unit_price'));
+    console.log(this_unit_price, row.find('input.pos_unit_price').val());
     var row_discounted_unit_price = this_unit_price;
     var row_discount_type = row.find('select.row_discount_type').val();
     var row_discount_amount = __read_number(row.find('input.row_discount_amount'));

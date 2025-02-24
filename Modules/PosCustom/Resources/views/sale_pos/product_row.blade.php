@@ -479,7 +479,7 @@
 			tr.find('input.pos_unit_price_inc_tax').val(unitPrice.toFixed(2)); // الاحتفاظ بسعر الوحدة كما هو
 		}
 
-	
+
 	});
 
 

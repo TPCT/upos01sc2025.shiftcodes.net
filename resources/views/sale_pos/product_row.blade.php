@@ -44,9 +44,7 @@
                name="products[{{$row_count}}][product_type]"
                value="{{$product->product_type}}">
 
-        <input type="hidden"
-               name="product[{{$row_count}}][pos_unit_price]" value="{{$product->unit_price_before_discount}}"
-        >
+
         @php
             $hide_tax = 'hide';
             if(session()->get('business.enable_inline_tax') == 1){
@@ -109,7 +107,18 @@
                 @include('sale_pos.partials.row_edit_product_price_modal')
             </div>
         @endif
-
+        <input type="hidden"
+               class="pos_unit_price"
+               name="products[{{$row_count}}][unit_price]" value="{{$unit_price_inc_tax}}"
+        >
+        <input type="hidden"
+               class="pos_item_tax"
+               name="products[{{$row_count}}][item_tax]" value="{{$item_tax}}"
+        >
+        <input type="hidden"
+               class="pos_item_tax_id"
+               name="products[{{$row_count}}][tax_id]" value="{{$tax_id}}"
+        >
         <!-- Description modal end -->
         @if(in_array('modifiers' , $enabled_modules))
             <div class="modifiers_html">

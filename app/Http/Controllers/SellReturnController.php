@@ -304,7 +304,8 @@ class SellReturnController extends Controller
 
          $statuses = Transaction::sell_statuses();
 
-         if ($sale_type == 'sales_order') {
+         $sale_type = "sales_return";
+         if ($sale_type == 'sales_return') {
              $status = 'ordered';
          }
 
@@ -326,7 +327,7 @@ class SellReturnController extends Controller
          $change_return = $this->dummyPaymentLine;
          $due = $this->transactionUtil->getContactDue(1, $business_id);
 
-         return view('sell.create')
+         return view('sell_return.create')
              ->with(compact(
                  'business_details',
                  'taxes',
@@ -396,7 +397,7 @@ class SellReturnController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\View\View|string
      */
     public function store(Request $request)
     {
@@ -406,20 +407,88 @@ class SellReturnController extends Controller
 
         try {
             $input = $request->except('_token');
-
             if (! empty($input['products'])) {
                 $business_id = $request->session()->get('user.business_id');
 
-                //Check if subscribed or not
                 if (! $this->moduleUtil->isSubscribed($business_id)) {
                     return $this->moduleUtil->expiredResponse(action([\App\Http\Controllers\SellReturnController::class, 'index']));
                 }
 
                 $user_id = $request->session()->get('user.id');
+                $discount = [
+                    'discount_type' => $input['discount_type'] ?? 'fixed',
+                    'discount_amount' => $input['discount_amount'] ?? 0,
+                ];
 
+                $productUtil = new \App\Utils\ProductUtil();
+                $transactionUtil = new TransactionUtil();
+                $input['tax_id'] = $input['tax_id'] ?? null;
+                $invoice_total = $productUtil->calculateInvoiceTotal($input['products'], $input['tax_id'], $discount);
                 DB::beginTransaction();
 
-                $sell_return = $this->transactionUtil->addSellReturn($input, $business_id, $user_id);
+                $sell_return_data = [
+                    'invoice_no' => $input['invoice_no'] ?? null,
+                    'discount_type' => $discount['discount_type'],
+                    'discount_amount' => $transactionUtil->num_uf($discount['discount_amount']),
+                    'tax_id' => $input['tax_id'],
+                    'tax_amount' => $invoice_total['tax'],
+                    'total_before_tax' => $invoice_total['total_before_tax'],
+                    'final_total' => $invoice_total['final_total'],
+                ];
+
+                if (! empty($input['transaction_date'])) {
+                    $sell_return_data['transaction_date'] = $transactionUtil->uf_date($input['transaction_date'], true);
+                }
+
+                if (empty($sell_return_data['invoice_no']) && empty($sell_return)) {
+                    $ref_count = $transactionUtil->setAndGetReferenceCount('sell_return', $business_id);
+                    $sell_return_data['invoice_no'] = $transactionUtil->generateReferenceNumber('sell_return', $ref_count, $business_id);
+                }
+                $cg = $this->contactUtil->getCustomerGroup($business_id, $input['contact_id']);
+
+                $sell_return_data['transaction_date'] = $sell_return_data['transaction_date'] ?? \Carbon::now();
+                $sell_return_data['business_id'] = $business_id;
+                $sell_return_data['location_id'] = $input['location_id'];
+                $sell_return_data['contact_id'] = $input['contact_id'];
+                $sell_return_data['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
+                $sell_return_data['type'] = 'sell_return';
+                $sell_return_data['status'] = 'final';
+                $sell_return_data['created_by'] = $user_id;
+                $sell_return_data['return_parent_id'] = null;
+                $sell_return = Transaction::create($sell_return_data);
+                $transactionUtil->activityLog($sell_return, 'added');
+
+                //Update payment status
+                foreach ($input['products'] as $product) {
+                    $increase_quantity = $this->productUtil
+                        ->num_uf($product['quantity']);
+                    if (!empty($product['base_unit_multiplier'])) {
+                        $increase_quantity = $increase_quantity * $product['base_unit_multiplier'];
+                    }
+
+                    if ($product['enable_stock']) {
+                        $this->productUtil->decreaseProductQuantity(
+                            $product['product_id'],
+                            $product['variation_id'],
+                            $input['location_id'],
+                            -1 * $increase_quantity
+                        );
+                    }
+
+                    if ($product['product_type'] == 'combo') {
+                        //Decrease quantity of combo as well.
+                        $this->productUtil
+                            ->decreaseProductQuantityCombo(
+                                $product['combo'],
+                                $input['location_id']
+                            );
+                    }
+                }
+
+                $transactionUtil->createOrUpdateSellLines($sell_return, $input['products'], $input['location_id']);
+                $sell_return->payment_status = $transactionUtil->updatePaymentStatus($sell_return->id, $sell_return->final_total);
+                $sell_return->return_parent_id = $sell_return->id;
+                $sell_return->save();
 
                 $receipt = $this->receiptContent($business_id, $sell_return->location_id, $sell_return->id);
 
@@ -432,7 +501,6 @@ class SellReturnController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
                 $msg = $e->getMessage();
             } else {
@@ -444,8 +512,9 @@ class SellReturnController extends Controller
                 'msg' => $msg,
             ];
         }
-
-        return $output;
+        return redirect()
+            ->action([\App\Http\Controllers\SellReturnController::class, 'index'])
+            ->with('status', $output);
     }
 
     /**
