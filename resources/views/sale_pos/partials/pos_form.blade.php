@@ -23,6 +23,9 @@
 					<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""  @if(!auth()->user()->can('customer.create')) disabled @endif><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 				</span>
 				<span class="input-group-btn">
+					<a href="{{route('sell-return.create')}}" class="btn btn-default bg-white btn-flat" data-customer-id="{{$walk_in_customer['id'] ?? ''}}"><i class="fa fa-arrow-left text-primary fa-lg"></i></a>
+				</span>
+				<span class="input-group-btn">
 					<button type="button" class="btn btn-default bg-white btn-flat show_last_customer_invoices" data-customer-id="{{$walk_in_customer['id'] ?? ''}}"><i class="fa fa-file-invoice text-primary fa-lg"></i></button>
 				</span>
 
