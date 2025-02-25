@@ -272,7 +272,7 @@
                    @endif
                    data-rule-required="true"
                    data-msg-required="@lang('validation.custom-messages.this_field_is_required')"
-                   @if($product->enable_stock && empty($pos_settings['allow_overselling']) && empty($is_sales_order) )
+                   @if($product->enable_stock && empty($pos_settings['allow_overselling']) && empty($is_sales_order) && $check_qty)
                        data-rule-max-value="{{$max_qty_rule}}" data-qty_available="{{$product->qty_available}}"
                    data-msg-max-value="{{$max_qty_msg}}"
                    data-msg_max_default="@lang('validation.custom-messages.quantity_not_available', ['qty'=> $product->formatted_qty_available, 'unit' => $product->unit  ])"

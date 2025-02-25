@@ -486,10 +486,11 @@ class SellReturnController extends Controller
                 }
 
                 $transactionUtil->createOrUpdateSellLines($sell_return, $input['products'], $input['location_id']);
-                $sell_return->payment_status = $transactionUtil->updatePaymentStatus($sell_return->id, $sell_return->final_total);
+                $sell_return->payment_status = "paid";
                 $sell_return->return_parent_id = $sell_return->id;
                 $sell_return->save();
 
+                $contact = Contact::find($input['contact_id']);
                 $receipt = $this->receiptContent($business_id, $sell_return->location_id, $sell_return->id);
 
                 DB::commit();

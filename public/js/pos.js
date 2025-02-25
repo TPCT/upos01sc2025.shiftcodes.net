@@ -223,6 +223,10 @@ $(document).ready(function() {
                         for_so = true;
                     }
 
+                    if ($('#sale_type').length && $('#sale_type').val() == 'sales_return') {
+                        for_so = true;
+                    }
+
                     var is_draft=false;
                     if($('input#status') && ($('input#status').val()=='quotation' || 
                     $('input#status').val()=='draft')) {
@@ -250,6 +254,11 @@ $(document).ready(function() {
                 if ($('#sale_type').length && $('#sale_type').val() == 'sales_order') {
                     for_so = true;
                 }
+
+                if ($('#sale_type').length && $('#sale_type').val() == 'sales_return') {
+                    for_so = true;
+                }
+
                 var is_draft=false;
                 if($('input#status') && ($('input#status').val()=='quotation' || 
                 $('input#status').val()=='draft')) {
@@ -1654,8 +1663,8 @@ function pos_product_row(variation_id = null, purchase_line_id = null, weighing_
 
         var disable_qty_alert = false;
 
-        if ($('#disable_qty_alert').length) {
-            disable_qty_alert = true;
+        if ($('#sale_type').length && $('#sale_type').val() == 'sales_order') {
+            for_so = true;
         }
 
         var is_sales_order = $('#sale_type').length && $('#sale_type').val() == 'sales_order' ? true : false;
@@ -1682,6 +1691,11 @@ function pos_product_row(variation_id = null, purchase_line_id = null, weighing_
         $('input#status').val()=='draft')) {
             is_draft=true;
         }
+
+        var is_sale_return = false;
+        if ($('#sale_type').length && $('#sale_type').val() == 'sales_return') {
+            is_sale_return = true;
+        }
         
         $.ajax({
             method: 'GET',
@@ -1697,7 +1711,8 @@ function pos_product_row(variation_id = null, purchase_line_id = null, weighing_
                 quantity: quantity,
                 is_sales_order: is_sales_order,
                 disable_qty_alert: disable_qty_alert,
-                is_draft: is_draft
+                is_draft: is_draft,
+                is_sale_return: is_sale_return,
             },
             dataType: 'json',
             success: function(result) {

@@ -1619,7 +1619,9 @@ class SellPosController extends Controller
 
         $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
 
-        $check_qty = !empty($pos_settings['allow_overselling']) ? false : true;
+        $check_qty = !(\request()->has('is_sale_return') && \request()->input('is_sale_return') == 'true') || !empty($pos_settings['allow_overselling']) ? false : true;
+        if (\request()->has('is_sale_return') && \request()->input('is_sale_return') == 'true')
+            $check_qty = false;
 
         $is_sales_order = request()->has('is_sales_order') && request()->input('is_sales_order') == 'true' ? true : false;
         $is_draft = request()->has('is_draft') && request()->input('is_draft') == 'true' ? true : false;
@@ -1717,7 +1719,7 @@ class SellPosController extends Controller
                     'sub_units', 'discount', 'waiters', 'edit_discount',
                     'edit_price', 'purchase_line_id', 'warranties', 'quantity',
                     'is_direct_sell', 'so_line', 'is_sales_order', 'last_sell_line',
-                    'user'
+                    'user', 'check_qty'
                 ))
                 ->render();
         }
@@ -1765,6 +1767,10 @@ class SellPosController extends Controller
                 $is_direct_sell = true;
             }
 
+            if (\request()->get('is_sell_return') == 'true'){
+                $is_direct_sell = true;
+            }
+
             if ($variation_id == 'null' && !empty($weighing_barcode)) {
                 $product_details = $this->__parseWeighingBarcode($weighing_barcode);
                 if ($product_details['success']) {
@@ -1777,9 +1783,7 @@ class SellPosController extends Controller
                     return $output;
                 }
             }
-
             $output = $this->getSellLineRow($variation_id, $location_id, $quantity, $row_count, $is_direct_sell);
-
             if ($this->transactionUtil->isModuleEnabled('modifiers') && !$is_direct_sell) {
                 $variation = Variation::find($variation_id);
                 $business_id = request()->session()->get('user.business_id');
