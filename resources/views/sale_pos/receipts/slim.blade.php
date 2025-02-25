@@ -8,6 +8,7 @@
 	<style>
 
 		.invoice-slim {
+			font-weight: bold;
 			font-family: 'Tahoma', sans-serif;
 			direction: rtl;
 			text-align: right;
