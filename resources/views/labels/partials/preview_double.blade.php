@@ -74,19 +74,14 @@
 </table>
 <style type="text/css">
 
-    .price_span {
-        float: left;
-        font-size: 11px;
-        color: #fff;
-        background-color: #000000d1;
-        font-family: Arial;
-        font-weight: 900;
-        padding: 1;
-        z-index: 1111;
-        margin-left: 5px;
-
-    }
-
+	.price_span {
+		float: left;
+		font-size: 11px;
+		color: black;
+		font-weight: 900;
+		z-index: 1111;
+		margin-left: 5px;
+	}
     .sym-curr {
         position: absolute;
         color: black;
