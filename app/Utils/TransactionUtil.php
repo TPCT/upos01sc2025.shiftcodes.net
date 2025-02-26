@@ -5248,7 +5248,7 @@ class TransactionUtil extends Util
 
         $invoice_sum = $transactions->where('type', 'sell')->sum('final_total');
         $purchase_sum = $transactions->where('type', 'purchase')->sum('final_total');
-        $sell_return_sum = $transactions->where('type', 'sell_return')->sum('final_total');
+        $sell_return_sum = $transactions->where('type', 'sell_return')->whereNotNull('return_parent_id')->sum('final_total');
         $purchase_return_sum = $transactions->where('type', 'purchase_return')->sum('final_total');
 
         //Get payment totals between dates
@@ -5263,7 +5263,6 @@ class TransactionUtil extends Util
         $paymentTypes = $this->payment_types(null, true, $business_id);
 
         $total_reverse_payment = 0;
-
         foreach ($payments as $payment) {
             if ($payment->transaction_type == 'opening_balance') {
                 $opening_balance_paid += $payment->amount;
@@ -5272,6 +5271,11 @@ class TransactionUtil extends Util
             if ($contact->type == 'customer' && $payment->is_advance == 0 && empty($payment->transaction_id) && $payment->payment_type == 'debit') {
                 $total_reverse_payment += $payment->amount;
             }
+
+            if ($contact->type == 'customer' && $payment->transaction->type == "sell_return" && empty($payment->transaction->return_parent_id)){
+                $total_reverse_payment += $payment->transaction->final_total;
+            }
+
             if ($contact->type == 'supplier' && $payment->is_advance == 0 && empty($payment->transaction_id) && $payment->payment_type == 'credit') {
                 $total_reverse_payment += $payment->amount;
             }
@@ -5310,6 +5314,14 @@ class TransactionUtil extends Util
             ];
         }
 
+        $total_sell_returns_without_invoice = 0;
+        if ($contact->type == "customer") {
+            $sell_returns_without_invoice = Transaction::where('contact_id', $contact_id)->whereNull('return_parent_id')->where('type', 'sell_return')->get();
+            foreach ($sell_returns_without_invoice as $sell_return) {
+                $total_sell_returns_without_invoice += $sell_return->final_total;
+            }
+        }
+
         $total_excess_advance_payment = $this->__paymentQuery($contact_id, $start, $end, $location_id)
                                     ->select(
                                             DB::raw('(transaction_payments.amount - COALESCE((SELECT SUM(amount) from transaction_payments as TP where TP.parent_id = transaction_payments.id), 0)) as amount')
@@ -5330,7 +5342,7 @@ class TransactionUtil extends Util
         $total_sell_change_return = ! empty($total_sell_change_return) ? $total_sell_change_return : 0;
         $total_invoice_paid -= $total_sell_change_return;
         $total_purchase_paid = ! empty($payments) ? $payments->where('transaction_type', 'purchase')->where('is_return', 0)->sum('amount') : 0;
-        $total_sell_return_paid = ! empty($payments) ? $payments->where('transaction_type', 'sell_return')->sum('amount') : 0;
+        $total_sell_return_paid = ! empty($payments) ? $payments->where('transaction_type', 'sell_return')->whereNotNull('t.return_parent_id')->sum('amount') : 0;
         $total_purchase_return_paid = ! empty($payments) ? $payments->where('transaction_type', 'purchase_return')->sum('amount') : 0;
 
         $total_invoice_paid += $opening_balance_paid;
@@ -5440,7 +5452,6 @@ class TransactionUtil extends Util
                                         ->sum('amount');
 
         $total_overall_paid_customer = $overall_total_invoice_paid - $overall_total_sell_return_paid + $overall_total_ob_paid; //Add '+ $overall_total_advance_payment'
-
         $total_overall_paid_supplier = $overall_total_purchase_paid - $overall_total_purchase_return_paid;
         $overall_due = $total_overall_invoice + $total_overall_purchase - $total_overall_paid_customer - $total_overall_paid_supplier - $overall_ledger_discount;
 
@@ -5453,7 +5464,7 @@ class TransactionUtil extends Util
             'beginning_balance' => $beginning_balance + $opening_balance_due,
             'balance_due' => $curr_due,
             'total_paid' => $total_paid,
-            'total_reverse_payment' => $total_reverse_payment,
+            'total_reverse_payment' => $total_reverse_payment - $total_sell_returns_without_invoice,
             'ledger_discount' => $ledger_discount,
 
             'all_total_invoice' => $total_overall_invoice,
