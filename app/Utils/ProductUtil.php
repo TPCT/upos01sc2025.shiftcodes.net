@@ -396,7 +396,7 @@ class ProductUtil extends Util
      * @param $old_quantity = 0
      * @return bool
      */
-    public function decreaseProductQuantity($product_id, $variation_id, $location_id, $new_quantity, $old_quantity = 0)
+    public function decreaseProductQuantity($product_id, $variation_id, $location_id, $new_quantity, $old_quantity = 0, $sell_return = false)
     {
         $qty_difference = $new_quantity - $old_quantity;
 
@@ -421,8 +421,10 @@ class ProductUtil extends Util
                     'qty_available' => 0,
                 ]);
             }
-
-            $details->decrement('qty_available', $qty_difference);
+            if ($sell_return)
+                $details->increment('qty_available', $qty_difference);
+            else
+                $details->decrement('qty_available', $qty_difference);
         }
 
         return true;
@@ -435,7 +437,7 @@ class ProductUtil extends Util
      * @param $location_id
      * @return void
      */
-    public function decreaseProductQuantityCombo($combo_details, $location_id)
+    public function decreaseProductQuantityCombo($combo_details, $location_id, $sell_return=false)
     {
         //product_id = child product id
         //variation id is child product variation id
@@ -444,7 +446,8 @@ class ProductUtil extends Util
                 $details['product_id'],
                 $details['variation_id'],
                 $location_id,
-                $details['quantity']
+                $details['quantity'],
+                sell_return: $sell_return
             );
         }
     }
@@ -1922,7 +1925,6 @@ class ProductUtil extends Util
                     ->leftjoin('purchase_lines as pl', 'pl.variation_id', '=', 'variations.id')
                     ->leftjoin('transactions as t', 'pl.transaction_id', '=', 't.id')
                     ->where('t.location_id', $location_id)
-                    //->where('t.status', 'received')
                     ->where('p.business_id', $business_id)
                     ->where('variations.id', $variation_id)
                     ->select(
@@ -1953,7 +1955,7 @@ class ProductUtil extends Util
                     ->where('variations.id', $variation_id)
                     ->select(
                         DB::raw("SUM(IF(t.type='sell', sl.quantity, 0)) as total_sold"),
-                        DB::raw("SUM(IF(t.type='sell', sl.quantity_returned, 0)) as total_sell_return"),
+                        DB::raw("SUM(IF(t.type IN ('sell', 'sell_return'), sl.quantity_returned, 0)) as total_sell_return"),
                         DB::raw("SUM(IF(t.type='sell_transfer', sl.quantity, 0)) as total_sell_transfer")
                     )
                   ->get()->first();

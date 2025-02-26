@@ -96,7 +96,7 @@
 				{!! Form::hidden('default_price_group', null, ['id' => 'default_price_group']) !!}
 
 				@if(in_array('types_of_service', $enabled_modules) && !empty($types_of_service))
-					<div class="col-md-4 col-sm-6">
+					<div class="col-md-4 col-sm-6 hidden">
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon">
@@ -151,7 +151,7 @@
 						<small class="@if ($due >= 0 ) text-success @else text-danger @endif contact_due_text"><strong>@lang('account.customer_due'):</strong> <span> {{$due}} </span></small>
 
 					</div>
-					<small>
+					<small class="hidden">
 					<strong>
 						@lang('lang_v1.billing_address'):
 					</strong>
@@ -170,7 +170,7 @@
 					</small>
 				</div>
 
-				<div class="col-md-3">
+				<div class="col-md-3 hidden">
 		          <div class="form-group">
 		            <div class="multi-input">
 		            @php
@@ -193,7 +193,7 @@
 				@php
 					$is_commission_agent_required = !empty($pos_settings['is_commission_agent_required']);
 				@endphp
-				<div class="col-sm-3">
+				<div class="col-sm-3 hidden">
 					<div class="form-group">
 					{!! Form::label('commission_agent', __('lang_v1.commission_agent') . ':') !!}
 					{!! Form::select('commission_agent',
@@ -227,7 +227,7 @@
 					</div>
 				@endif
 				@if($sale_type != 'sales_order')
-					<div class="col-sm-3">
+					<div class="col-sm-3 hidden">
 						<div class="form-group">
 							{!! Form::label('invoice_scheme_id', __('invoice.invoice_scheme') . ':') !!}
 							{!! Form::select('invoice_scheme_id', $invoice_schemes, $default_invoice_schemes->id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
@@ -422,7 +422,7 @@
 					</div>
 				</div>
 			@endcomponent
-			@component('components.widget', ['class' => 'box-solid'])
+			@component('components.widget', ['class' => 'box-solid hidden'])
 				<div class="col-md-4  @if($sale_type == 'sales_order') hide @endif">
 			        <div class="form-group">
 			            {!! Form::label('discount_type', __('sale.discount_type') . ':*' ) !!}
@@ -515,7 +515,7 @@
 			    </div>
 				<input type="hidden" name="is_direct_sale" value="1">
 			@endcomponent
-			@component('components.widget', ['class' => 'box-solid'])
+			@component('components.widget', ['class' => 'box-solid hidden'])
 			<div class="col-md-4">
 				<div class="form-group">
 		            {!! Form::label('shipping_details', __('sale.shipping_details')) !!}
@@ -729,7 +729,7 @@
 		</div>
 	</div>
 	@if(!empty($common_settings['is_enabled_export']) && $sale_type != 'sales_order')
-		@component('components.widget', ['class' => 'box-solid', 'title' => __('lang_v1.export')])
+		@component('components.widget', ['class' => 'box-solid hidden', 'title' => __('lang_v1.export')])
 			<div class="col-md-12 mb-12">
                 <div class="form-check">
                     <input type="checkbox" name="is_export" class="form-check-input" id="is_export" @if(!empty($walk_in_customer['is_export'])) checked @endif>
@@ -758,7 +758,7 @@
 	@endphp
 	@if((empty($status) || (!in_array($status, ['quotation', 'draft'])) || $is_enabled_download_pdf) && $sale_type != 'sales_order')
 		@can('sell.payments')
-			@component('components.widget', ['class' => 'box-solid', 'id' => $payment_body_id, 'title' => __('purchase.add_payment')])
+			@component('components.widget', ['class' => 'box-solid hidden', 'id' => $payment_body_id, 'title' => __('purchase.add_payment')])
 			@if($is_enabled_download_pdf)
 				<div class="well row">
 					<div class="col-md-6">

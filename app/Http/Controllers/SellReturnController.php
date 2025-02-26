@@ -471,7 +471,8 @@ class SellReturnController extends Controller
                             $product['product_id'],
                             $product['variation_id'],
                             $input['location_id'],
-                            -1 * $increase_quantity
+                            $increase_quantity,
+                            sell_return: true
                         );
                     }
 
@@ -480,12 +481,13 @@ class SellReturnController extends Controller
                         $this->productUtil
                             ->decreaseProductQuantityCombo(
                                 $product['combo'],
-                                $input['location_id']
+                                $input['location_id'],
+                                sell_return: true
                             );
                     }
                 }
 
-                $transactionUtil->createOrUpdateSellLines($sell_return, $input['products'], $input['location_id']);
+                $transactionUtil->createOrUpdateSellLines($sell_return, $input['products'], $input['location_id'], sell_return: true);
                 $sell_return->payment_status = "paid";
                 $sell_return->return_parent_id = $sell_return->id;
                 $sell_return->save();
@@ -500,6 +502,7 @@ class SellReturnController extends Controller
                 ];
             }
         } catch (\Exception $e) {
+            dd($e->getMessage());
             DB::rollBack();
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
                 $msg = $e->getMessage();

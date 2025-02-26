@@ -284,7 +284,7 @@ class TransactionUtil extends Util
      *   Example: ['database_trasnaction_linekey' => 'products_line_key'];
      * @return boolean/object
      */
-    public function createOrUpdateSellLines($transaction, $products, $location_id, $return_deleted = false, $status_before = null, $extra_line_parameters = [], $uf_data = true)
+    public function createOrUpdateSellLines($transaction, $products, $location_id, $return_deleted = false, $status_before = null, $extra_line_parameters = [], $uf_data = true, $sell_return=false)
     {
         $lines_formatted = [];
         $modifiers_array = [];
@@ -324,7 +324,8 @@ class TransactionUtil extends Util
                                     $modifiers_formatted[] = new TransactionSellLine([
                                         'product_id' => $product['modifier_set_id'][$key],
                                         'variation_id' => $value,
-                                        'quantity' => $modifier_quantity,
+                                        'quantity' => $sell_return ? 0 : $modifier_quantity,
+                                        'quantity_returned' => $sell_return ? $modifier_quantity : 0,
                                         'unit_price_before_discount' => $this_price,
                                         'unit_price' => $this_price,
                                         'unit_price_inc_tax' => $this_price,
@@ -369,7 +370,8 @@ class TransactionUtil extends Util
                 $line = [
                     'product_id' => $product['product_id'],
                     'variation_id' => $product['variation_id'],
-                    'quantity' => $uf_quantity * $multiplier,
+                    'quantity' => $sell_return ? 0 : $uf_quantity * $multiplier,
+                    'quantity_returned' => $sell_return ? $uf_quantity * $multiplier : 0,
                     'unit_price_before_discount' => $unit_price_before_discount,
                     'unit_price' => $unit_price,
                     'line_discount_type' => ! empty($product['line_discount_type']) ? $product['line_discount_type'] : null,
@@ -406,7 +408,8 @@ class TransactionUtil extends Util
                                 $sell_line_modifiers[] = [
                                     'product_id' => $product['modifier_set_id'][$key],
                                     'variation_id' => $value,
-                                    'quantity' => $modifier_quantity,
+                                    'quantity' => $sell_return ? 0 : $modifier_quantity,
+                                    'quantity_returned' => $sell_return ? $modifier_quantity : 0,
                                     'unit_price_before_discount' => $this_price,
                                     'unit_price' => $this_price,
                                     'unit_price_inc_tax' => $this_price,

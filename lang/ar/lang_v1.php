@@ -4,6 +4,7 @@ return [
     'sales_report' => 'فواتير المبيعات',
     'reference_no' => 'الرقم المرجعي',
     'total' => 'الاجمالي',
+    'save' => 'حفظ',
     'sales_return' => 'اضافه مرتجع',
     'purchases_report' => 'فواتير الشراء',
     'invoices_report' => 'تفاصيل تحصيلات الفواتير',
