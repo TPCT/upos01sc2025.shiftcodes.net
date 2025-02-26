@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Barcode;
+use App\Business;
 use App\Product;
 use App\SellingPriceGroup;
 use App\Utils\ProductUtil;
@@ -117,11 +118,13 @@ class LabelsController extends Controller
             $print = $request->get('print');
             $barcode_setting = $request->get('barcode_setting');
             $business_id = $request->session()->get('user.business_id');
-
+            $print['business_name'] = Business::find($business_id)->name;
             $barcode_details = Barcode::find($barcode_setting);
+
             $view = "preview_2";
             if ($barcode_details->type == "double-labels-for-one-sticker")
                 $view = "preview_double";
+
             $barcode_details->stickers_in_one_sheet = $barcode_details->is_continuous ? $barcode_details->stickers_in_one_row : $barcode_details->stickers_in_one_sheet;
             $barcode_details->paper_height = $barcode_details->is_continuous ? $barcode_details->height : $barcode_details->paper_height;
             if ($barcode_details->stickers_in_one_row == 1) {

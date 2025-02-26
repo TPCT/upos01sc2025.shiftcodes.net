@@ -1,11 +1,17 @@
 <table align="center" style="border-spacing: {{$barcode_details->col_distance * 1}}in {{$barcode_details->row_distance * 1}}in; overflow: hidden !important;">
 @foreach($page_products as $page_product)
+
 	@if($loop->index % $barcode_details->stickers_in_one_row == 0)
+		<!-- create a new row -->
 		<tr>
+		<!-- <columns column-count="{{$barcode_details->stickers_in_one_row}}" column-gap="{{$barcode_details->col_distance*1}}"> -->
 	@endif
 		<td align="center" valign="center">
 			<div style="overflow: hidden !important;display: flex; flex-wrap: wrap;align-content: center;width: {{$barcode_details->width * 1}}in; height: {{$barcode_details->height * 1}}in; justify-content: center;">
+				
+
 				<div>
+
 					{{-- Business Name --}}
 					@if(!empty($print['business_name']))
 						<b style="display: block !important; font-size: {{$print['business_name_size']}}px">{{$business_name}}</b>
@@ -30,7 +36,6 @@
 							{{$page_product->product_variation_name}}:<b>{{$page_product->variation_name}}</b>
 						</span>
 					@endif
-
 					{{-- product_custom_fields --}}
 					@php
 						$custom_labels = json_decode(session('business.custom_labels'), true);
@@ -56,7 +61,7 @@
 						@lang('lang_v1.price'):
 						<b>{{session('currency')['symbol'] ?? ''}}
 
-
+						
 						@if($print['price_type'] == 'inclusive')
 							{{@num_format($page_product->sell_price_inc_tax)}}
 						@else
@@ -83,13 +88,13 @@
 					@endif
 					{{-- Barcode --}}
 					<img style="max-width:90% !important;height: {{$barcode_details->height*0.24}}in !important; display: block;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
-
+					
 					<span style="font-size: 10px !important">
 						{{$page_product->sub_sku}}
 					</span>
 				</div>
 			</div>
-
+		
 		</td>
 
 	@if($loop->iteration % $barcode_details->stickers_in_one_row == 0)
@@ -104,17 +109,21 @@
 		border: 1px dotted lightgray;
 	}
 	@media print{
-
+		
 		table{
 			page-break-after: always;
 		}
 
+		
 		@page {
-			size: {{$paper_width}}in {{$paper_height}}in;
-			margin-top: {{$margin_top}}in !important;
-			margin-bottom: {{$margin_top}}in !important;
-			margin-left: {{$margin_left}}in !important;
-			margin-right: {{$margin_left}}in !important;
-		}
+		size: {{$paper_width}}in {{$paper_height}}in;
+
+		/*width: {{$barcode_details->paper_width}}in !important;*/
+		/*height:@if($barcode_details->paper_height != 0){{$barcode_details->paper_height}}in !important @else auto @endif;*/
+		margin-top: {{$margin_top}}in !important;
+		margin-bottom: {{$margin_top}}in !important;
+		margin-left: {{$margin_left}}in !important;
+		margin-right: {{$margin_left}}in !important;
+	}
 	}
 </style>
