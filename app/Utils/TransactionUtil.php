@@ -5431,7 +5431,7 @@ class TransactionUtil extends Util
         $overall_payments = $this->__paymentQuery($contact_id, null, null, $location_id)
                             ->select('transaction_payments.*', 'bl.name as location_name', 't.type as transaction_type', 'is_advance')
                                     ->get();
-        $overall_total_invoice_paid = $overall_payments->where('transaction_type', 'sell')->where('is_return', 0)->sum('amount');
+        $overall_total_invoice_paid = $overall_payments->where('transaction_type', 'sell')->where('is_returphp artisan n', 0)->sum('amount');
         $overall_total_ob_paid = $overall_payments->where('transaction_type', 'opening_balance')->where('is_return', 0)->sum('amount');
         $overall_total_sell_change_return = $overall_payments->where('transaction_type', 'sell')->where('is_return', 1)->sum('amount');
         $overall_total_sell_change_return = ! empty($overall_total_sell_change_return) ? $overall_total_sell_change_return : 0;

@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Utils\TransactionUtil;
@@ -264,6 +265,15 @@ class CashRegisterController extends Controller
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->sum('amount');
 
+        $details['sell_return'] += Transaction::where(function ($query) use ($business_id, $open_time, $close_time){
+             $query->where('type', 'sell_return');
+             $query->where('business_id', $business_id);
+             $query->where('status', 'final');
+             $query->where('payment_status', 'paid');
+             $query->whereBetween('paid_on', [$open_time, $close_time]);
+             $query->whereNull('return_parent_id');
+        })->sum('final_total');
+
         $details['supplier_payments'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $user_id){
             $query->where('type', 'purchase');
             $query->where('business_id', $business_id);
@@ -404,6 +414,15 @@ class CashRegisterController extends Controller
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->sum('amount');
+
+        $details['sell_return'] += Transaction::where(function ($query) use ($business_id, $open_time, $close_time){
+            $query->where('type', 'sell_return');
+            $query->where('business_id', $business_id);
+            $query->where('status', 'final');
+            $query->where('payment_status', 'paid');
+            $query->whereBetween('transaction_date', [$open_time, $close_time]);
+            $query->whereNull('return_parent_id');
+        })->sum('final_total');
 
         $details['supplier_payments'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $user_id){
             $query->where('type', 'purchase');
