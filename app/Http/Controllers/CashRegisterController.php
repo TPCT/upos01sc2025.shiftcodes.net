@@ -270,7 +270,7 @@ class CashRegisterController extends Controller
              $query->where('business_id', $business_id);
              $query->where('status', 'final');
              $query->where('payment_status', 'paid');
-             $query->whereBetween('paid_on', [$open_time, $close_time]);
+             $query->whereBetween('transaction_date', [$open_time, $close_time]);
              $query->whereNull('return_parent_id');
         })->sum('final_total');
 
