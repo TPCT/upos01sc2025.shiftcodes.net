@@ -9,6 +9,7 @@ use App\Contact;
 use App\CustomerGroup;
 use App\Events\TransactionPaymentDeleted;
 use App\InvoiceScheme;
+use App\PurchaseLine;
 use App\SellingPriceGroup;
 use App\TaxRate;
 use App\Transaction;
@@ -20,6 +21,7 @@ use App\Utils\ContactUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\Models\Activity;
@@ -531,6 +533,18 @@ class SellReturnController extends Controller
                             $increase_quantity,
                             sell_return: true
                         );
+
+                        $purchase_line = PurchaseLine::where(function (Builder $query) use ($product) {
+                            $query->where('product_id', $product['product_id']);
+                            $query->where('variation_id', $product['variation_id']);
+                        })->latest()->first();
+
+                        $purchase_line->create(array_merge($purchase_line->toArray(), [
+                            'transaction_id' => $sell_return->id,
+                            'product_id' => $product['product_id'],
+                            'variation_id' => $product['variation_id'],
+                            'quantity' => $increase_quantity,
+                        ]));
                     }
 
                     if ($product['product_type'] == 'combo') {

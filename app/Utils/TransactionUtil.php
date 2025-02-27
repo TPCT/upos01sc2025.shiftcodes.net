@@ -3242,9 +3242,16 @@ class TransactionUtil extends Util
             $query = Transaction::join('purchase_lines AS PL', 'transactions.id', '=', 'PL.transaction_id')
                 ->where('transactions.business_id', $business['id'])
                 ->where('transactions.location_id', $business['location_id'])
-                ->whereIn('transactions.type', ['purchase', 'purchase_transfer',
-                    'opening_stock', 'production_purchase', ])
-                ->where('transactions.status', 'received')
+                ->where(function($query){
+                    $query->whereIn('transactions.type', ['purchase', 'purchase_transfer',
+                        'opening_stock', 'production_purchase'])
+                        ->where('transactions.status', 'received');
+                })->orWhere(function ($query){
+                    $query->whereIn('transactions.type', ['sell_return'])
+                    ->whereNull('transactions.return_parent_id')
+                    ->where('transactions.status', 'final');
+                })
+
                 ->whereRaw("( $qty_sum_query ) < PL.quantity")
                 ->where('PL.product_id', $line->product_id)
                 ->where('PL.variation_id', $line->variation_id);

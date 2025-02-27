@@ -115,10 +115,11 @@
             $total_quantity = 0.0;
             $total_sum = 0.0;
         @endphp
+
         @foreach($receipt_details->lines as $line)
             @php
                 $discount = $line['total_line_discount'];
-                $total = $line['line_total'];
+                $total = (float)$line['line_total_uf'];
                 $total_sum += $total;
                 $total_quantity += (float) $line['quantity'];
                 $total_discount += $discount;
@@ -130,7 +131,7 @@
 				<td>{{$line['quantity']}}</td>
 				<td>{{$line['unit_price_inc_tax'] . " " . $receipt_details->currency['symbol']}}</td>
 				<td>{{number_format($discount, 2) . " " . $receipt_details->currency['symbol']}}</td>
-				<td>{{number_format($total, 2) . " " . $receipt_details->currency['symbol']}}</td>
+                <td>{{number_format($total, 2) . " " . $receipt_details->currency['symbol']}}</td>
 			</tr>
         @endforeach
         </tbody>

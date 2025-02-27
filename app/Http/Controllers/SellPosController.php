@@ -670,6 +670,7 @@ class SellPosController extends Controller
 
             $output = ['success' => 0,
                 'msg' => $msg,
+                'error' => $e->getMessage(),
             ];
         }
 
