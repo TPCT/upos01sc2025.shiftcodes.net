@@ -143,7 +143,7 @@ class ContactController extends Controller
             )
             ->addColumn(
                 'return_due',
-                '<span class="return_due" data-orig-value="{{$total_purchase_return - $purchase_return_paid}}" data-highlight=false>@format_currency($total_purchase_return - $purchase_return_paid)'
+                '<span class="return_due" data-orig-value="{{$total_purchase_return - $purchase_return_paid}}" data-highlight=false>@format_currency($total_purchase_return - $purchase_return_paid)</span>'
             )
             ->addColumn(
                 'action',
