@@ -502,7 +502,7 @@ class TransactionPaymentController extends Controller
                 );
             } elseif ($due_payment_type == 'sell_return') {
                 $query->select(
-                    DB::raw("SUM(IF(t.type = 'sell_return', final_total, 0)) as total_sell_return"),
+                    DB::raw("SUM(IF(t.type = 'sell_return' AND t.return_parent_id IS NOT NULL, final_total, 0)) as total_sell_return"),
                     DB::raw("SUM(IF(t.type = 'sell_return', (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as total_return_paid"),
                     'contacts.name',
                     'contacts.supplier_business_name',
@@ -546,7 +546,7 @@ class TransactionPaymentController extends Controller
             $contact_details->total_paid = empty($contact_details->total_paid) ? 0 : $contact_details->total_paid;
 
 
-            return view('transaction_payment.pay_supplier_due_modal')
+            return view('transaction_payment.sell.pay_supplier_due_modal')
                         ->with(compact('contact_details', 'payment_types', 'payment_line', 'due_payment_type', 'ob_due', 'amount_formated', 'accounts'));
         }
     }
@@ -595,7 +595,6 @@ class TransactionPaymentController extends Controller
                 'msg' => __('purchase.payment_added_success'),
             ];
 
-            return redirect()->route('view-payment', ['payment_id' => $tp->id])->with('status', $output);
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
@@ -604,7 +603,6 @@ class TransactionPaymentController extends Controller
                 'msg' => 'File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage(),
             ];
         }
-
         return redirect()->back()->with(['status' => $output]);
     }
 

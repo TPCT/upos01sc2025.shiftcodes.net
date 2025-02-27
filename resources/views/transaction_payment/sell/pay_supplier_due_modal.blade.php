@@ -3,7 +3,7 @@
 
     {!! Form::open(['url' => action([\App\Http\Controllers\TransactionPaymentController::class, 'postPayContactDue']), 'method' => 'post', 'id' => 'pay_contact_due_form', 'files' => true ]) !!}
 
-    {!! Form::hidden("contact_id", $contact_details->id); !!}
+    {!! Form::hidden("contact_id", $contact_details->contact_id); !!}
     {!! Form::hidden("due_payment_type", $due_payment_type); !!}
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -23,7 +23,7 @@
             <strong>@lang('report.total_sell'): </strong><span class="display_currency" data-currency_symbol="true">{{ $contact_details->total_invoice }}</span><br>
             <strong>@lang('contact.total_paid'): </strong><span class="display_currency" data-currency_symbol="true">{{ $contact_details->total_paid }}</span><br>
             <strong>@lang('contact.total_sale_due'): </strong><span class="display_currency" data-currency_symbol="true">{{ $contact_details->total_invoice - $contact_details->total_paid > 0 ? $contact_details->total_invoice - $contact_details->total_paid : 0 }}</span><br>
-            <strong>@lang('contact.balance'): </strong><span class="display_currency" data-currency_symbol="true">{{ $contact_details->total_invoice - $contact_details->total_paid < 0 ? -1 * ($contact_details->total_invoice - $contact_details->total_paid) : 0 }}</span><br>
+            <strong>@lang('contact.balance'): </strong><span class="display_currency" data-currency_symbol="true">{{ $contact_details->contact_balance}}</span><br>
 
           </div>
         </div>
