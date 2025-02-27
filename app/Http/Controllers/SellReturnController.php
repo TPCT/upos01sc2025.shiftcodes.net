@@ -183,8 +183,8 @@ class SellReturnController extends Controller
                     'final_total',
                     '<span class="display_currency final_total" data-currency_symbol="true" data-orig-value="{{$final_total}}">{{$final_total}}</span>'
                 )
-                ->editColumn('parent_sale', function ($row) {
-                    return '<button type="button" class="btn btn-link btn-modal" data-container=".view_modal" data-href="'.action([\App\Http\Controllers\SellController::class, 'show'], [$row->parent_sale_id]).'">'.$row->parent_sale.'</button>';
+                ->editColumn('parent_sale', function ($row){
+                    return '<button type="button" class="btn btn-link btn-modal" data-container=".view_modal" data-href="' . action('App\Http\Controllers\SellReturnController@show', [$row->parent_sale_id]) . '">'.$row->parent_sale.'</button>';
                 })
                 ->editColumn('name', '@if(!empty($supplier_business_name)) {{$supplier_business_name}}, <br> @endif {{$name}}')
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
@@ -193,7 +193,10 @@ class SellReturnController extends Controller
                     '<a href="{{ action([\App\Http\Controllers\TransactionPaymentController::class, \'show\'], [$id])}}" class="view_payment_modal payment-status payment-status-label" data-orig-value="{{$payment_status}}" data-status-name="{{__(\'lang_v1.\' . $payment_status)}}"><span class="label @payment_status($payment_status)">{{__(\'lang_v1.\' . $payment_status)}}</span></a>'
                 )
                 ->addColumn('payment_due', function ($row) {
-                    $due = $row->final_total - $row->amount_paid;
+                    $due = 0;
+
+                    if ($row->parent_return_id)
+                        $due = $row->final_total - $row->amount_paid;
 
                     return '<span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="'.$due.'">'.$due.'</sapn>';
                 })
