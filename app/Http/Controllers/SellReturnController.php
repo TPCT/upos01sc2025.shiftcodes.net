@@ -195,7 +195,7 @@ class SellReturnController extends Controller
                 ->addColumn('payment_due', function ($row) {
                     $due = 0;
 
-                    if ($row->parent_return_id)
+                    if ($row->parent_sale_id)
                         $due = $row->final_total - $row->amount_paid;
 
                     return '<span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="'.$due.'">'.$due.'</sapn>';
