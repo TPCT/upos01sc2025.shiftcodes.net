@@ -1,129 +1,94 @@
-<table align="center" style="border-spacing: {{$barcode_details->col_distance * 1}}in {{$barcode_details->row_distance * 1}}in; overflow: hidden !important;">
-@foreach($page_products as $page_product)
+<table align="center" style="
+    border-spacing: {{$barcode_details->col_distance * 1}}in {{$barcode_details->row_distance * 1}}in; 
+    margin-top: {{$margin_top}}in;
+    margin-bottom: {{$margin_top}}in;
+    margin-left: {{$margin_left}}in;
+    margin-right: {{$margin_left}}in;
+    overflow: hidden !important;">
+    
+    @foreach($page_products as $page_product)
 
-	@if($loop->index % $barcode_details->stickers_in_one_row == 0)
-		<!-- create a new row -->
-		<tr>
-		<!-- <columns column-count="{{$barcode_details->stickers_in_one_row}}" column-gap="{{$barcode_details->col_distance*1}}"> -->
-	@endif
-		<td align="center" valign="center">
-			<div style="overflow: hidden !important;display: flex; flex-wrap: wrap;align-content: center;width: {{$barcode_details->width * 1}}in; height: {{$barcode_details->height * 1}}in; justify-content: center;">
-				
+        @if($loop->index % $barcode_details->stickers_in_one_row == 0)
+            <tr>
+        @endif
 
-				<div>
+        <td align="center" valign="center" style="border: 0.5px solid lightgray; padding: 5px;">
+            <div style="width: {{$barcode_details->width * 1}}in; 
+                        height: {{$barcode_details->height * 1}}in; 
+                        display: flex; 
+                        flex-direction: column; 
+                        justify-content: center; 
+                        align-items: center; 
+                        text-align: center; 
+                        overflow: hidden !important;">
+                
+                {{-- اسم المتجر --}}
+                @if(!empty($print['business_name']))
+                    <b style="font-size: {{$print['business_name_size']}}px; display: block; margin-bottom: 5px;">
+                        {{$business_name}}
+                    </b>
+                @endif
 
-					{{-- Business Name --}}
-					@if(!empty($print['business_name']))
-						<b style="display: block !important; font-size: {{$print['business_name_size']}}px">{{$business_name}}</b>
-					@endif
+                {{-- اسم المنتج --}}
+                @if(!empty($print['name']))
+                    <span style="font-size: {{$print['name_size']}}px; display: block; font-weight: bold; color: #000000; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); margin-top: 5px;">
+                        {{$page_product->product_actual_name}}
+                    </span>
+                @endif
 
-					{{-- Product Name --}}
-					@if(!empty($print['name']))
-						<span style="display: block !important; font-size: {{$print['name_size']}}px">
-							{{$page_product->product_actual_name}}
+                {{-- الباركود --}}
+                <img style="width: 100%; height: auto; max-height: {{$barcode_details->height * 0.24}}in; display: block;" 
+                     src="https://barcode.tec-it.com/barcode.ashx?data={{ urlencode($page_product->sub_sku) }}&code=Code128&dpi=96">
 
-							@if(!empty($print['lot_number']) && !empty($page_product->lot_number))
-								<span style="font-size: {{12*$factor}}px">
-									 ({{$page_product->lot_number}})
-								</span>
-							@endif
-						</span>
-					@endif
+                {{-- كود المنتج --}}
+                <span style="font-size: 12px; font-weight: bold;">
+                    {{$page_product->sub_sku}}
+                </span>
 
-					{{-- Variation --}}
-					@if(!empty($print['variations']) && $page_product->is_dummy != 1)
-						<span style="display: block !important; font-size: {{$print['variations_size']}}px">
-							{{$page_product->product_variation_name}}:<b>{{$page_product->variation_name}}</b>
-						</span>
-					@endif
-					{{-- product_custom_fields --}}
-					@php
-						$custom_labels = json_decode(session('business.custom_labels'), true);
-						$product_custom_fields = !empty($custom_labels['product']) ? $custom_labels['product'] : [];
-					@endphp
+                {{-- الحجم أو النوع والسعر في سطر واحد --}}
+                @if((!empty($print['variations']) && $page_product->is_dummy != 1) || !empty($print['price']))
+                    <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 5px;">
+                        {{-- الحجم أو النوع --}}
+                        @if(!empty($print['variations']) && $page_product->is_dummy != 1)
+                            <span style="font-size: {{$print['variations_size']}}px; text-align: right;">
+                                {{$page_product->product_variation_name}}: <b>{{$page_product->variation_name}}</b>
+                            </span>
+                        @endif
 
-					@foreach($product_custom_fields as $index => $cf)
-						@php
-							$field_name = 'product_custom_field' . $loop->iteration;
-						@endphp
-						@if(!empty($cf) && !empty($page_product->$field_name ) && !empty($print[$field_name]))
-							<span style="font-size: {{ $print[$field_name . '_size'] }}px">
-								<b>{{ $cf }}:</b>
-								{{ $page_product->$field_name }}
-							</span>
-						@endif
-					@endforeach
-					<br>
+                        {{-- السعر --}}
+                        @if(!empty($print['price']))
+                            <span style="font-size: {{$print['price_size']}}px; font-weight: bold; text-align: left; color: #000;">
+                                <b>السعر: </b>
+                                @if(isset($print['price_type']) && $print['price_type'] == 'inclusive')
+                                    {{ number_format($page_product->sell_price_inc_tax, 2) }} {{ $print['currency_symbol'] ?? 'جنيه' }}
+                                @else
+                                    {{ number_format($page_product->default_sell_price, 2) }} {{ $print['currency_symbol'] ?? 'جنيه' }}
+                                @endif
+                            </span>
+                        @endif
+                    </div>
+                @endif
 
-					{{-- Price --}}
-					@if(!empty($print['price']))
-					<span style="font-size: {{$print['price_size']}}px;">
-						@lang('lang_v1.price'):
-						<b>{{session('currency')['symbol'] ?? ''}}
+            </div>
+        </td>
 
-						
-						@if($print['price_type'] == 'inclusive')
-							{{@num_format($page_product->sell_price_inc_tax)}}
-						@else
-							{{@num_format($page_product->default_sell_price)}}
-						@endif</b>
-					</span>
-					@endif
-					@if(!empty($print['exp_date']) && !empty($page_product->exp_date))
-						<br>
-						<span style="font-size: {{$print['exp_date_size']}}px">
-							<b>@lang('product.exp_date'):</b>
-							{{$page_product->exp_date}}
-						</span>
-						@if($barcode_details->is_continuous)
-						<br>
-						@endif
-					@endif
+        @if($loop->iteration % $barcode_details->stickers_in_one_row == 0)
+            </tr>
+        @endif
 
-					@if(!empty($print['packing_date']) && !empty($page_product->packing_date))
-						<span style="font-size: {{$print['packing_date_size']}}px">
-							<b>@lang('lang_v1.packing_date'):</b>
-							{{$page_product->packing_date}}
-						</span>
-					@endif
-					{{-- Barcode --}}
-					<img style="max-width:90% !important;height: {{$barcode_details->height*0.24}}in !important; display: block;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
-					
-					<span style="font-size: 10px !important">
-						{{$page_product->sub_sku}}
-					</span>
-				</div>
-			</div>
-		
-		</td>
-
-	@if($loop->iteration % $barcode_details->stickers_in_one_row == 0)
-		</tr>
-	@endif
-@endforeach
+    @endforeach
 </table>
 
-<style type="text/css">
+<style>
+    td {
+        border: 1px solid lightgray;
+        padding: 5px;
+    }
 
-	td{
-		border: 1px dotted lightgray;
-	}
-	@media print{
-		
-		table{
-			page-break-after: always;
-		}
-
-		
-		@page {
-		size: {{$paper_width}}in {{$paper_height}}in;
-
-		/*width: {{$barcode_details->paper_width}}in !important;*/
-		/*height:@if($barcode_details->paper_height != 0){{$barcode_details->paper_height}}in !important @else auto @endif;*/
-		margin-top: {{$margin_top}}in !important;
-		margin-bottom: {{$margin_top}}in !important;
-		margin-left: {{$margin_left}}in !important;
-		margin-right: {{$margin_left}}in !important;
-	}
-	}
+    @media print {
+        table {
+            page-break-after: always;
+            width: 100%;
+        }
+    }
 </style>

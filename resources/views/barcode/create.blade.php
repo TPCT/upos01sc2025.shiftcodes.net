@@ -22,6 +22,11 @@
 'id' => 'add_barcode_settings_form' ]) !!}
 	@component('components.widget')
   <div class="row">
+     <!-- Box to preview the barcode size -->
+<div id="preview-box" style="border: 1px solid #000; margin-top: 20px;">
+  <p>Preview:</p>
+  <div id="barcode-preview" style="width: 100px; height: 100px; background-color: #ddd;"></div>
+</div>
     <div class="col-sm-12">
       <div class="form-group">
         {!! Form::label('name', __('barcode.setting_name') . ':*') !!}
@@ -181,6 +186,62 @@
       <button type="submit" class="tw-dw-btn tw-dw-btn-primary tw-dw-btn-lg tw-text-white">@lang('messages.save')</button>
     </div>
   </div>
+
+ 
+
+<style>
+  #barcode-preview {
+  display: inline-block;
+  background-color: #ddd;
+  transition: all 0.3s ease;
+}
+
+</style>
+<script>
+// Script to dynamically update the preview box with inch-to-pixel conversion
+document.addEventListener('DOMContentLoaded', function () {
+  // Constants to convert inches to pixels (1 inch = 96 pixels)
+  const INCH_TO_PIXEL = 96;
+
+  // Get all the input fields that affect the size
+  const widthInput = document.querySelector('input[name="width"]');
+  const heightInput = document.querySelector('input[name="height"]');
+  const topMarginInput = document.querySelector('input[name="top_margin"]');
+  const leftMarginInput = document.querySelector('input[name="left_margin"]');
+
+  // Get the preview element
+  const barcodePreview = document.getElementById('barcode-preview');
+
+  // Function to update the preview box
+  function updatePreview() {
+    // Get the current values in inches and convert them to pixels
+    const widthInches = parseFloat(widthInput.value) || 0;
+    const heightInches = parseFloat(heightInput.value) || 0;
+    const topMarginInches = parseFloat(topMarginInput.value) || 0;
+    const leftMarginInches = parseFloat(leftMarginInput.value) || 0;
+
+    // Convert inches to pixels
+    const widthPixels = widthInches * INCH_TO_PIXEL;
+    const heightPixels = heightInches * INCH_TO_PIXEL;
+    const topMarginPixels = topMarginInches * INCH_TO_PIXEL;
+    const leftMarginPixels = leftMarginInches * INCH_TO_PIXEL;
+
+    // Update the style of the preview box with the pixel values
+    barcodePreview.style.width = `${widthPixels}px`;
+    barcodePreview.style.height = `${heightPixels}px`;
+    barcodePreview.style.marginTop = `${topMarginPixels}px`;
+    barcodePreview.style.marginLeft = `${leftMarginPixels}px`;
+  }
+
+  // Event listeners to update preview when input values change
+  widthInput.addEventListener('input', updatePreview);
+  heightInput.addEventListener('input', updatePreview);
+  topMarginInput.addEventListener('input', updatePreview);
+  leftMarginInput.addEventListener('input', updatePreview);
+});
+
+
+</script>
   @endcomponent
   {!! Form::close() !!}
 </section>
