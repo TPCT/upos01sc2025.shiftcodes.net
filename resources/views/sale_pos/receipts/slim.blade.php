@@ -59,7 +59,7 @@
 		.invoice-slim th,
 		.invoice-slim td {
 			border: 1px solid #000;
-			padding: 10px;
+			padding: 5px;
 			text-align: center;
 		}
 
