@@ -180,9 +180,9 @@
 			</tr>
 			<tr>
 				<td style="width: 20%">الكمية</td>
-				<td>س. قبل الخصم</td>
+				<td>السعر قبل</td>
 				<td style="width: 20%">الخصم</td>
-				<td>س. بعد الخصم</td>
+				<td>السعر بعد</td>
 				<td style="width: 20%;">الإجمالي</td>
 			</tr>
 			<tr>
