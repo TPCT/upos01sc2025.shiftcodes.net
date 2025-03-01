@@ -179,11 +179,11 @@
 				<td colspan="5">الصنف: {{$line['name']}}</td>
 			</tr>
 			<tr>
-				<td style="width: 10%">الكمية</td>
+				<td style="width: 20%">الكمية</td>
 				<td>س. قبل الخصم</td>
-				<td style="width: 10%">الخصم</td>
+				<td style="width: 20%">الخصم</td>
 				<td>س. بعد الخصم</td>
-				<td style="width: 10%;">الإجمالي</td>
+				<td style="width: 20%;">الإجمالي</td>
 			</tr>
 			<tr>
 				<td>{{(float)$line['quantity']}}</td>
