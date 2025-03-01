@@ -176,7 +176,7 @@
                 $unit_discount = (float)$line['line_discount'];
 			@endphp
 			<tr>
-				<td colspan="4">الصنف: {{$line['name']}}</td>
+				<td colspan="5">الصنف: {{$line['name']}}</td>
 			</tr>
 			<tr>
 				<td>الكمية</td>
