@@ -150,45 +150,59 @@
 		@endif
 	</div>
 
-	<table>
-		<thead>
-		<tr>
-			<th>الكمية</th>
-			<th>الصنف</th>
-			<th>السعر</th>
-			<th>الخصم</th>
-			<th>الإجمالي</th>
-		</tr>
-		</thead>
-		<tbody>
-			@php
-				$total_discount = 0.0;
-				$total_quantity = 0.0;
-				$total_sum = 0.0;
-                $total_product = 0.0;
-                $total_products = 0;
-                $receipt_total = $receipt_details->customer_balance - $receipt_details->total_unformatted + $receipt_details->total_paid_unformatted;
-			@endphp
-			@foreach($receipt_details->lines as $line)
-				@php
-					$total_products += 1;
-					$total = (float)$line['line_total_uf'];
-					$total_sum += $total;
-					$total_quantity += (float) $line['quantity'];
-					$total_discount += (float) $line['total_line_discount'];
-                    $unit_price = (float)$line['unit_price_before_discount_uf'];
-                    $unit_discount = (float)$line['line_discount'];
-				@endphp
-				<tr>
-					<td>{{(float)$line['quantity']}}</td>
-					<td>{{$line['name']}}</td>
-					<td>{{$line['unit_price_before_discount']}}</td>
-					<td>{{number_format($unit_discount / $unit_price * 100, 2)}} %</td>
-					<td>{{number_format($total, 2)}}</td>
-				</tr>
-			@endforeach
-		</tbody>
-	</table>
+@php
+	$total_discount = 0.0;
+	$total_quantity = 0.0;
+	$total_sum = 0.0;
+	$total_product = 0.0;
+	$total_products = 0;
+	$receipt_total = $receipt_details->customer_balance - $receipt_details->total_unformatted + $receipt_details->total_paid_unformatted;
+@endphp
+
+@foreach($receipt_details->lines as $line)
+	@php
+		$total_products += 1;
+		$total = (float)$line['line_total_uf'];
+		$total_sum += $total;
+		$total_quantity += (float) $line['quantity'];
+		$total_discount += (float) $line['total_line_discount'];
+		$unit_price = (float)$line['unit_price_before_discount_uf'];
+		$unit_discount = (float)$line['line_discount'];
+	@endphp
+	<span>#{{$loop->index + 1}}. {{$line['name']}}</span>
+	<div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; margin-bottom: 5px;">
+		@if ($unit_discount)
+			<span>{{$line['unit_price_before_discount']}} * {{$line['quantity']}} - {{number_format($unit_discount * (float) $line['quantity'], 2)}}</span>
+		@else
+			<span>{{$line['unit_price_before_discount']}} * {{$line['quantity']}}</span>
+		@endif
+		<span>{{number_format($total, 2)}}</span>
+	</div>
+@endforeach
+{{--	<table>--}}
+{{--		<thead>--}}
+{{--		<tr>--}}
+{{--			<th>الكمية</th>--}}
+{{--			<th>الصنف</th>--}}
+{{--			<th>السعر</th>--}}
+{{--			<th>الخصم</th>--}}
+{{--			<th>الإجمالي</th>--}}
+{{--		</tr>--}}
+{{--		</thead>--}}
+{{--		<tbody>--}}
+
+{{--			@foreach($receipt_details->lines as $line)--}}
+
+{{--				<tr>--}}
+{{--					<td>{{(float)$line['quantity']}}</td>--}}
+{{--					<td>{{$line['name']}}</td>--}}
+{{--					<td>{{$line['unit_price_before_discount']}}</td>--}}
+{{--					<td>{{number_format($unit_discount / $unit_price * 100, 2)}} %</td>--}}
+{{--					<td>{{number_format($total, 2)}}</td>--}}
+{{--				</tr>--}}
+{{--			@endforeach--}}
+{{--		</tbody>--}}
+{{--	</table>--}}
 
 	<div class="summary">
 
