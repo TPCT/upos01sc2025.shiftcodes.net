@@ -156,15 +156,15 @@
 	</div>
 
 	<table>
-		<thead>
-		<tr>
-			<th>الكمية</th>
-			<th>الصنف</th>
-			<th>السعر</th>
-			<th>الخصم</th>
-			<th>الإجمالي</th>
-		</tr>
-		</thead>
+{{--		<thead>--}}
+{{--		<tr>--}}
+{{--			<th>الكمية</th>--}}
+{{--			<th>الصنف</th>--}}
+{{--			<th>السعر</th>--}}
+{{--			<th>الخصم</th>--}}
+{{--			<th>الإجمالي</th>--}}
+{{--		</tr>--}}
+{{--		</thead>--}}
 		<tbody>
 		@php
 			$total_discount = 0.0;
@@ -185,8 +185,16 @@
                 $unit_discount = (float)$line['line_discount'];
 			@endphp
 			<tr>
+				<td colspan="4">{{$line['name']}}</td>
+			</tr>
+			<tr>
+				<td>الكمية</td>
+				<td>السعر</td>
+				<td>الخصم</td>
+				<td>الإجمالي</td>
+			</tr>
+			<tr>
 				<td>{{(float)$line['quantity']}}</td>
-				<td>{{$line['name']}}</td>
 				<td>{{$line['unit_price_before_discount']}}</td>
 				<td>{{number_format($unit_discount / $unit_price * 100, 2)}} %</td>
 				<td>{{number_format($total, 2)}}</td>
