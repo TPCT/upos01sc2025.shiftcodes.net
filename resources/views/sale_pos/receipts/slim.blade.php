@@ -16,7 +16,7 @@
 			padding: 0;
 			box-sizing: border-box;
 			font-size: 7px;
-			word-break: break-all;
+			word-break: break-word;
 		}
 
 		.invoice-slim .logo img{
