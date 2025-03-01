@@ -147,7 +147,9 @@
 			<p><strong>مندوب البيع:</strong> {{$receipt_details->sales_person}}</p>
 		@endif
 		<p><strong>اسم العميل:</strong> {{$receipt_details->customer_name}}</p>
-		<p><strong>الهاتف:</strong> {{$receipt_details->customer_mobile}}</p>
+		@if ($receipt_details->customer_mobile)
+			<p><strong>الهاتف:</strong> {{$receipt_details->customer_mobile}}</p>
+		@endif
 		@if ($receipt_details->customer_city)
 			<p><strong>مدينة:</strong> {{$receipt_details->customer_city}}</p>
 		@endif
