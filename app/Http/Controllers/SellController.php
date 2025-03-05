@@ -304,6 +304,9 @@ class SellController extends Controller
 
             if (! empty(request()->suspended)) {
                 $transaction_sub_type = request()->get('transaction_sub_type');
+                $sells->when(request('location_id'), function ($query, $location_id){
+                    $query->where('transactions.location_id', $location_id);
+                });
                 if (! empty($transaction_sub_type)) {
                     $sells->where('transactions.sub_type', $transaction_sub_type);
                 } else {
@@ -325,7 +328,9 @@ class SellController extends Controller
                             ->addSelect('transactions.is_suspend', 'transactions.res_table_id', 'transactions.res_waiter_id', 'transactions.additional_notes')
                             ->get();
 
-                return view('sale_pos.partials.suspended_sales_modal')->with(compact('sales', 'is_tables_enabled', 'is_service_staff_enabled', 'transaction_sub_type'));
+                $locations = BusinessLocation::whereBusinessId($business_id)->whereIsActive(1)->get();
+
+                return view('sale_pos.partials.suspended_sales_modal')->with(compact('sales', 'is_tables_enabled', 'is_service_staff_enabled', 'transaction_sub_type', 'locations'));
             }
 
             $with[] = 'payment_lines';

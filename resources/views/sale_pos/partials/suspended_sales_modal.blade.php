@@ -6,6 +6,24 @@
 			<h4 class="modal-title">@lang('lang_v1.suspended_sales')</h4>
 		</div>
 		<div class="modal-body">
+			<div class="row mb-3">
+				<form class="col-sm-4" method="get" action="{{route('sells.index')}}" id="location-filter-form">
+					<input type="hidden" name="suspended" value="1">
+					<div class="form-group">
+						<label>@lang('lang_v1.Branch'): </label>
+						<div class="input-group">
+							<select class="select2 form-control" name="location_id">
+								@foreach($locations as $location)
+									<option @selected(request('location_id') == $location->id) value="{{$location->id}}">{{$location->name}}</option>
+								@endforeach
+							</select>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default bg-white btn-flat search"><i class="fa fa-search text-primary fa-lg"></i></button>
+							</span>
+						</div>
+					</div>
+				</form>
+			</div>
 			<div class="row">
 				@php
 					$c = 0;
@@ -48,7 +66,7 @@
 					            	</a>
 								@endif
 								@if(!auth()->user()->can('sell.update') && auth()->user()->can('edit_pos_payment'))
-									<a href="{{route('edit-pos-payment', ['po' => $sale->id])}}" 
+									<a href="{{route('edit-pos-payment', ['po' => $sale->id])}}"
 									class="small-box-footer bg-blue p-10">
 									@lang('lang_v1.add_edit_payment') <i class="fas fa-money-bill-alt"></i>
 									</a>
@@ -73,3 +91,19 @@
 		</div>
 	</div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
+
+<script>
+	$(function(){
+		$("#location-filter-form .search").on('click', function(e){
+			e.preventDefault();
+			const form = $(this).closest("form");
+			$.ajax({
+				url: form.attr('action'),
+				data: form.serialize(),
+				success: function (data){
+					$(".modal-dialog").parent().html(data);
+				}
+			})
+		})
+	})
+</script>
