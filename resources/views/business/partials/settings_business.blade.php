@@ -1,3 +1,7 @@
+<form method="post" action="">
+    @csrf
+</form>
+
 <div class="pos-tab-content active">
     <div class="row">
         <div class="col-sm-4">
@@ -139,7 +143,7 @@
             </div>
         </div>
     </div>
-     {{-- code --}}
+
     <div class="row hide">
         <div class="col-sm-6">
             <div class="form-group">

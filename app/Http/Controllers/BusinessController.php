@@ -3,15 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Business;
+use App\CashRegister;
 use App\Currency;
 use App\Notifications\TestEmailNotification;
+use App\Product;
+use App\ProductVariation;
+use App\PurchaseLine;
+use App\ReferenceCount;
 use App\System;
 use App\TaxRate;
+use App\Transaction;
+use App\TransactionPayment;
+use App\TransactionSellLine;
+use App\TransactionSellLinesPurchaseLines;
 use App\Unit;
 use App\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\RestaurantUtil;
+use App\Variation;
 use Carbon\Carbon;
 use DateTimeZone;
 use Illuminate\Http\Request;
@@ -602,5 +612,51 @@ class BusinessController extends Controller
         }
 
         return $output;
+    }
+
+    public function resetBusinessSettings(Request $request){
+        if (! auth()->user()->can('business_settings.access')) {
+            abort(403, 'Unauthorized action.');
+        }
+        DB::statement("SET FOREIGN_KEY_CHECKS=0;");
+        DB::table('activity_log')->truncate();
+        DB::table('cash_registers')->truncate();
+        DB::table('cash_register_transactions')->truncate();
+        DB::table('products')->truncate();
+        DB::table('product_locations')->truncate();
+        DB::table('product_racks')->truncate();
+        DB::table('product_variations')->truncate();
+        DB::table('purchase_lines')->truncate();
+        ReferenceCount::whereIn('ref_type',
+            ['sell_payment', 'sell_return', 'draft', 'purchase', 'expense', 'purchase_payment', 'expense_payment']
+        )->get()->each(function ($item) {
+           $item->update([
+               'ref_count' => 0
+           ]);
+        });
+        DB::table('res_product_modifier_sets')->truncate();
+        DB::table('selling_price_groups')->truncate();
+        DB::table('sell_line_warranties')->truncate();
+        DB::table('stock_adjustments_temp')->truncate();
+        DB::table('stock_adjustment_lines')->truncate();
+
+        DB::table('transactions')->truncate();
+        DB::table('transaction_payments')->truncate();
+        DB::table('transaction_sell_lines')->truncate();
+        DB::table('transaction_sell_lines_purchase_lines')->truncate();
+        DB::table('types_of_services')->truncate();
+        DB::table('variations')->truncate();
+        DB::table('variation_group_prices')->truncate();
+        DB::table('variation_location_details')->truncate();
+        DB::table('variation_templates')->truncate();
+        DB::table('variation_value_templates')->truncate();
+        DB::table('warranties')->truncate();
+
+        DB::statement("SET FOREIGN_KEY_CHECKS=1;");
+
+        $output = ['success' => 1,
+            'msg' => __('business.settings_updated_success'),
+        ];
+        return redirect('business/settings')->with('status', $output);
     }
 }

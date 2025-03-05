@@ -12,8 +12,7 @@
 
 <!-- Main content -->
 <section class="content">
-{!! Form::open(['url' => action([\App\Http\Controllers\BusinessController::class, 'postBusinessSettings']), 'method' => 'post', 'id' => 'bussiness_edit_form',
-           'files' => true ]) !!}
+{!! Form::open(['url' => action([\App\Http\Controllers\BusinessController::class, 'postBusinessSettings']), 'method' => 'post', 'id' => 'bussiness_edit_form', 'files' => true ]) !!}
     <div class="row">
         <div class="col-xs-12">
        <!--  <pos-tab-container> -->
@@ -88,13 +87,21 @@
         <!--  </pos-tab-container> -->
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <button class="tw-dw-btn tw-dw-btn-error tw-dw-btn-lg tw-text-white" type="submit">@lang('business.update_settings')</button>
-        </div>
-    </div>
 {!! Form::close() !!}
+
+<div class="row">
+    <div class="col-sm-6 text-center">
+        <button form="bussiness_edit_form" class="tw-dw-btn tw-dw-btn-error tw-dw-btn-lg tw-text-white" type="submit">@lang('business.update_settings')</button>
+    </div>
+
+    @can('business_settings.access')
+        {!! Form::open(['url' => action([\App\Http\Controllers\BusinessController::class, 'resetBusinessSettings']), 'method' => 'post', 'id' => 'bussiness_reset_form']) !!}
+        {!! Form::close() !!}
+        <div class="col-sm-6 text-center">
+            <button form="bussiness_reset_form" class="tw-dw-btn tw-dw-btn-error tw-dw-btn-lg tw-text-white" type="submit">@lang('lang_v1.Reset')</button>
+        </div>
+    @endcan
+</div>
 </section>
 <!-- /.content -->
 @stop

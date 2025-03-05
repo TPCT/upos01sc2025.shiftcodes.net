@@ -5,6 +5,7 @@ return [
     'reference_no' => 'الرقم المرجعي',
     'total' => 'الاجمالي',
     'save' => 'حفظ',
+    'Reset' => 'اعادة الضبط',
     'sales_return' => 'اضافه مرتجع',
     'purchases_report' => 'فواتير الشراء',
     'invoices_report' => 'تفاصيل تحصيلات الفواتير',
