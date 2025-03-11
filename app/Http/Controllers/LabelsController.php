@@ -39,6 +39,7 @@ class LabelsController extends Controller
                 $data[$key] = $value;
             }
         }
+        $data['is_default'] = true;
         $barcode->update($data);
         return back();
     }
