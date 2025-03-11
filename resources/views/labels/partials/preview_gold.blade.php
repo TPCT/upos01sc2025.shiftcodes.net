@@ -25,13 +25,15 @@
 					@endif
 				</div>
 				<div style="position: absolute;left: 0;border: 1px dashed black;height: 0;width: 100%;"></div>
-				<div style="display: flex;justify-content: center;font-weight: bolder;align-items: center;position: absolute;top: 50%;width: 100%;height: 1.25cm;">
+				<div style="display: flex; flex-direction:column; justify-content: center;font-weight: bolder;align-items: center;position: absolute;top: 50%;width: 100%;height: 1.25cm;">
 					<img style="width:{{$barcode_details->width}}cm !important;height: {{$barcode_details->height}}cm !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
+					<span style="position: absolute;top: 0.275cm;background: white;">{{$page_product->sub_sku}}</span>
 				</div>
 			</div>
 			<div class="left" style="position: absolute; top: 45px; left: 0; border: 1px solid black; border-radius: 5px; height: var(--conatiner-height); width: var(--conatiner-width);">
-				<div style="transform: scaleX(-1) scaleY(-1); display: flex;justify-content: center;font-weight: bolder;align-items: center;position: absolute;top: 50%;width: 100%;height: 1.25cm;">
+				<div style="transform: scaleX(-1) scaleY(-1); display: flex; flex-direction: column; justify-content: center;font-weight: bolder;align-items: center;position: absolute;top: 50%;width: 100%;height: 1.25cm;">
 					<img style="width:{{$barcode_details->width}}cm !important;height: {{$barcode_details->height}}cm !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
+					<span style="position: absolute;bottom: 0.275cm;background: white;">{{$page_product->sub_sku}}</span>
 				</div>
 				<div style="position: absolute;left: 0;border: 1px dashed black;height: 0;width: 100%; top: 50%"></div>
 				<div style="height: 50%;display: flex;flex-direction: column;font-weight: bolder;align-items: center;width: 100%; justify-content: center">
