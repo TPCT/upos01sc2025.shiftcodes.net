@@ -63,7 +63,7 @@
 							</span>
 						@endif
 
-						<img style="width:90% !important;height: {{$barcode_details->height*0.24}}in !important;"
+						<img style="width:90% !important;height: {{$barcode_details->height}}cm !important;"
 							 src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
 					</div>
 				</div>

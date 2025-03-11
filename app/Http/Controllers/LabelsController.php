@@ -124,6 +124,8 @@ class LabelsController extends Controller
             $view = "preview_2";
             if ($barcode_details->type == "double-labels-for-one-sticker")
                 $view = "preview_double";
+            elseif($barcode_details->type = "gold-tag-barcode")
+                $view = "preview_gold";
 
             $barcode_details->stickers_in_one_sheet = $barcode_details->is_continuous ? $barcode_details->stickers_in_one_row : $barcode_details->stickers_in_one_sheet;
             $barcode_details->paper_height = $barcode_details->is_continuous ? $barcode_details->height : $barcode_details->paper_height;
