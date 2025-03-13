@@ -143,7 +143,7 @@ class ContactController extends Controller
             )
             ->addColumn(
                 'return_due',
-                '<span class="return_due" data-orig-value="{{$total_purchase_return - $purchase_return_paid}}" data-highlight=false>@format_currency($total_purchase_return - $purchase_return_paid)</span>'
+                '<span class="return_due" data-orig-value="{{$total_purchase_return - $purchase_return_paid}}" data-highlight=false>@format_currency($total_purchase_return - $purchase_return_paid)'
             )
             ->addColumn(
                 'action',
@@ -232,11 +232,11 @@ class ContactController extends Controller
                     return $html;
                 }
             )
-            ->editColumn('opening_balance', function ($row) {
-                $html = '<span data-orig-value="'.$row->opening_balance.'">'.$this->transactionUtil->num_f($row->opening_balance, true).'</span>';
-
-                return $html;
-            })
+//            ->editColumn('opening_balance', function ($row) {
+//                $html = '<span data-orig-value="'.$row->opening_balance.'">'.$this->transactionUtil->num_f($row->opening_balance, true).'</span>';
+//
+//                return $html;
+//            })
             ->editColumn('balance', function ($row) {
                 $html = '<span data-orig-value="'.$row->balance.'">'.$this->transactionUtil->num_f($row->balance, true).'</span>';
 
@@ -263,15 +263,17 @@ class ContactController extends Controller
             ->removeColumn('purchase_paid')
             ->removeColumn('total_purchase_return')
             ->removeColumn('purchase_return_paid')
+            ->removeColumn('opening_balance')
+            ->removeColumn('total_ledger_discount')
             ->filterColumn('address', function ($query, $keyword) {
                 $query->where(function ($q) use ($keyword) {
                     $q->where('address_line_1', 'like', "%{$keyword}%")
-                    ->orWhere('address_line_2', 'like', "%{$keyword}%")
-                    ->orWhere('city', 'like', "%{$keyword}%")
-                    ->orWhere('state', 'like', "%{$keyword}%")
-                    ->orWhere('country', 'like', "%{$keyword}%")
-                    ->orWhere('zip_code', 'like', "%{$keyword}%")
-                    ->orWhereRaw("CONCAT(COALESCE(address_line_1, ''), ', ', COALESCE(address_line_2, ''), ', ', COALESCE(city, ''), ', ', COALESCE(state, ''), ', ', COALESCE(country, '') ) like ?", ["%{$keyword}%"]);
+                        ->orWhere('address_line_2', 'like', "%{$keyword}%")
+                        ->orWhere('city', 'like', "%{$keyword}%")
+                        ->orWhere('state', 'like', "%{$keyword}%")
+                        ->orWhere('country', 'like', "%{$keyword}%")
+                        ->orWhere('zip_code', 'like', "%{$keyword}%")
+                        ->orWhereRaw("CONCAT(COALESCE(address_line_1, ''), ', ', COALESCE(address_line_2, ''), ', ', COALESCE(city, ''), ', ', COALESCE(state, ''), ', ', COALESCE(country, '') ) like ?", ["%{$keyword}%"]);
                 });
             })
             ->rawColumns(['action', 'opening_balance', 'pay_term', 'due', 'return_due', 'name', 'balance'])
@@ -327,15 +329,14 @@ class ContactController extends Controller
                      ->orHavingRaw('transaction_date IS NULL');
         }
 
-//        if (
-//            (! $is_admin && auth()->user()->can('customer_with_no_sell_three_month')) ||
-//            ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
-//            ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
-//        ) {
-//            $from_transaction_date = \Carbon::now()->subMonths(3)->format('Y-m-d');
-//            $query->havingRaw("max_transaction_date < '{$from_transaction_date}'")
-//                     ->orHavingRaw('transaction_date IS NULL');
-//        }
+        if (
+            (! $is_admin && auth()->user()->can('customer_with_no_sell_three_month')) ||
+            ($has_no_sell_from == 'three_months' && (auth()->user()->can('customer_with_no_sell_three_month') || auth()->user()->can('customer_irrespective_of_sell')))
+        ) {
+            $from_transaction_date = \Carbon::now()->subMonths(3)->format('Y-m-d');
+            $query->havingRaw("max_transaction_date < '{$from_transaction_date}'")
+                     ->orHavingRaw('transaction_date IS NULL');
+        }
 
         if (
             (! $is_admin && auth()->user()->can('customer_with_no_sell_six_month')) ||

@@ -149,15 +149,15 @@
                                 @if ($type == 'supplier')
                                     <th>@lang('business.business_name')</th>
                                     <th>@lang('contact.name')</th>
+                                    <th>@lang('contact.total_purchase_due')</th>
+                                    <th>@lang('lang_v1.total_purchase_return_due')</th>
                                     <th>@lang('business.email')</th>
                                     <th>@lang('contact.tax_no')</th>
                                     <th>@lang('contact.pay_term')</th>
-                                    <th>@lang('lang_v1.advance_balance')</th>
+                                    <th>@lang('lang_v1.balance')</th>
                                     <th>@lang('lang_v1.added_on')</th>
                                     <th>@lang('business.address')</th>
                                     <th>@lang('contact.mobile')</th>
-                                    <th>@lang('contact.total_purchase_due')</th>
-                                    <th>@lang('lang_v1.total_purchase_return_due')</th>
                                 @elseif($type == 'customer')
                                     <th>@lang('business.business_name')</th>
                                     <th>@lang('user.name')</th>
@@ -218,13 +218,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td @if ($type == 'supplier') colspan="6"
-                            @elseif($type == 'customer')
-                                @if ($reward_enabled)
-                                    colspan="9"
-                                @else
-                                    colspan="8" @endif
-                                    @endif>
+                                <td colspan="{{ $type == 'supplier' ? 6 : ($reward_enabled ? 9 : 8) }}">
                                     <strong>
                                         @lang('sale.total'):
                                     </strong>
