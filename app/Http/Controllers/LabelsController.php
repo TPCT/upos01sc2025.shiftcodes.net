@@ -122,11 +122,12 @@ class LabelsController extends Controller
             $print['business_name'] = Business::find($business_id)->name;
             $barcode_details = Barcode::find($barcode_setting);
 
-            $view = "preview_2";
             if ($barcode_details->type == "double-labels-for-one-sticker")
                 $view = "preview_double";
-            elseif($barcode_details->type = "gold-tag-barcode")
+            else if($barcode_details->type == "gold-tag-barcode")
                 $view = "preview_gold";
+            else
+                $view = "preview_2";
 
             $barcode_details->stickers_in_one_sheet = $barcode_details->is_continuous ? $barcode_details->stickers_in_one_row : $barcode_details->stickers_in_one_sheet;
             $barcode_details->paper_height = $barcode_details->is_continuous ? $barcode_details->height : $barcode_details->paper_height;
