@@ -45,11 +45,11 @@
             <div class="tw-p-6 tw-mb-4 tw-rounded-2xl tw-bg-transparent tw-shadow-sm tw-ring-1 tw-ring-gray-200 tw-w-full">
                 <div class="tw-flex tw-flex-col tw-gap-4 tw-dw-rounded-box tw-dw-p-6 tw-dw-max-w-md">
                     <div class="tw-flex tw-items-center tw-flex-col">
-<h1 class="tw-text-lg md:tw-text-xl tw-font-bold tw-text-white">
-    <a href="https://www.egsoft.net" target="_blank" class="tw-text-white tw-underline hover:tw-text-blue-300">
-        @lang('برجاء زيارة موقع الشركة للمزيد من البرامج')
-    </a>
-</h1>
+                        <h1 class="tw-text-lg md:tw-text-xl tw-font-bold tw-text-white">
+                            <a href="https://shiftcodes.net" target="_blank" class="tw-text-white tw-underline hover:tw-text-blue-300">
+                                @lang('برجاء زيارة موقع الشركة للمزيد من البرامج')
+                            </a>
+                        </h1>
 
                         <h2 class="tw-text-sm tw-font-medium tw-text-gray-500">
                             @lang('lang_v1.login_to_your') {{ config('app.name', 'ultimatePOS') }}
