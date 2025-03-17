@@ -141,7 +141,7 @@
 	</div>
 
 	<div class="details">
-		<p><strong>التاريخ:</strong> {{$receipt_details->transaction_date_object->format("d/m/Y")}} - الساعة: {{$receipt_details->transaction_date_object->format("h a")}}</p>
+		<p><strong>التاريخ:</strong> {{$receipt_details->transaction_date_object->format("d/m/Y")}} - الساعة: {{$receipt_details->transaction_date_object->format("h:M:s a")}}</p>
 		<p><strong>رقم الفاتورة:</strong> {{$receipt_details->invoice_no}}</p>
 		@if(!empty($receipt_details->sales_person_label))
 			<p><strong>مندوب البيع:</strong> {{$receipt_details->sales_person}}</p>
