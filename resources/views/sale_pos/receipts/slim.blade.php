@@ -169,10 +169,10 @@
 			@php
 				$total_products += 1;
                 $total = (float)$line['line_total_uf'];
-                $total_sum += $total;
                 $total_quantity += (float) $line['quantity'];
                 $total_discount += (float) $line['total_line_discount'];
                 $unit_price = (float)$line['unit_price_before_discount_uf'];
+				$total_sum += $total_quantity * $unit_price;
                 $unit_discount = (float)$line['line_discount'];
 			@endphp
 			<tr>
