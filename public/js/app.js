@@ -375,9 +375,8 @@ $(document).ready(function() {
     //Start: CRUD for Contacts
     //contacts table
     var contact_table_type = $('#contact_type').val();
-    var columns = [];
     if (contact_table_type == 'supplier') {
-        columns = [
+        var columns = [
             { data: 'action', searchable: false, orderable: false },
             { data: 'contact_id', name: 'contact_id' },
             { data: 'supplier_business_name', name: 'supplier_business_name' },
@@ -392,7 +391,7 @@ $(document).ready(function() {
             { data: 'created_at', name: 'contacts.created_at' },
         ];
     } else if (contact_table_type == 'customer') {
-        columns = [
+        var columns = [
             { data: 'action', title: translations.actions, searchable: false, orderable: false },
             { data: 'contact_id', title: translations.contact_id, name: 'contact_id' },
             { data: 'supplier_business_name', title: translations.supplier_bussiness_name, name: 'supplier_business_name' },
@@ -414,20 +413,22 @@ $(document).ready(function() {
         }
     }
 
-    Array.prototype.push.apply(columns, [
-        { data: 'address', title: translations.address, name: 'address', orderable: false },
-        { data: 'mobile', title: translations.mobile, name: 'mobile' },
-        { data: 'custom_field1', title: translations.custom_field_1, name: 'custom_field1' },
-        { data: 'custom_field2', title: translations.custom_field_2, name: 'custom_field2' },
-        { data: 'custom_field3', title: translations.custom_field_3, name: 'custom_field3' },
-        { data: 'custom_field4', title: translations.custom_field_4, name: 'custom_field4' },
-        { data: 'custom_field5', title: translations.custom_field_5, name: 'custom_field5' },
-        { data: 'custom_field6', title: translations.custom_field_6, name: 'custom_field6' },
-        { data: 'custom_field7', title: translations.custom_field_7, name: 'custom_field7' },
-        { data: 'custom_field8', title: translations.custom_field_8, name: 'custom_field8' },
-        { data: 'custom_field9', title: translations.custom_field_9, name: 'custom_field9' },
-        { data: 'custom_field10', title: translations.custom_field_10, name: 'custom_field10' }
-    ]);
+    if (columns !== undefined) {
+        Array.prototype.push.apply(columns, [
+            { data: 'address', title: translations.address, name: 'address', orderable: false },
+            { data: 'mobile', title: translations.mobile, name: 'mobile' },
+            { data: 'custom_field1', title: translations.custom_field_1, name: 'custom_field1' },
+            { data: 'custom_field2', title: translations.custom_field_2, name: 'custom_field2' },
+            { data: 'custom_field3', title: translations.custom_field_3, name: 'custom_field3' },
+            { data: 'custom_field4', title: translations.custom_field_4, name: 'custom_field4' },
+            { data: 'custom_field5', title: translations.custom_field_5, name: 'custom_field5' },
+            { data: 'custom_field6', title: translations.custom_field_6, name: 'custom_field6' },
+            { data: 'custom_field7', title: translations.custom_field_7, name: 'custom_field7' },
+            { data: 'custom_field8', title: translations.custom_field_8, name: 'custom_field8' },
+            { data: 'custom_field9', title: translations.custom_field_9, name: 'custom_field9' },
+            { data: 'custom_field10', title: translations.custom_field_10, name: 'custom_field10' }
+        ]);
+    }
     
     contact_table = $('#contact_table').DataTable({
         processing: true,
