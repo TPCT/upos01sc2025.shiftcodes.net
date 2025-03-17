@@ -375,8 +375,9 @@ $(document).ready(function() {
     //Start: CRUD for Contacts
     //contacts table
     var contact_table_type = $('#contact_type').val();
+    var columns = [];
     if (contact_table_type == 'supplier') {
-        var columns = [
+        columns = [
             { data: 'action', searchable: false, orderable: false },
             { data: 'contact_id', name: 'contact_id' },
             { data: 'supplier_business_name', name: 'supplier_business_name' },
@@ -391,7 +392,7 @@ $(document).ready(function() {
             { data: 'created_at', name: 'contacts.created_at' },
         ];
     } else if (contact_table_type == 'customer') {
-        var columns = [
+        columns = [
             { data: 'action', title: translations.actions, searchable: false, orderable: false },
             { data: 'contact_id', title: translations.contact_id, name: 'contact_id' },
             { data: 'supplier_business_name', title: translations.supplier_bussiness_name, name: 'supplier_business_name' },
