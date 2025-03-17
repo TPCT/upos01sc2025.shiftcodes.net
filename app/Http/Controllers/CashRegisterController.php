@@ -170,6 +170,7 @@ class CashRegisterController extends Controller
 
         $sells = Transaction::where(function ($query) use ($business_id, $open_time, $close_time) {
             $query->where('type', 'sell');
+            $query->where('payment_status', 'paid');
             $query->where('business_id', $business_id);
             $query->whereBetween('transaction_date', [$open_time, $close_time]);
         })->get();
@@ -184,7 +185,7 @@ class CashRegisterController extends Controller
             $query->where('type', 'sell');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
-            $query->where('payment_status', 'paid');
+            $query->where('payment_status', 'partial');
         })->where(function ($query) use ($business_id, $open_time, $close_time) {
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
