@@ -228,10 +228,10 @@
 		<table class="table table-condensed table-bordered table-striped table-responsive" id="pos_table">
 			<thead>
 				<tr>
-					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
+					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-3">
 						@lang('sale.product')
 					</th>
-					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
+					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-1">
 						@lang('lang_v1.stock_count')
 					</th>
 					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">

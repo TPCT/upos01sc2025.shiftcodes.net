@@ -27,7 +27,6 @@
             if(!empty($product->brand)){ $product_name .= ' ' . $product->brand ;}
         @endphp
 
-        {!! $product_name !!}
 
         <img src="@if(count($product->media) > 0)
 						{{$product->media->first()->display_url}}
@@ -38,6 +37,7 @@
 					@endif" alt="product-img" loading="lazy"
              style="height: 100%;display: inline;margin-left: 3px; border: black;border-radius: 5px; margin-top: 5px; width: 50px;object-fit: cover;">
 
+        {!! $product_name !!}
 
         <input type="hidden" class="enable_sr_no" value="{{$product->enable_sr_no}}">
         <input type="hidden"
