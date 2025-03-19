@@ -49,7 +49,7 @@
 	@endphp
 	<td class="{{$hide_tax}}">
 		<input type="hidden" name="products[{{$row_count}}][item_tax]" class="form-control item_tax">
-		
+
 		{!! Form::select("products[$row_count][tax_id]", $tax_dropdown['tax_rates'], $tax_id, ['placeholder' => 'Select', 'class' => 'form-control tax_id'], $tax_dropdown['attributes']); !!}
 	</td>
 	<td class="{{$hide_tax}}">

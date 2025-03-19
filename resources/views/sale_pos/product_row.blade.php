@@ -285,7 +285,6 @@
 
         <input type="hidden" name="products[{{$row_count}}][product_unit_id]" value="{{$product->unit_id}}">
         @if(count($sub_units) > 0)
-            <br>
             <select name="products[{{$row_count}}][sub_unit_id]" class="form-control input-sm sub_unit">
                 @foreach($sub_units as $key => $value)
                     <option value="{{$key}}" data-multiplier="{{$value['multiplier']}}"
@@ -385,17 +384,15 @@
         >
     </td>
 
-    @if(!empty($common_settings['enable_product_warranty']) && !empty($is_direct_sell))
-        <td>
-            {!! Form::select("products[$row_count][warranty_id]", $warranties, $warranty_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control']); !!}
-        </td>
-    @endif
-
+{{--    @if(!empty($common_settings['enable_product_warranty']) && !empty($is_direct_sell))--}}
+{{--        <td>--}}
+{{--            {!! Form::select("products[$row_count][warranty_id]", $warranties, $warranty_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control']); !!}--}}
+{{--        </td>--}}
+{{--    @endif--}}
 
     <td class="text-center">
         @php
             $subtotal_type = !empty($pos_settings['is_pos_subtotal_editable']) ? 'text' : 'hidden';
-
         @endphp
         <input type="{{$subtotal_type}}"
                class="form-control pos_line_total @if(!empty($pos_settings['is_pos_subtotal_editable'])) input_number @endif"
@@ -403,6 +400,7 @@
         <span class="display_currency pos_line_total_text @if(!empty($pos_settings['is_pos_subtotal_editable'])) hide @endif"
               data-currency_symbol="true">{{$product->quantity_ordered*$unit_price_inc_tax}}</span>
     </td>
+
     <td class="text-center v-center">
         <i class="fa fa-times text-danger pos_remove_row cursor-pointer" aria-hidden="true"></i>
     </td>

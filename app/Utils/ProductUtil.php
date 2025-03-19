@@ -485,11 +485,10 @@ class ProductUtil extends Util
             });
         }
 
-        if (! empty($location_id) && $check_qty) {
+        if (!empty($location_id)) {
             //Check for enable stock, if enabled check for location id.
             $query->where(function ($query) use ($location_id) {
-                $query->where('p.enable_stock', '!=', 1)
-                            ->orWhere('vld.location_id', $location_id);
+                $query->orWhere('vld.location_id', $location_id);
             });
         }
 

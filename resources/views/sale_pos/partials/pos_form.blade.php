@@ -222,15 +222,13 @@
 		<input type="hidden" id="product_row_count"
 			value="0">
 		@php
-			$hide_tax = '';
-			if( session()->get('business.enable_inline_tax') == 0){
-				$hide_tax = 'hide';
-			}
+            $hide_tax = session()->get('business.enable_inline_tax') ? 'text' : 'hidden';
+			$subtotal_type = !empty($pos_settings['is_pos_subtotal_editable']) ? 'text' : 'hidden';
 		@endphp
 		<table class="table table-condensed table-bordered table-striped table-responsive" id="pos_table">
 			<thead>
 				<tr>
-					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-4">
+					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
 						@lang('sale.product')
 					</th>
 					<th class="tex-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
@@ -242,8 +240,11 @@
 					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2">
 						@lang('sale.discount')
 					</th>
-					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2 ">
+					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2 {{$hide_tax}}">
 						@lang('sale.price_inc_tax')
+					</th>
+					<th class="text-center tw-text-sm md:!tw-text-base tw-font-bold col-md-2 {{$subtotal_type}}">
+						@lang('sale.total_payable')
 					</th>
 					<th class="text-center"><i class="fas fa-times tw-text-base" aria-hidden="true"></i></th>
 				</tr>
