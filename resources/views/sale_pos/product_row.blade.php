@@ -375,14 +375,25 @@
         @endif
     </td>
 
-    <td class="{{$hide_tax}}">
-        <input type="text" name="products[{{$row_count}}][unit_price_inc_tax]"
-               class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}"
-               @if(!$edit_price) readonly
-               @endif data-rule-min-value="{{$base_price}}"
-               data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($base_price)])}}"
-        >
-    </td>
+    @can('sell_less_than_purchase_price')
+        <td class="{{$hide_tax}}">
+            <input type="text" name="products[{{$row_count}}][unit_price_inc_tax]"
+                   class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}"
+                   @if(!$edit_price) readonly
+                   @endif data-rule-min-value="0"
+                   data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format(0)])}}"
+            >
+        </td>
+    @else
+        <td class="{{$hide_tax}}">
+            <input type="text" name="products[{{$row_count}}][unit_price_inc_tax]"
+                   class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}"
+                   @if(!$edit_price) readonly
+                   @endif data-rule-min-value="{{$base_price}}"
+                   data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($base_price)])}}"
+            >
+        </td>
+    @endcan
 
 {{--    @if(!empty($common_settings['enable_product_warranty']) && !empty($is_direct_sell))--}}
 {{--        <td>--}}

@@ -6,6 +6,7 @@ return [
     'total' => 'الاجمالي',
     'save' => 'حفظ',
     'Reset' => 'اعادة الضبط',
+    'sell_less_than_purchase_price' => 'البيع باقل من سعر الشراء',
     'sales_return' => 'اضافه مرتجع',
     'purchases_report' => 'فواتير الشراء',
     'invoices_report' => 'تفاصيل تحصيلات الفواتير',
