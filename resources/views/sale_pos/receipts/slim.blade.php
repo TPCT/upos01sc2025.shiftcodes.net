@@ -204,6 +204,23 @@
 		</div>
 
 		<div style="height: 1px; border: 1px solid black; margin-top: 10px"></div>
+		@if(!empty($receipt_details->payments))
+			<table>
+				<thead>
+				<th>طريقة الدفع</th>
+				<th>المبلغ</th>
+				</thead>
+				<tbody>
+				@foreach($receipt_details->payments as $payment)
+					<tr>
+						<td>{{$payment['method']}}</td>
+						<td>{{$payment['amount']}}</td>
+					</tr>
+				@endforeach
+				</tbody>
+			</table>
+		@endif
+		<div style="height: 1px; border: 1px solid black; margin-top: 10px"></div>
 
 		<table class="summary-table">
 			<tr>
