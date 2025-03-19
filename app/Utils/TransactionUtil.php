@@ -1422,6 +1422,7 @@ class TransactionUtil extends Util
             $discount = $transaction->discount_amount;
         }
         $output['discount'] = ($discount != 0) ? $this->num_f($discount, $show_currency, $business_details) : 0;
+        $output['discount_uf'] = $discount;
 
         //reward points
         if ($business_details->enable_rp == 1 && ! empty($transaction->rp_redeemed)) {
