@@ -16,149 +16,90 @@
             </h4>
         </div>
         <div class="modal-body">
-            @if(!empty($transaction))
                 <div class="row">
-                    @if(in_array($transaction->type, ['purchase', 'purchase_return']))
-                        <div class="col-xs-6">
-                            @lang('purchase.supplier'):
-                            <address>
-                                <strong>{{ $transaction->contact->supplier_business_name }}</strong>
-                                {{ $transaction->contact->name }}
-                                {!! $transaction->contact->contact_address !!}
-                                @if(!empty($transaction->contact->tax_number))
-                                    <br>@lang('contact.tax_no'): {{$transaction->contact->tax_number}}
-                                @endif
-                                @if(!empty($transaction->contact->mobile))
-                                    <br>@lang('contact.mobile'): {{$transaction->contact->mobile}}
-                                @endif
-                                @if(!empty($transaction->contact->email))
-                                    <br>@lang('business.email'): {{$transaction->contact->email}}
-                                @endif
-                            </address>
-                        </div>
-                        <div class="col-xs-6">
-                            @lang('business.business'):
-                            <address>
-                                <strong>{{ $transaction->business->name }}</strong>
+                    <div class="col-xs-6">
+                        @lang('purchase.supplier'):
+                        <address>
+                            <strong>{{ $contact->supplier_business_name }}</strong>
+                            {{ $contact->name }}
+                            {!! $contact->contact_address !!}
+                            @if(!empty($contact->tax_number))
+                                <br>@lang('contact.tax_no'): {{$contact->tax_number}}
+                            @endif
+                            @if(!empty($contact->mobile))
+                                <br>@lang('contact.mobile'): {{$contact->mobile}}
+                            @endif
+                            @if(!empty($contact->email))
+                                <br>@lang('business.email'): {{$contact->email}}
+                            @endif
+                        </address>
+                    </div>
+                    <div class="col-xs-6">
+                        @lang('business.business'):
+                        <address>
+                            <strong>{{ $business->name }}</strong>
 
-                                @if(!empty($transaction->location))
-                                    {{ $transaction->location->name }}
-                                    @if(!empty($transaction->location->landmark))
-                                        <br>{{$transaction->location->landmark}}
-                                    @endif
-                                    @if(!empty($transaction->location->city) || !empty($transaction->location->state) || !empty($transaction->location->country))
-                                        <br>{{implode(',', array_filter([$transaction->location->city, $transaction->location->state, $transaction->location->country]))}}
-                                    @endif
+                            @if(!empty($location))
+                                {{ $location->name }}
+                                @if(!empty($location->landmark))
+                                    <br>{{$location->landmark}}
                                 @endif
-
-                                @if(!empty($transaction->business->tax_number_1))
-                                    <br>{{$transaction->business->tax_label_1}}
-                                    : {{$transaction->business->tax_number_1}}
-                                @endif
-
-                                @if(!empty($transaction->business->tax_number_2))
-                                    <br>{{$transaction->business->tax_label_2}}
-                                    : {{$transaction->business->tax_number_2}}
-                                @endif
-
-                                @if(!empty($transaction->location))
-                                    @if(!empty($transaction->location->mobile))
-                                        <br>@lang('contact.mobile'): {{$transaction->location->mobile}}
-                                    @endif
-                                    @if(!empty($transaction->location->email))
-                                        <br>@lang('business.email'): {{$transaction->location->email}}
-                                    @endif
-                                @endif
-                            </address>
-                        </div>
-                    @else
-                        <div class="col-xs-6">
-                            @if($transaction->type != 'payroll' && !empty($transaction->contact))
-                                @lang('contact.customer'):
-                                <address>
-                                    <strong>{{ $transaction->contact->name ?? '' }}</strong>
-
-                                    {!! $transaction->contact->contact_address !!}
-                                    @if(!empty($transaction->contact->tax_number))
-                                        <br>@lang('contact.tax_no'): {{$transaction->contact->tax_number}}
-                                    @endif
-                                    @if(!empty($transaction->contact->mobile))
-                                        <br>@lang('contact.mobile'): {{$transaction->contact->mobile}}
-                                    @endif
-                                    @if(!empty($transaction->contact->email))
-                                        <br>@lang('business.email'): {{$transaction->contact->email}}
-                                    @endif
-                                </address>
-                            @else
-                                @if(!empty($transaction->transaction_for))
-                                    @lang('essentials::lang.payroll_for'):
-                                    <address>
-                                        <strong>{{ $transaction->transaction_for->user_full_name }}</strong>
-                                        @if(!empty($transaction->transaction_for->address))
-                                            <br>{{$transaction->transaction_for->address}}
-                                        @endif
-                                        @if(!empty($transaction->transaction_for->contact_number))
-                                            <br>@lang('contact.mobile')
-                                            : {{$transaction->transaction_for->contact_number}}
-                                        @endif
-                                        @if(!empty($transaction->transaction_for->email))
-                                            <br>@lang('business.email'): {{$transaction->transaction_for->email}}
-                                        @endif
-                                    </address>
+                                @if(!empty($location->city) || !empty($location->state) || !empty($location->country))
+                                    <br>{{implode(',', array_filter([$location->city, $location->state, $location->country]))}}
                                 @endif
                             @endif
-                        </div>
+
+                            @if(!empty($business->tax_number_1))
+                                <br>{{$business->tax_label_1}}
+                                : {{$business->tax_number_1}}
+                            @endif
+
+                            @if(!empty($business->tax_number_2))
+                                <br>{{$business->tax_label_2}}
+                                : {{$business->tax_number_2}}
+                            @endif
+
+                            @if(!empty($location))
+                                @if(!empty($location->mobile))
+                                    <br>@lang('contact.mobile'): {{$location->mobile}}
+                                @endif
+                                @if(!empty($location->email))
+                                    <br>@lang('business.email'): {{$location->email}}
+                                @endif
+                            @endif
+                        </address>
+                    </div>
+                    @if (!empty($transaction))
                         <div class="col-xs-6">
-                            @lang('business.business'):
-                            <address>
-                                <strong>{{ $transaction->business->name }}</strong>
-                                @if(!empty($transaction->location))
-                                    {{ $transaction->location->name }}
-                                    @if(!empty($transaction->location->landmark))
-                                        <br>{{$transaction->location->landmark}}
+                            @if(!empty($transaction->transaction_for))
+                                @lang('essentials::lang.payroll_for'):
+                                <address>
+                                    <strong>{{ $transaction->transaction_for->user_full_name }}</strong>
+                                    @if(!empty($transaction->transaction_for->address))
+                                        <br>{{$transaction->transaction_for->address}}
                                     @endif
-                                    @if(!empty($transaction->location->city) || !empty($transaction->location->state) || !empty($transaction->location->country))
-                                        <br>{{implode(',', array_filter([$transaction->location->city, $transaction->location->state, $transaction->location->country]))}}
+                                    @if(!empty($transaction->transaction_for->contact_number))
+                                        <br>@lang('contact.mobile')
+                                        : {{$transaction->transaction_for->contact_number}}
                                     @endif
-                                @endif
-
-                                @if(!empty($transaction->business->tax_number_1))
-                                    <br>{{$transaction->business->tax_label_1}}
-                                    : {{$transaction->business->tax_number_1}}
-                                @endif
-
-                                @if(!empty($transaction->business->tax_number_2))
-                                    <br>{{$transaction->business->tax_label_2}}
-                                    : {{$transaction->business->tax_number_2}}
-                                @endif
-
-                                @if(!empty($transaction->location))
-                                    @if(!empty($transaction->location->mobile))
-                                        <br>@lang('contact.mobile'): {{$transaction->location->mobile}}
+                                    @if(!empty($transaction->transaction_for->email))
+                                        <br>@lang('business.email'): {{$transaction->transaction_for->email}}
                                     @endif
-                                    @if(!empty($transaction->location->email))
-                                        <br>@lang('business.email'): {{$transaction->location->email}}
-                                    @endif
-                                @endif
-                            </address>
+                                </address>
+                            @endif
                         </div>
                     @endif
                 </div>
-            @endif
             <div class="row">
                 <br>
                 <div class="col-xs-6">
-                    @if($due)
-                        <strong>رصيد الحساب قبل: </strong>@format_currency($due - $single_payment_line->amount)
-                        <br>
-                    @endif
+                    <strong>رصيد الحساب قبل: </strong>@format_currency($due - $single_payment_line->amount)
+                    <br>
 
                     <strong>@lang('purchase.amount') :</strong>
                     @format_currency($single_payment_line->amount)<br>
-                    @if ($due)
-                        <strong>رصيد الحساب بعد: </strong>@format_currency($due)<br>
-                    @endif
-                            <strong>@lang('lang_v1.payment_method') :</strong>
+                    <strong>رصيد الحساب بعد: </strong>@format_currency($due)<br>
+                    <strong>@lang('lang_v1.payment_method') :</strong>
                     {{ $payment_types[$single_payment_line->method] ?? '' }}<br>
                     @if($single_payment_line->method == "card")
                         <strong>@lang('lang_v1.card_holder_name') :</strong>

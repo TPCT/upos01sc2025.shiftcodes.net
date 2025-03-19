@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Business;
 use App\Contact;
 use App\Events\TransactionPaymentAdded;
 use App\Events\TransactionPaymentUpdated;
@@ -645,13 +646,15 @@ class TransactionPaymentController extends Controller
                         ->first();
                 $transaction = ! empty($child_payment) ? $child_payment->transaction : null;
             }
-            $due = 0;
-            if ($transaction)
-                $due = $this->transactionUtil->getContactDue($transaction->contact->id, $business_id);
+
+            $contact = $single_payment_line->contact;
+            $business = Business::find($single_payment_line->business_id);
+            $location = $transaction?->location;
+            $due = $this->transactionUtil->getContactDue($single_payment_line->contact->id, $business_id);
             $payment_types = $this->transactionUtil->payment_types(null, false, $business_id);
 
             return view('transaction_payment.single_payment_view')
-                    ->with(compact('single_payment_line', 'transaction', 'payment_types', 'due'));
+                    ->with(compact('single_payment_line', 'transaction', 'payment_types', 'due', 'contact', 'business', 'location'));
         }
     }
 
