@@ -126,8 +126,12 @@
 
 		<h2>{{$receipt_details->business_name}}</h2>
 		<p>{!! $receipt_details->contact !!}</p>
-		<p>العنوان: {{$receipt_details->address}}</p>
+		@if (!empty($receipt_details->address))
+			<p>العنوان: {{$receipt_details->address}}</p>
+		@endif
 		<p>{{$receipt_details->location_name}}</p>
+
+		<p>{!! $receipt_details->header_text !!}</p>
 	</div>
 
 	<div style="display: flex; justify-content: center;">
@@ -249,6 +253,12 @@
 
 		</table>
 	</div>
+
+	@if(!empty($receipt_details->additional_notes))
+		<p>
+			{!! nl2br($receipt_details->additional_notes) !!}
+		</p>
+	@endif
 
 	<div class="footer">
 		{!! $receipt_details->footer_text !!}
