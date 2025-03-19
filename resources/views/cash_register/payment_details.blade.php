@@ -366,7 +366,7 @@
         @endphp
         <tr class="">
           <td><a class="badge bg-blue view-invoice-modal"
-                 data-href="{{route('view-payment', ['payment_id' => $transaction->id])}}"># {{$bill->payment_ref_no}} </a>
+                 data-href="{{route('view-payment', ['payment_id' => $bill->id])}}"># {{$bill->payment_ref_no}} </a>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$bill->amount}}</span></td>
           <td><span>{{$bill->transaction->invoice_no}}</span></td>
@@ -413,7 +413,7 @@
         @endphp
         <tr class="">
           <td><a class="badge bg-blue view-invoice-modal"
-                 data-href="{{route('view-payment', ['payment_id' => $transaction->id])}}"># {{$discount->payment_ref_no}} </a>
+                 data-href="{{route('view-payment', ['payment_id' => $discount->id])}}"># {{$discount->payment_ref_no}} </a>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$discount_amount}}</span></td>
           <td><span>{{$transaction->invoice_no}}</span></td>
@@ -453,8 +453,7 @@
           $total += $bill->amount;
         @endphp
         <tr class="">
-          <td><a class="badge bg-blue"
-                 data-href=""># {{$bill->payment_ref_no}} </a>
+          <td><a class="badge bg-blue" data-href="{{route('view-payment', ['payment_id' => $bill->id])}}"># {{$bill->payment_ref_no}} </a>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$bill->amount}}</span></td>
           <td><span>{{Contact::find($bill->payment_for)?->name ?? '-----'}}</span></td>
