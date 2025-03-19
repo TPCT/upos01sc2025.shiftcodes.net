@@ -611,7 +611,7 @@ class TransactionPaymentController extends Controller
      * payment.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function viewPayment($payment_id)
     {
@@ -629,7 +629,6 @@ class TransactionPaymentController extends Controller
         if (request()->ajax()) {
             $business_id = request()->session()->get('business.id');
             $single_payment_line = TransactionPayment::findOrFail($payment_id);
-            $transaction = null;
             if (! empty($single_payment_line->transaction_id)) {
                 $transaction = Transaction::where('id', $single_payment_line->transaction_id)
                                 ->with(['contact', 'location', 'transaction_for'])

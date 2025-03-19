@@ -45,7 +45,9 @@
     <div class="modal fade location_edit_modal" tabindex="-1" role="dialog" 
         aria-labelledby="gridSystemModalLabel">
     </div>
-
+    <div class="modal fade invoice_modal" tabindex="-1" role="dialog"
+         aria-labelledby="gridSystemModalLabel">
+    </div>
 </section>
 <!-- /.content -->
 

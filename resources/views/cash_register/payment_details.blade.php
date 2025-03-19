@@ -18,29 +18,27 @@
         $total = 0;
         $total_sells_paid = 0;
       @endphp
-      @foreach($sells as $sell)
+      @foreach($details['sells'] as $sell)
         @php
           if ($sell->types_of_service_id){
               if ($sell->packing_charge_type == "percent"){
-                  $services[(int)$sell->types_of_service_id]['total'] += $sell->total_before_tax * $sell->packing_charge / 100;
+                  $details['services'][(int)$sell->types_of_service_id]['total'] += $sell->total_before_tax * $sell->packing_charge / 100;
               }else{
-                  $services[(int)$sell->types_of_service_id]['total'] += $sell->packing_charge;
+                  $details['services'][(int)$sell->types_of_service_id]['total'] += $sell->packing_charge;
               }
           }
-          $amount = 0;
-          foreach ($sell->payment_lines as $line)
-              $amount += $line->amount;
+          $amount = (float)$sell->amount;
           $total_sells_paid += $amount;
-          $total += $sell->final_total;
+          $total += $sell->transaction->final_total;
         @endphp
         <tr class="">
           <td><a class="badge bg-blue view-invoice-modal"
-                 data-href="{{route('view-payment', ['payment_id' => $sell->id])}}"># {{$sell->invoice_no}} </a>
+                 data-href="{{route('view-payment', ['payment_id' => $sell->id])}}"># {{$sell->payment_ref_no}} </a>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$sell->final_total}}</span></td>
           <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
           <td><span class="display_currency"
-                    data-currency_symbol="true">{{$sell->final_total - $amount}}</span></td>
+                    data-currency_symbol="true">{{$sell->transaction->final_total - $amount}}</span></td>
         </tr>
       @endforeach
       </tbody>
@@ -75,24 +73,22 @@
         $total = 0;
         $total_purchases_paid = 0;
       @endphp
-      @foreach($purchases as $purchase)
+      @foreach($details['purchases'] as $purchase)
         @php
-          $amount = 0;
-          foreach ($purchase->payment_lines as $line)
-              $amount += $line->amount;
+          $amount = (float)$purchase->amount;
           $total_purchases_paid += $amount;
-          $total += $purchase->final_total;
+          $total += $purchase->transaction->final_total;
         @endphp
         <tr class="">
           <td><a class="badge bg-blue view-invoice-modal"
-                 data-href="{{route('view-payment', ['payment_id' => $purchase->id])}}"># {{$purchase->ref_no}} </a>
+                 data-href="{{route('view-payment', ['payment_id' => $purchase->id])}}"># {{$purchase->payment_ref_no}} </a>
           </td>
           <td><span>{{$purchase->contact->name}}</span></td>
           <td><span class="display_currency" data-currency_symbol="true">{{$purchase->final_total}}</span>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
           <td><span class="display_currency"
-                    data-currency_symbol="true">{{$purchase->final_total - $amount}}</span></td>
+                    data-currency_symbol="true">{{$purchase->transaction->final_total - $amount}}</span></td>
         </tr>
       @endforeach
       </tbody>
@@ -120,7 +116,7 @@
       </tr>
       </thead>
       <tbody>
-      @foreach($services as $service)
+      @foreach($details['services'] as $service)
         @php
           $total += $service['total']
         @endphp
@@ -363,7 +359,7 @@
       @php
         $bill_collection_total = 0;
       @endphp
-      @foreach($collected_bills as $bill)
+      @foreach($details['collected_bills'] as $bill)
         @php
           $transaction = $bill->transaction;
           $bill_collection_total += $bill->amount;
@@ -404,7 +400,7 @@
       @php
         $total = 0;
       @endphp
-      @foreach($discounts as $discount)
+      @foreach($details['discounts'] as $discount)
         @php
           $transaction = $discount->transaction;
           if ($transaction->discount_type == "percentage"){
@@ -450,7 +446,7 @@
       @php
         $total = 0;
       @endphp
-      @foreach($collected_bills_without_invoices as $bill)
+      @foreach($details['collected_bills_without_invoices'] as $bill)
         @php
           $transaction = $bill->transaction;
           $bill_collection_total += $bill->amount;
@@ -492,7 +488,7 @@
       @php
         $total_expenses_paid = 0;
       @endphp
-      @foreach($expenses as $expense)
+      @foreach($details['expenses'] as $expense)
         @php
           $transaction = $expense->transaction;
           $total_expenses_paid += $expense->amount;
@@ -539,7 +535,7 @@
       @php
         $total_income = 0;
       @endphp
-      @foreach($incomes as $income)
+      @foreach($details['incomes'] as $income)
         @php
           $transaction = $income->transaction;
           $total_income += $income->amount;

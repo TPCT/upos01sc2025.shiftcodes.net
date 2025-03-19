@@ -120,7 +120,7 @@ class CashRegisterController extends Controller
      * Display the specified resource.
      *
      * @param CashRegister $cashRegister
-     * @return Response
+     * @return Application|Factory|View
      */
     public function show($id)
     {
@@ -138,60 +138,42 @@ class CashRegisterController extends Controller
 
         $payment_types = $this->cashRegisterUtil->payment_types(null, false, $business_id);
 
+        $this->details($details, $business_id, $open_time, $close_time, $user_id);
+
         return view('cash_register.register_details')
             ->with(compact('register_details', 'details', 'payment_types', 'close_time'));
     }
 
-    /**
-     * Shows register details modal.
-     *
-     * @param void
-     * @return Application|Factory|View|\Illuminate\View\View
-     */
-    public function getRegisterDetails()
-    {
-        if (!auth()->user()->can('view_cash_register')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $business_id = request()->session()->get('user.business_id');
-
-        $register_details = $this->cashRegisterUtil->getRegisterDetails();
-
-        $user_id = auth()->user()->id;
-        $open_time = $register_details['open_time'];
-        $close_time = Carbon::now()->toDateTimeString();
-
-        $is_types_of_service_enabled = $this->moduleUtil->isModuleEnabled('types_of_service');
-
-        $details = $this->cashRegisterUtil->getRegisterTransactionDetails($user_id, $open_time, $close_time, $is_types_of_service_enabled);
-
-        $payment_types = $this->cashRegisterUtil->payment_types($register_details->location_id, true, $business_id);
-
-        $sells = Transaction::where(function ($query) use ($business_id, $open_time, $close_time) {
+    private function details(&$details, $business_id, $open_time, $close_time, $user_id){
+        $details['sells'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time){
             $query->where('type', 'sell');
             $query->where('payment_status', 'paid');
             $query->where('business_id', $business_id);
             $query->whereBetween('transaction_date', [$open_time, $close_time]);
+        })->where(function ($query) use ($business_id, $open_time, $close_time){
+            $query->where('business_id', $business_id);
+            $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->get();
 
-        $purchases = Transaction::where(function ($query) use ($business_id, $open_time, $close_time) {
+        $details['purchases'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time){
             $query->where('type', 'purchase');
             $query->where('business_id', $business_id);
-            $query->whereBetween('transaction_date', [$open_time, $close_time]);
-        })->get();
-
-        $collected_bills = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('type', 'sell');
-            $query->where('business_id', $business_id);
-            $query->where('status', 'final');
-            $query->where('payment_status', 'partial');
         })->where(function ($query) use ($business_id, $open_time, $close_time) {
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->get();
 
-        $discounts = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
+        $details['collected_bills'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
+            $query->where('type', 'sell');
+            $query->where('business_id', $business_id);
+            $query->where('status', 'final');
+            $query->where('transaction_date', '<', $open_time);
+        })->where(function ($query) use ($business_id, $open_time, $close_time) {
+            $query->where('business_id', $business_id);
+            $query->whereBetween('paid_on', [$open_time, $close_time]);
+        })->get();
+
+        $details['discounts'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
             $query->where('type', 'sell');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
@@ -203,7 +185,7 @@ class CashRegisterController extends Controller
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->get();
 
-        $expenses = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
+        $details['expenses'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
             $query->where('type', 'expense');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
@@ -213,7 +195,7 @@ class CashRegisterController extends Controller
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->get();
 
-        $incomes = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
+        $details['incomes'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
             $query->where('type', 'expense_refund');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
@@ -223,15 +205,15 @@ class CashRegisterController extends Controller
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })->get();
 
-        $collected_bills_without_invoices = TransactionPayment::where(function($query) use ($business_id, $open_time, $close_time) {
+        $details['collected_bills_without_invoices'] = TransactionPayment::where(function($query) use ($business_id, $open_time, $close_time) {
             $query->whereNull('transaction_id');
             $query->whereNotNull('payment_for');
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
         })
-        ->get();
+            ->get();
 
-        $services = TypesOfService::all()->pluck('name', 'id')->map(function ($item) {
+        $details['services'] = TypesOfService::all()->pluck('name', 'id')->map(function ($item) {
             return [
                 'name' => $item,
                 'total' => 0
@@ -276,13 +258,40 @@ class CashRegisterController extends Controller
                 $query->whereBetween('paid_on', [$open_time, $close_time]);
             })->sum('amount');
 
-        $pos_settings = !empty(request()->session()->get('business.pos_settings')) ? json_decode(request()->session()->get('business.pos_settings'), true) : [];
+        $details['pos_settings'] = !empty(request()->session()->get('business.pos_settings')) ? json_decode(request()->session()->get('business.pos_settings'), true) : [];
+    }
+
+    /**
+     * Shows register details modal.
+     *
+     * @param void
+     * @return Application|Factory|View|\Illuminate\View\View
+     */
+    public function getRegisterDetails()
+    {
+        if (!auth()->user()->can('view_cash_register')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $business_id = request()->session()->get('user.business_id');
+
+        $register_details = $this->cashRegisterUtil->getRegisterDetails();
+
+        $user_id = auth()->user()->id;
+        $open_time = $register_details['open_time'];
+        $close_time = Carbon::now()->toDateTimeString();
+
+        $is_types_of_service_enabled = $this->moduleUtil->isModuleEnabled('types_of_service');
+
+        $details = $this->cashRegisterUtil->getRegisterTransactionDetails($user_id, $open_time, $close_time, $is_types_of_service_enabled);
+
+        $payment_types = $this->cashRegisterUtil->payment_types($register_details->location_id, true, $business_id);
+
+        $this->details($details, $business_id, $open_time, $close_time, $user_id);
 
         return view('cash_register.register_details')
             ->with(compact(
                 'register_details', 'details', 'payment_types',
-                'pos_settings', 'sells', 'purchases', 'collected_bills', 'services',
-                'discounts', 'expenses', 'incomes', 'collected_bills_without_invoices',
                 'close_time'
             ));
     }
@@ -291,7 +300,7 @@ class CashRegisterController extends Controller
      * Shows close register form.
      *
      * @param void
-     * @return Response
+     * @return Application|Factory|View
      */
     public function getCloseRegister($id = null)
     {
@@ -312,118 +321,11 @@ class CashRegisterController extends Controller
 
         $payment_types = $this->cashRegisterUtil->payment_types($register_details->location_id, true, $business_id);
 
-        $sells = Transaction::where(function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('type', 'sell');
-            $query->where('business_id', $business_id);
-            $query->whereBetween('transaction_date', [$open_time, $close_time]);
-        })->get();
-
-        $purchases = Transaction::where(function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('type', 'purchase');
-            $query->where('business_id', $business_id);
-            $query->whereBetween('transaction_date', [$open_time, $close_time]);
-        })->get();
-
-        $collected_bills = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('type', 'sell');
-            $query->where('business_id', $business_id);
-            $query->where('status', 'final');
-            $query->where('payment_status', 'paid');
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('business_id', $business_id);
-            $query->whereBetween('paid_on', [$open_time, $close_time]);
-        })->get();
-
-        $discounts = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('type', 'sell');
-            $query->where('business_id', $business_id);
-            $query->where('status', 'final');
-            $query->where('payment_status', 'paid');
-            $query->where('discount_amount', '>', 0);
-            $query->whereNotNull('contact_id');
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('business_id', $business_id);
-            $query->whereBetween('paid_on', [$open_time, $close_time]);
-        })->get();
-
-        $expenses = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('type', 'expense');
-            $query->where('business_id', $business_id);
-            $query->where('status', 'final');
-            $query->where('payment_status', 'paid');
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('business_id', $business_id);
-            $query->whereBetween('paid_on', [$open_time, $close_time]);
-        })->get();
-
-        $incomes = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('type', 'expense_refund');
-            $query->where('business_id', $business_id);
-            $query->where('status', 'final');
-            $query->where('payment_status', 'paid');
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('business_id', $business_id);
-            $query->whereBetween('paid_on', [$open_time, $close_time]);
-        })->get();
-
-        $collected_bills_without_invoices = TransactionPayment::where(function($query) use ($business_id, $open_time, $close_time) {
-            $query->where('business_id', $business_id);
-            $query->whereBetween('paid_on', [$open_time, $close_time]);
-            $query->whereNull('transaction_id');
-            $query->whereNotNull('payment_for');
-        })->get();
-
-        $services = TypesOfService::all()->pluck('name', 'id')->map(function ($item) {
-            return [
-                'name' => $item,
-                'total' => 0
-            ];
-        })->toArray();
-
-        $details['drawer_cash'] = CashRegisterTransaction::whereHas('cash_register', function ($query) use ($business_id, $user_id){
-            $query->where('business_id', $business_id);
-            $query->where('user_id', $user_id);
-            $query->where('status', 'open');
-        })->where(function ($query) use ($business_id, $user_id){
-            $query->where('transaction_type', 'initial');
-        })->first()?->amount ?? 0;
-
-        $details['purchase_return'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $user_id){
-            $query->where('type', 'purchase_return');
-            $query->where('business_id', $business_id);
-            $query->where('status', 'final');
-            $query->where('payment_status', 'paid');
-        })->where(function ($query) use ($business_id, $user_id, $open_time, $close_time){
-            $query->where('business_id', $business_id);
-            $query->whereBetween('paid_on', [$open_time, $close_time]);
-        })->sum('amount');
-
-        $details['sell_return'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $user_id){
-            $query->where('type', 'sell_return');
-            $query->where('business_id', $business_id);
-            $query->where('status', 'final');
-        })->where(function ($query) use ($business_id, $user_id, $open_time, $close_time){
-            $query->where('business_id', $business_id);
-            $query->whereBetween('paid_on', [$open_time, $close_time]);
-        })->sum('amount');
-
-        $details['supplier_payments'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $user_id){
-            $query->where('type', 'purchase');
-            $query->where('business_id', $business_id);
-            $query->where('payment_status', 'partial');
-        })
-        ->where(function ($query) use ($business_id, $open_time, $close_time) {
-            $query->where('business_id', $business_id);
-            $query->whereBetween('paid_on', [$open_time, $close_time]);
-        })->sum('amount');
-
-        $pos_settings = !empty(request()->session()->get('business.pos_settings')) ? json_decode(request()->session()->get('business.pos_settings'), true) : [];
+        $this->details($details, $business_id, $open_time, $close_time, $user_id);
 
         return view('cash_register.close_register_modal')
             ->with(compact(
-                'register_details', 'details', 'payment_types',
-                'pos_settings', 'sells', 'purchases', 'collected_bills', 'services',
-                'discounts', 'expenses', 'incomes', 'collected_bills_without_invoices'
+                'register_details', 'details', 'payment_types'
             ));
     }
 
@@ -431,7 +333,7 @@ class CashRegisterController extends Controller
      * Closes currently opened register.
      *
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function postCloseRegister(Request $request)
     {
