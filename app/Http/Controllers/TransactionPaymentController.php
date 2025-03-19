@@ -160,11 +160,11 @@ class TransactionPaymentController extends Controller
             DB::rollBack();
             $msg = __('messages.something_went_wrong');
 
-            if (get_class($e) == \App\Exceptions\AdvanceBalanceNotAvailable::class) {
-                $msg = $e->getMessage();
-            } else {
-                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
-            }
+//            if (get_class($e) == \App\Exceptions\AdvanceBalanceNotAvailable::class) {
+//                $msg = $e->getMessage();
+//            } else {
+//                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+//            }
 
             $output = ['success' => false,
                 'msg' => $msg,
@@ -593,18 +593,22 @@ class TransactionPaymentController extends Controller
             DB::commit();
             $output = ['success' => true,
                 'msg' => __('purchase.payment_added_success'),
+                'route' => route('view-payment', ['payment_id' => $tp->id])
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
-            $output = ['success' => false,
+            $output = [
+                'success' => false,
                 'msg' => 'File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage(),
+                'content' => null
             ];
         }
-        dd($output);
-//        return redirect()->back()->with(['status' => $output]);
+        if ($output['success'])
+            return response()->json($output);
+        return redirect()->back()->with(['status' => $output]);
     }
 
     /**

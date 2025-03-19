@@ -257,9 +257,13 @@
       data: $(this).serialize(),
       contentType: "application/x-www-form-urlencoded",
       success: function (response){
-          console.log(response);
-          const modal = $(".client_add_cash_modal");
-          modal.html(response);
+        const modal = $(".client_add_cash_modal");
+        $.get({
+          url: response.route,
+          success: function(response){
+            modal.html(response)
+          }
+        });
       }
     })
   })

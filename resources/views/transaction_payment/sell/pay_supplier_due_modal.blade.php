@@ -188,3 +188,24 @@
 
   </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
+
+<script>
+  $("#pay_contact_due_form").on('submit', function(e){
+    e.preventDefault();
+
+    $.post({
+      url: $(this).attr('action'),
+      data: $(this).serialize(),
+      contentType: "application/x-www-form-urlencoded",
+      success: function (response){
+        const modal = $(".client_add_cash_modal,.pay_contact_due_modal");
+        $.get({
+          url: response.route,
+          success: function(response){
+              modal.html(response)
+          }
+        });
+      }
+    })
+  })
+</script>
