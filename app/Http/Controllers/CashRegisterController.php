@@ -170,7 +170,7 @@ class CashRegisterController extends Controller
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
             $query->where('transaction_date', '<', $open_time);
-        })->where(function (Builder $query) use ($business_id, $open_time, $close_time, $details, $user_id) {
+        })->where(function ($query) use ($business_id, $open_time, $close_time, $details, $user_id) {
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
             $query->where('created_by', $user_id);
