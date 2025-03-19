@@ -145,73 +145,80 @@ class CashRegisterController extends Controller
     }
 
     private function details(&$details, $business_id, $open_time, $close_time, $user_id){
-        $details['sells'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time){
+        $details['sells'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time, $user_id){
             $query->where('type', 'sell');
             $query->where('payment_status', 'paid');
             $query->where('business_id', $business_id);
             $query->whereBetween('transaction_date', [$open_time, $close_time]);
-        })->where(function ($query) use ($business_id, $open_time, $close_time){
+        })->where(function ($query) use ($business_id, $open_time, $close_time, $user_id){
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })->get();
 
-        $details['purchases'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time){
+        $details['purchases'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time, $user_id){
             $query->where('type', 'purchase');
             $query->where('business_id', $business_id);
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
+        })->where(function ($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })->get();
 
-        $details['collected_bills'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
+        $details['collected_bills'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->where('type', 'sell');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
             $query->where('transaction_date', '<', $open_time);
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
+        })->where(function (Builder $query) use ($business_id, $open_time, $close_time, $details, $user_id) {
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })->get();
 
-        $details['discounts'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
+        $details['discounts'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->where('type', 'sell');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
             $query->where('payment_status', 'paid');
             $query->where('discount_amount', '>', 0);
             $query->whereNotNull('contact_id');
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
+        })->where(function ($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })->get();
 
-        $details['expenses'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
+        $details['expenses'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->where('type', 'expense');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
             $query->where('payment_status', 'paid');
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
+        })->where(function ($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })->get();
 
-        $details['incomes'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time) {
+        $details['incomes'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->where('type', 'expense_refund');
             $query->where('business_id', $business_id);
             $query->where('status', 'final');
             $query->where('payment_status', 'paid');
-        })->where(function ($query) use ($business_id, $open_time, $close_time) {
+        })->where(function ($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })->get();
 
-        $details['collected_bills_without_invoices'] = TransactionPayment::where(function($query) use ($business_id, $open_time, $close_time) {
+        $details['collected_bills_without_invoices'] = TransactionPayment::where(function($query) use ($business_id, $open_time, $close_time, $user_id) {
             $query->whereNull('transaction_id');
             $query->whereNotNull('payment_for');
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })
-            ->get();
+        ->get();
 
         $details['services'] = TypesOfService::all()->pluck('name', 'id')->map(function ($item) {
             return [
@@ -236,6 +243,7 @@ class CashRegisterController extends Controller
         })->where(function ($query) use ($business_id, $user_id, $open_time, $close_time){
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })->sum('amount');
 
         $details['sell_return'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $user_id){
@@ -246,6 +254,7 @@ class CashRegisterController extends Controller
         })->where(function ($query) use ($business_id, $user_id, $open_time, $close_time){
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
+            $query->where('created_by', $user_id);
         })->sum('amount');
 
         $details['supplier_payments'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $user_id){
@@ -253,9 +262,10 @@ class CashRegisterController extends Controller
             $query->where('business_id', $business_id);
             $query->where('payment_status', 'partial');
         })
-            ->where(function ($query) use ($business_id, $open_time, $close_time) {
+            ->where(function ($query) use ($business_id, $open_time, $close_time, $user_id) {
                 $query->where('business_id', $business_id);
                 $query->whereBetween('paid_on', [$open_time, $close_time]);
+                $query->where('created_by', $user_id);
             })->sum('amount');
 
         $details['pos_settings'] = !empty(request()->session()->get('business.pos_settings')) ? json_decode(request()->session()->get('business.pos_settings'), true) : [];
