@@ -255,7 +255,7 @@
 	</div>
 
 	@if(!empty($receipt_details->additional_notes))
-		<p>
+		<p style="margin-top: 10px">
 			{!! nl2br($receipt_details->additional_notes) !!}
 		</p>
 	@endif
