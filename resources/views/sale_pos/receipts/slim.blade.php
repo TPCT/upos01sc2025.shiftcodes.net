@@ -163,7 +163,7 @@
             $total_sum = 0.0;
             $total_product = 0.0;
             $total_products = 0;
-            $receipt_total = $receipt_details->customer_balance - $receipt_details->total_unformatted + $receipt_details->total_paid_unformatted;
+			$receipt_total = $receipt_details->customer_balance - $receipt_details->total_unformatted + $receipt_details->total_paid_unformatted;
 		@endphp
 		@foreach($receipt_details->lines as $line)
 			@php

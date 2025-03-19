@@ -111,7 +111,7 @@
         </thead>
         <tbody>
         @php
-            $total_discount = 0.0;
+            $total_discount = (float)$receipt_details->discount_uf;
             $total_quantity = 0.0;
             $total_sum = 0.0;
         @endphp

@@ -1394,6 +1394,7 @@ class TransactionUtil extends Util
         //show cat code
         $output['show_cat_code'] = $il->show_cat_code;
         $output['cat_code_label'] = $il->cat_code_label;
+        $output['status'] = request('status');
 
         //Subtotal
         $output['subtotal_label'] = $il->sub_total_label.':';
@@ -1486,6 +1487,7 @@ class TransactionUtil extends Util
 
         $output['total_unformatted'] = $transaction->final_total;
 
+        $output['total_paid_unformatted'] = 0.0;
         //Paid & Amount due, only if final
         if ($transaction_type == 'sell' && $transaction->status == 'final') {
             $paid_amount = $this->getTotalPaid($transaction->id);
