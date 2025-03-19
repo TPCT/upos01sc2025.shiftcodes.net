@@ -603,7 +603,8 @@ class TransactionPaymentController extends Controller
                 'msg' => 'File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage(),
             ];
         }
-        return redirect()->back()->with(['status' => $output]);
+        dd($output);
+//        return redirect()->back()->with(['status' => $output]);
     }
 
     /**
