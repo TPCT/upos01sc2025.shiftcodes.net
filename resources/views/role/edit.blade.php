@@ -61,6 +61,15 @@
                             </label>
                         </div>
                     </div>
+
+                        <div class="col-md-12">
+                            <div class="checkbox">
+                                <label>
+                                    {!! Form::checkbox('permissions[]', 'reset_panel_permission', in_array('reset_panel_permission', $role_permissions),
+                                    [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.reset_panel_permission' ) }}
+                                </label>
+                            </div>
+                        </div>
                 </div>
             </div>
             <hr>

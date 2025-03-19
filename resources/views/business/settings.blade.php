@@ -94,7 +94,7 @@
         <button form="bussiness_edit_form" class="tw-dw-btn tw-dw-btn-error tw-dw-btn-lg tw-text-white" type="submit">@lang('business.update_settings')</button>
     </div>
 
-    @can('business_settings.access')
+    @can('business_settings.reset_panel_permission')
         {!! Form::open(['url' => action([\App\Http\Controllers\BusinessController::class, 'resetBusinessSettings']), 'method' => 'post', 'id' => 'bussiness_reset_form']) !!}
         {!! Form::close() !!}
         <div class="col-sm-6 text-center">
