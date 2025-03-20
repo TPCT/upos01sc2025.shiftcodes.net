@@ -35,7 +35,7 @@
           <td><a class="badge bg-blue view-invoice-modal"
                  data-href="{{route('view-payment', ['payment_id' => $sell->id])}}"># {{$sell->payment_ref_no}} </a>
           </td>
-          <td><span class="display_currency" data-currency_symbol="true">{{$sell->final_total}}</span></td>
+          <td><span class="display_currency" data-currency_symbol="true">{{$sell->amount}}</span></td>
           <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
           <td><span class="display_currency"
                     data-currency_symbol="true">{{$sell->transaction->final_total - $amount}}</span></td>
@@ -84,7 +84,7 @@
                  data-href="{{route('view-payment', ['payment_id' => $purchase->id])}}"># {{$purchase->payment_ref_no}} </a>
           </td>
           <td><span>{{$purchase->contact->name}}</span></td>
-          <td><span class="display_currency" data-currency_symbol="true">{{$purchase->final_total}}</span>
+          <td><span class="display_currency" data-currency_symbol="true">{{$purchase->amount}}</span>
           </td>
           <td><span class="display_currency" data-currency_symbol="true">{{$amount}}</span></td>
           <td><span class="display_currency"
