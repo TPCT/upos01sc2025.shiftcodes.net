@@ -1,8 +1,27 @@
 <table align="center" style="overflow: hidden !important;">
 	@foreach($page_products as $page_product)
 		<tr style="margin-top: {{$barcode_details->top_margin}}; margin-left: {{$barcode_details->left_margin}}; ">
-			<div class="right" style="position: absolute; right: 0; border: 1px solid black; border-radius: 5px; height: var(--conatiner-height); width: var(--conatiner-width);">
-				<div style="height: 50%;transform: scaleX(-1) scaleY(-1);display: flex;flex-direction: column;font-weight: bolder;align-items: center;width: 100%; justify-content: center">
+			<div class="right" style="padding-top: 0.1cm; position: absolute; right: 0; border: 1px solid black; border-radius: 5px; height: var(--conatiner-height); width: var(--conatiner-width);">
+
+				<div style="display: flex; height: 50%">
+					<div style="display: flex; flex-direction: column">
+						<img style="padding-left: 0.1cm; width:{{0.80}}cm !important;height: {{$barcode_details->height}}cm !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
+						<span style="transform: scaleX(-1) scaleY(-1); display: flex; flex-direction:column; justify-content: center;font-weight: bolder;align-items: center;">{{$page_product->sub_sku}}</span>
+					</div>
+					<div style="transform: scaleX(-1) scaleY(-1);display: flex;flex-direction: column;font-weight: bolder;align-items: center;width: 100%; justify-content: center">
+					@if(!empty($print['name']))
+						<span style="display: block !important; font-size: {{$barcode_details->name_size}}px">
+							{{$page_product->product_actual_name}}
+							@if(!empty($print['lot_number']) && !empty($page_product->lot_number))
+								({{$page_product->lot_number}})
+							@endif
+						</span>
+					@endif
+					@if ($page_product->weight)
+						<span style="font-size: {{6}}px; text-align: right;">
+							{{$page_product->weight}} G
+						</span>
+					@endif
 					<span style="font-size: {{$barcode_details->price_size}}px" class="price_span">
 						@if($print['price_type'] == 'inclusive')
 							{{@num_format($page_product->sell_price_inc_tax)}}
@@ -10,55 +29,44 @@
 							{{@num_format($page_product->default_sell_price)}}
 						@endif
 					</span>
-					@if(!empty($print['variations']) && $page_product->is_dummy != 1)
-						<span style="font-size: {{$print['variations_size']}}px; text-align: right;">
-                                {{$page_product->product_variation_name}}: <b>{{$page_product->variation_name}}</b>
-						</span>
-					@endif
-					@if(!empty($print['name']))
-						<span style="display: block !important; font-size: {{$barcode_details->name_size}}px">
-								{{$page_product->product_actual_name}}
-							@if(!empty($print['lot_number']) && !empty($page_product->lot_number))
-								({{$page_product->lot_number}})
-							@endif
-						</span>
-					@endif
+					</div>
 				</div>
-				<div style="position: absolute;left: 0;border: 1px dashed black;height: 0;width: 100%;"></div>
-				<div style="display: flex; flex-direction:column; justify-content: center;font-weight: bolder;align-items: center;position: absolute;top: 50%;width: 100%;height: 1.25cm;">
-					<img style="width:{{$barcode_details->width}}cm !important;height: {{$barcode_details->height}}cm !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
-					<span>{{$page_product->sub_sku}}</span>
+
+				<div style="display: flex; height: 50%; justify-content: center; align-items: center; transform: scaleY(-1) scaleX(-1)">
+					<img src="{{asset('/uploads/business_logos/' . $print['business_logo'])}}" height="30px" width="30px"/>
 				</div>
 			</div>
-			<div class="left" style="position: absolute; top: 45px; left: 0; border: 1px solid black; border-radius: 5px; height: var(--conatiner-height); width: var(--conatiner-width);">
-				<div style="transform: scaleX(-1) scaleY(-1); display: flex; flex-direction: column; justify-content: center;font-weight: bolder;align-items: center;position: absolute;top: 50%;width: 100%;height: 1.25cm;">
-					<img style="width:{{$barcode_details->width}}cm !important;height: {{$barcode_details->height}}cm !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
-					<span>{{$page_product->sub_sku}}</span>
-				</div>
-				<div style="position: absolute;left: 0;border: 1px dashed black;height: 0;width: 100%; top: 50%"></div>
-				<div style="height: 50%;display: flex;flex-direction: column;font-weight: bolder;align-items: center;width: 100%; justify-content: center">
-					<span style="font-size: {{$barcode_details->price_size}}px" class="price_span">
-						@if($print['price_type'] == 'inclusive')
-							{{@num_format($page_product->sell_price_inc_tax)}}
-						@else
-							{{@num_format($page_product->default_sell_price)}}
-						@endif
-					</span>
-
-					@if(!empty($print['variations']) && $page_product->is_dummy != 1)
-						<span style="font-size: {{$print['variations_size']}}px; text-align: right;">
-                                {{$page_product->product_variation_name}}: <b>{{$page_product->variation_name}}</b>
-                            </span>
-					@endif
-
-					@if(!empty($print['name']))
-						<span style="display: block !important; font-size: {{$barcode_details->name_size}}px">
+			<div class="left" style="padding-top: 0.1cm; position: absolute; top: 45px; left: 0; border: 1px solid black; border-radius: 5px; height: var(--conatiner-height); width: var(--conatiner-width);">
+				<div style="display: flex; height: 50%">
+					<div style="display: flex; flex-direction: column">
+						<img style="padding-left: 0.1cm; width:{{0.80}}cm !important;height: {{$barcode_details->height}}cm !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($page_product->sub_sku, $page_product->barcode_type, 1,30, array(0, 0, 0), false)}}">
+						<span style="display: flex; flex-direction:column; justify-content: center;font-weight: bolder;align-items: center;">{{$page_product->sub_sku}}</span>
+					</div>
+					<div style="display: flex;flex-direction: column;font-weight: bolder;align-items: center;width: 100%; justify-content: center">
+						@if(!empty($print['name']))
+							<span style="display: block !important; font-size: {{$barcode_details->name_size}}px">
 								{{$page_product->product_actual_name}}
-							@if(!empty($print['lot_number']) && !empty($page_product->lot_number))
-								({{$page_product->lot_number}})
-							@endif
+								@if(!empty($print['lot_number']) && !empty($page_product->lot_number))
+									({{$page_product->lot_number}})
+								@endif
+							</span>
+						@endif
+						@if ($page_product->weight)
+							<span style="font-size: {{6}}px; text-align: right;">
+								{{$page_product->weight}} G
+							</span>
+						@endif
+						<span style="font-size: {{$barcode_details->price_size}}px" class="price_span">
+							@if($print['price_type'] == 'inclusive')
+									{{@num_format($page_product->sell_price_inc_tax)}}
+								@else
+									{{@num_format($page_product->default_sell_price)}}
+								@endif
 						</span>
-					@endif
+					</div>
+				</div>
+				<div style="display: flex; height: 50%; justify-content: center; align-items: center">
+					<img src="{{asset('/uploads/business_logos/' . $print['business_logo'])}}" height="30px" width="30px"/>
 				</div>
 			</div>
 		</tr>

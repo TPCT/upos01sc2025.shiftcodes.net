@@ -119,7 +119,9 @@ class LabelsController extends Controller
             $print = $request->get('print');
             $barcode_setting = $request->get('barcode_setting');
             $business_id = $request->session()->get('user.business_id');
-            $print['business_name'] = Business::find($business_id)->name;
+            $business = Business::find($business_id);
+            $print['business_name'] = $business->name;
+            $print['business_logo'] = $business->logo;
             $barcode_details = Barcode::find($barcode_setting);
 
             if ($barcode_details->type == "double-labels-for-one-sticker")
