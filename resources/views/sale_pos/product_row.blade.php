@@ -363,14 +363,25 @@
                            class="form-control input_number row_discount_amount" value="0.00"
                     >
                 </div>
-                <select name="products[{{$row_count}}][line_discount_type]"
-                        class="form-control row_discount_type"
-                        data-max-fixed-discount="{{min((float)($unit_price_inc_tax - $base_price), ((float)$unit_price_inc_tax * $user->max_sales_discount_percent / 100))}}"
-                        data-max-percentage-discount="{{min((float)($unit_price_inc_tax - $base_price) / $unit_price_inc_tax * 100, ((float) $user->max_sales_discount_percent))}}"
-                >
-                    <option value="fixed">@lang("lang_v1.fixed")</option>
-                    <option value="percentage">@lang("lang_v1.percentage")</option>
-                </select>
+                @can('sell_less_than_purchase_price')
+                    <select name="products[{{$row_count}}][line_discount_type]"
+                            class="form-control row_discount_type"
+                            data-max-fixed-discount="{{((float)$unit_price_inc_tax * $user->max_sales_discount_percent / 100)}}"
+                            data-max-percentage-discount="{{((float) $user->max_sales_discount_percent)}}"
+                    >
+                        <option value="fixed">@lang("lang_v1.fixed")</option>
+                        <option value="percentage">@lang("lang_v1.percentage")</option>
+                    </select>
+                @else
+                    <select name="products[{{$row_count}}][line_discount_type]"
+                            class="form-control row_discount_type"
+                            data-max-fixed-discount="{{min((float)($unit_price_inc_tax - $base_price))}}"
+                            data-max-percentage-discount="{{min((float)($unit_price_inc_tax - $base_price) / $unit_price_inc_tax * 100)}}"
+                    >
+                        <option value="fixed">@lang("lang_v1.fixed")</option>
+                        <option value="percentage">@lang("lang_v1.percentage")</option>
+                    </select>
+                @endcan
             </div>
         @endif
     </td>
