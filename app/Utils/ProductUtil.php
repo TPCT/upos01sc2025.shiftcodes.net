@@ -484,13 +484,9 @@ class ProductUtil extends Util
                 $query->where(function ($query) {
                     $query->where('p.enable_stock', '!=', 1)
                         ->orWhere('vld.qty_available', '>', 0);
-                });
-            }
-
-            if (!empty($location_id)) {
-                //Check for enable stock, if enabled check for location id.
-                $query->where(function ($query) use ($location_id) {
-                    $query->orWhere('vld.location_id', $location_id);
+                    if (!empty($location_id)) {
+                        $query->orWhere('vld.location_id', $location_id);
+                    }
                 });
             }
         }

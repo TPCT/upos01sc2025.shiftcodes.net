@@ -1636,6 +1636,7 @@ class SellPosController extends Controller
         }
 
         $product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id, $location_id, $check_qty);
+
         if (!isset($product->quantity_ordered)) {
             $product->quantity_ordered = $quantity;
         }
