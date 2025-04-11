@@ -1620,7 +1620,9 @@ class SellPosController extends Controller
 
         $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
 
-        $check_qty = !(\request()->has('is_sale_return') && \request()->input('is_sale_return') == 'true') || !empty($pos_settings['allow_overselling']) ? false : true;
+        $sell_return = \request()->has('is_sale_return') && \request()->input('is_sale_return') == 'true';
+        $check_qty = !($sell_return) || !empty($pos_settings['allow_overselling']) ? false : true;
+
         if (\request()->has('is_sale_return') && \request()->input('is_sale_return') == 'true')
             $check_qty = false;
 
@@ -1721,6 +1723,7 @@ class SellPosController extends Controller
                     'sub_units', 'discount', 'waiters', 'edit_discount',
                     'edit_price', 'purchase_line_id', 'warranties', 'quantity',
                     'is_direct_sell', 'so_line', 'is_sales_order', 'last_sell_line',
+                    'sell_return',
                     'user', 'check_qty'
                 ))
                 ->render();
