@@ -1620,24 +1620,17 @@ class SellPosController extends Controller
 
         $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
 
-        $sell_return = \request()->has('is_sale_return') && \request()->input('is_sale_return') == 'true';
-        $check_qty = !($sell_return) || !empty($pos_settings['allow_overselling']) ? false : true;
+        $sell_return = \request()->has('is_sale_return') && \request()->input('is_sale_return') == '1';
+        $is_sales_order = request()->has('is_sales_order') && request()->input('is_sales_order') == '1';
+        $is_draft = request()->has('is_draft') && request()->input('is_draft') == '1';
+        $disable_qty_alert = \request()->has('disable_qty_alert') && \request()->input('disable_qty_alert') == '1';
 
-        if (\request()->has('is_sale_return') && \request()->input('is_sale_return') == 'true')
-            $check_qty = false;
 
-        $is_sales_order = request()->has('is_sales_order') && request()->input('is_sales_order') == 'true' ? true : false;
-        $is_draft = request()->has('is_draft') && request()->input('is_draft') == 'true' ? true : false;
-
-        if ($is_sales_order || !empty($so_line) || $is_draft) {
-            $check_qty = false;
-        }
-
-        if (request()->input('disable_qty_alert') === 'true') {
+        if ($sell_return || $is_sales_order || !empty($so_line) || $is_draft || $disable_qty_alert) {
             $pos_settings['allow_overselling'] = true;
         }
 
-        $product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id, $location_id, $check_qty);
+        $product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id, $location_id, $pos_settings['allow_overselling'] = true);
 
         if (!isset($product->quantity_ordered)) {
             $product->quantity_ordered = $quantity;
@@ -1767,14 +1760,7 @@ class SellPosController extends Controller
             $quantity = request()->get('quantity', 1);
             $weighing_barcode = request()->get('weighing_scale_barcode', null);
 
-            $is_direct_sell = false;
-            if (request()->get('is_direct_sell') == 'true') {
-                $is_direct_sell = true;
-            }
-
-            if (\request()->get('is_sell_return') == 'true'){
-                $is_direct_sell = true;
-            }
+            $is_direct_sell = request('is_direct_sell') == '1' || request('is_sell_return') == '1';
 
             if ($variation_id == 'null' && !empty($weighing_barcode)) {
                 $product_details = $this->__parseWeighingBarcode($weighing_barcode);

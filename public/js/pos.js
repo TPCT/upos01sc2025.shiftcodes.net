@@ -1653,21 +1653,21 @@ function pos_product_row(variation_id = null, purchase_line_id = null, weighing_
         var product_row = $('input#product_row_count').val();
         var location_id = $('input#location_id').val();
         var customer_id = $('select#customer_id').val();
-        var is_direct_sell = false;
+        var is_direct_sell = 0;
         if (
             $('input[name="is_direct_sale"]').length > 0 &&
             $('input[name="is_direct_sale"]').val() == 1
         ) {
-            is_direct_sell = true;
+            is_direct_sell = 1;
         }
 
-        var disable_qty_alert = false;
+        var disable_qty_alert = 0;
 
         if ($('#sale_type').length && $('#sale_type').val() == 'sales_order') {
             for_so = true;
         }
 
-        var is_sales_order = $('#sale_type').length && $('#sale_type').val() == 'sales_order' ? true : false;
+        var is_sales_order = $('#sale_type').length && $('#sale_type').val() == 'sales_order' ? 1 : 0;
 
         var price_group = '';
         if ($('#price_group').length > 0) {
@@ -1686,15 +1686,15 @@ function pos_product_row(variation_id = null, purchase_line_id = null, weighing_
             price_group = $('#types_of_service_price_group').val();
         }
 
-        var is_draft=false;
+        var is_draft=0;
         if($('input#status') && ($('input#status').val()=='quotation' || 
         $('input#status').val()=='draft')) {
-            is_draft=true;
+            is_draft=1;
         }
 
-        var is_sale_return = false;
+        var is_sale_return = 0;
         if ($('#sale_type').length && $('#sale_type').val() == 'sales_return') {
-            is_sale_return = true;
+            is_sale_return = 1;
         }
         
         $.ajax({
