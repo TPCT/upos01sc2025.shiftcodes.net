@@ -3,7 +3,6 @@
     $multiplier = 1;
 
     $action = !empty($action) ? $action : '';
-    $check_qty ??= false;
 @endphp
 
 @foreach($sub_units as $key => $value)
