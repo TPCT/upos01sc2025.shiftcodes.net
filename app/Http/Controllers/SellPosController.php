@@ -1718,7 +1718,7 @@ class SellPosController extends Controller
                     'edit_price', 'purchase_line_id', 'warranties', 'quantity',
                     'is_direct_sell', 'so_line', 'is_sales_order', 'last_sell_line',
                     'sell_return',
-                    'user', 'check_qty'
+                    'user', $pos_settings['allow_overselling']
                 ))
                 ->render();
         }
