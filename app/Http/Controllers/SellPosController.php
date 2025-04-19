@@ -1631,7 +1631,7 @@ class SellPosController extends Controller
             $pos_settings['allow_overselling'] = true;
         }
 
-        $product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id, $location_id, $pos_settings['allow_overselling']);
+        $product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id, $location_id, !$pos_settings['allow_overselling']);
 
         if (!isset($product->quantity_ordered)) {
             $product->quantity_ordered = $quantity;
