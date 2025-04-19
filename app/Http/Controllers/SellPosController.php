@@ -1626,6 +1626,7 @@ class SellPosController extends Controller
         $disable_qty_alert = \request()->has('disable_qty_alert') && \request()->input('disable_qty_alert') == '1';
 
 
+        $pos_settings['allow_overselling'] = false;
         if ($sell_return || $is_sales_order || !empty($so_line) || $is_draft || $disable_qty_alert) {
             $pos_settings['allow_overselling'] = true;
         }
