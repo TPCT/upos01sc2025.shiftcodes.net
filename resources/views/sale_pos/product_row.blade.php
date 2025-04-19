@@ -375,7 +375,7 @@
                 @else
                     <select name="products[{{$row_count}}][line_discount_type]"
                             class="form-control row_discount_type"
-                            data-max-fixed-discount="{{((float)($unit_price_inc_tax - $base_price)}}"
+                            data-max-fixed-discount="{{(float)($unit_price_inc_tax - $base_price)}}"
                             data-max-percentage-discount="{{(float)($unit_price_inc_tax - $base_price) / $unit_price_inc_tax * 100}}"
                     >
                         <option value="fixed">@lang("lang_v1.fixed")</option>

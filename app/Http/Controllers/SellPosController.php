@@ -1802,8 +1802,6 @@ class SellPosController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            var_dump($e);
-            exit;
             \Log::emergency('File:' . $e->getFile() . 'Line:' . $e->getLine() . 'Message:' . $e->getMessage());
 
             $output['success'] = false;
