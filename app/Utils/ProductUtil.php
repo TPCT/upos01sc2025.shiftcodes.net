@@ -481,15 +481,16 @@ class ProductUtil extends Util
         //Add condition for check of quantity. (if stock is not enabled or qty_available > 0)
         if ($product->type != "combo"){
             if ($check_qty) {
-                $query->where(function ($query) {
+                $query->where(function ($query) use ($location_id) {
                     $query->where('p.enable_stock', '!=', 1)
                         ->orWhere('vld.qty_available', '>', 0);
-                    if (!empty($location_id)) {
-                        $query->orWhere('vld.location_id', $location_id);
-                    }
                 });
             }
         }
+
+        $query->when($location_id, function ($query, $location_id){
+            $query->where('vld.location_id', $location_id);
+        });
 
 
         $product = $query->select(
@@ -543,8 +544,17 @@ class ProductUtil extends Util
             'brands.name as brand',
             DB::raw('(SELECT purchase_price_inc_tax FROM purchase_lines WHERE 
                         variation_id=variations.id ORDER BY id DESC LIMIT 1) as last_purchased_price')
-        )
-        ->firstOrFail();
+        );
+
+        $sql = $product->toSql(); // "select * from `users` where `status` = ? and `age` > ?"
+
+        // Get bindings (parameters)
+        $bindings = $product->getBindings(); // ['active', 25]
+
+        // To see the full query with bindings interpolated (for debugging):
+        $fullQuery = vsprintf(str_replace('?', "'%s'", $sql), $bindings);
+//        var_dump($fullQuery);
+        $product = $product->firstOrFail();
 
         $product->media = $variation->media;
 
