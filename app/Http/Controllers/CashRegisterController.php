@@ -174,6 +174,8 @@ class CashRegisterController extends Controller
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
             $query->where('created_by', $user_id);
+            $query->whereNotNull('transaction_id');
+            $query->whereNull('payment_for');
         })->get();
 
         $details['discounts'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time, $user_id) {
@@ -187,8 +189,6 @@ class CashRegisterController extends Controller
             $query->where('business_id', $business_id);
             $query->whereBetween('paid_on', [$open_time, $close_time]);
             $query->where('created_by', $user_id);
-            $query->whereNotNull('transaction_id');
-            $query->whereNull('payment_for');
         })->get();
 
         $details['expenses'] = TransactionPayment::whereHas('transaction', function ($query) use ($business_id, $open_time, $close_time, $user_id) {
