@@ -435,24 +435,25 @@ class ReportController extends Controller
                     return $html;
                 })
                 ->editColumn('stock_price', function ($row) {
+                    $stock_price = $row->stock > 0 ? $row->stock_price : 0;
                     $html = '<span class="total_stock_price" data-orig-value="'
-                        .$row->stock_price.'">'.
-                        $this->transactionUtil->num_f($row->stock_price, true).'</span>';
+                        .$stock_price.'">'.
+                        $this->transactionUtil->num_f($stock_price, true).'</span>';
 
                     return $html;
                 })
                 ->editColumn('stock_value_by_sale_price', function ($row) {
-                    $stock = $row->stock ? $row->stock : 0;
+                    $stock = $row->stock ?: 0;
                     $unit_selling_price = (float) $row->group_price > 0 ? $row->group_price : $row->unit_price;
                     $stock_price = $stock * $unit_selling_price;
 
                     return  '<span class="stock_value_by_sale_price" data-orig-value="'.(float) $stock_price.'" > '.$this->transactionUtil->num_f($stock_price, true).'</span>';
                 })
                 ->addColumn('potential_profit', function ($row) {
-                    $stock = $row->stock ? $row->stock : 0;
+                    $stock = $row->stock ?: 0;
                     $unit_selling_price = (float) $row->group_price > 0 ? $row->group_price : $row->unit_price;
                     $stock_price_by_sp = $stock * $unit_selling_price;
-                    $potential_profit = (float) $stock_price_by_sp - (float) $row->stock_price;
+                    $potential_profit = (float) $stock_price_by_sp - ($stock > 0 ? (float) $row->stock_price : 0);
 
                     return  '<span class="potential_profit" data-orig-value="'.(float) $potential_profit.'" > '.$this->transactionUtil->num_f($potential_profit, true).'</span>';
                 })
