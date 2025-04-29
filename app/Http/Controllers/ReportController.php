@@ -435,7 +435,7 @@ class ReportController extends Controller
                     return $html;
                 })
                 ->editColumn('stock_price', function ($row) {
-                    $stock_price = $row->stock * $row->purchase_price_inc_tax;
+                    $stock_price = $row->stock * $row->max_purchase_price;
                     $html = '<span class="total_stock_price" data-orig-value="'
                         .$stock_price.'">'.
                         $this->transactionUtil->num_f($stock_price, true).'</span>';
@@ -451,7 +451,7 @@ class ReportController extends Controller
                 })
                 ->addColumn('potential_profit', function ($row) {
                     $stock = $row->stock ?: 0;
-                    $stock_price = $stock * $row->purchase_price_inc_tax;
+                    $stock_price = $stock * $row->max_purchase_price;
                     $unit_selling_price = (float) $row->group_price > 0 ? $row->group_price : $row->unit_price;
                     $stock_price_by_sp = $stock * $unit_selling_price;
                     $potential_profit = (float) $stock_price_by_sp - $stock_price;

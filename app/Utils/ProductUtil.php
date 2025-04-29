@@ -1850,8 +1850,9 @@ class ProductUtil extends Util
                   WHERE (transactions.status='received' OR transactions.type='purchase_return')  AND transactions.location_id=vld.location_id 
                   AND (pl.variation_id=variations.id)) as stock_price"),
             DB::raw('SUM(vld.qty_available) as stock'),
+            DB::raw('MAX(variations.dpp_inc_tax) as max_purchase_price'),
+            DB::raw('MIN(variations.dpp_inc_tax) as min_purchase_price'),
             'variations.sub_sku as sku',
-            'variations.default_purchase_price as ddp_inc_tax',
             'p.name as product',
             'p.type',
             'p.alert_quantity',
