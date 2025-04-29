@@ -486,12 +486,11 @@ class ProductUtil extends Util
                         ->orWhere('vld.qty_available', '>', 0);
                 });
             }
+
+            $query->when($location_id, function ($query, $location_id){
+                $query->where('vld.location_id', $location_id);
+            });
         }
-
-        $query->when($location_id, function ($query, $location_id){
-            $query->where('vld.location_id', $location_id);
-        });
-
 
         $product = $query->select(
             DB::raw("IF(pv.is_dummy = 0, CONCAT(p.name, 
@@ -1854,6 +1853,7 @@ class ProductUtil extends Util
                   AND (pl.variation_id=variations.id)) as stock_price"),
             DB::raw('SUM(vld.qty_available) as stock'),
             'variations.sub_sku as sku',
+            'variations.default_purchase_price as ddp_inc_tax',
             'p.name as product',
             'p.type',
             'p.alert_quantity',
