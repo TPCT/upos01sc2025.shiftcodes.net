@@ -36,16 +36,18 @@
 						<br>
 					</div>
 					<div style="width: {{$paper_width}}in; height: {{$barcode_details->height * 0.5}}in; !important;">
-						<b style="display: block !important; font-size: {{$barcode_details->business_name_size}}px;text-align: right;direction: rtl;padding-right:10px">
-							{{$print['business_name']}}
-							<span style="font-size: {{$barcode_details->price_size}}px" class="price_span">
-								@if($print['price_type'] == 'inclusive')
-									{{@num_format($page_product->sell_price_inc_tax)}}
-								@else
-									{{@num_format($page_product->default_sell_price)}}
-								@endif
-							</span>
-						</b>
+						@if(!empty($print['price']))
+							<b style="display: block !important; font-size: {{$barcode_details->business_name_size}}px;text-align: right;direction: rtl;padding-right:10px">
+								{{$print['business_name']}}
+								<span style="font-size: {{$barcode_details->price_size}}px" class="price_span">
+									@if($print['price_type'] == 'inclusive')
+										{{@num_format($page_product->sell_price_inc_tax)}}
+									@else
+										{{@num_format($page_product->default_sell_price)}}
+									@endif
+								</span>
+							</b>
+						@endif
 
 						@if(!empty($print['name']))
 							<span style="display: block !important; font-size: {{$barcode_details->name_size}}px">
