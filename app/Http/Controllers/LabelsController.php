@@ -202,6 +202,7 @@ class LabelsController extends Controller
             exit;
         } catch (\Exception $e) {
             \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            var_dump($e->getMessage());
         }
     }
 }
